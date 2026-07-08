@@ -42,7 +42,7 @@ def read_locale(locale: str) -> dict[str, str]:
 
 def collect_static_code_keys() -> set[str]:
     keys: set[str] = set()
-    pattern = re.compile(r'"((?:button|field|filter|message|preview|screen|tab|tooltip|npc|npc_preset|skin|talent|talent_branch|talent_status|achievement)\.homecraftguild[^"]*)"')
+    pattern = re.compile(r'"((?:language|button|editbox|hint|field|filter|message|preview|screen|tab|tooltip|npc|npc_preset|skin|talent|talent_branch|talent_status|achievement|buff|role|golem_status|dimension|entity)\.homecraftguild[^"]*)"')
     for path in (ROOT / "src/main/java").rglob("*.java"):
         text = path.read_text(encoding="utf-8", errors="ignore")
         for match in pattern.finditer(text):
@@ -71,6 +71,8 @@ def main() -> int:
         "screen.homecraftguild.npc_admin.title",
         "screen.homecraftguild.talents.title",
         "screen.homecraftguild.achievements.title",
+        "language.homecraftguild.current",
+        "screen.homecraftguild.common.shown_range",
         "skin.homecraftguild.guild_registrar",
         "npc_preset.homecraftguild.trader_weapons.name",
         "talent.homecraftguild.member_xp_1.title",

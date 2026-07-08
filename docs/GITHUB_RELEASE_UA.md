@@ -53,8 +53,8 @@ build/libs/homecraftguild-neoforge-1.21.11-<mod_version>+mc1.21.11-neoforge.jar
 Release запускається тільки тегом:
 
 ```bash
-git tag v0.1.157
-git push origin v0.1.157
+git tag v0.1.158
+git push origin v0.1.158
 ```
 
 Workflow робить тільки одну збірку:

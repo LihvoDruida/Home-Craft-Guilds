@@ -1,5 +1,6 @@
 package ua.homecraft.guild.client;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
 
 import java.util.Locale;
@@ -12,6 +13,33 @@ import java.util.Locale;
  */
 public final class HomeCraftGuildI18n {
     private HomeCraftGuildI18n() {}
+
+
+    /**
+     * A tiny translated marker used by open screens to detect runtime language changes.
+     * The value comes from the active language file, so it changes immediately after
+     * Minecraft reloads language resources.
+     */
+    public static String languageStamp() {
+        String value = t("language.homecraftguild.current");
+        String language = "unknown";
+        try {
+            Minecraft minecraft = Minecraft.getInstance();
+            if (minecraft != null && minecraft.getLanguageManager() != null) {
+                language = String.valueOf(minecraft.getLanguageManager().getSelected());
+            }
+        } catch (Throwable ignored) {
+        }
+        return language + "|" + value;
+    }
+
+    public static boolean languageChanged(String previousStamp) {
+        return previousStamp == null || !previousStamp.equals(languageStamp());
+    }
+
+    public static String shownRange(int start, int end, int total) {
+        return t("screen.homecraftguild.common.shown_range", start, end, total);
+    }
 
     public static Component c(String key, Object... args) {
         return Component.translatable(key, args);

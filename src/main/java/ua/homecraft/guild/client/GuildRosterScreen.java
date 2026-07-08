@@ -21,7 +21,8 @@ public final class GuildRosterScreen extends Screen {
     private final List<GolemAction> golemActions = new ArrayList<>();
     private final List<ContextAction> contextActions = new ArrayList<>();
     private final List<MemberAction> memberActions = new ArrayList<>();
-    private final List<String> helpLines = buildHelpLines();
+    private List<String> helpLines = buildHelpLines();
+    private String liveLanguageStamp = HomeCraftGuildI18n.languageStamp();
     private final List<TooltipArea> tooltipAreas = new ArrayList<>();
 
     private MemberRow kickConfirmMember;
@@ -107,25 +108,25 @@ public final class GuildRosterScreen extends Screen {
                 row.h = rowH;
                 inviteRows.add(row);
                 int bw = Math.max(72, Math.min(96, (row.w - 18) / 4));
-                addRenderableWidget(Button.builder(Component.literal("Прийняти"), b -> send("accept", row.guildId, ""))
+                addRenderableWidget(Button.builder(HomeCraftGuildI18n.c("button.homecraftguild.accept"), b -> send("accept", row.guildId, ""))
                         .bounds(row.x + row.w - bw * 2 - 8, ry + 5, bw, 21).build());
-                addRenderableWidget(Button.builder(Component.literal("Відмовити"), b -> send("decline", row.guildId, ""))
+                addRenderableWidget(Button.builder(HomeCraftGuildI18n.c("button.homecraftguild.decline"), b -> send("decline", row.guildId, ""))
                         .bounds(row.x + row.w - bw, ry + 5, bw, 21).build());
             }
-            addRenderableWidget(Button.builder(Component.literal("Оновити"), b -> send("request", "", ""))
+            addRenderableWidget(Button.builder(HomeCraftGuildI18n.c("button.homecraftguild.refresh"), b -> send("request", "", ""))
                     .bounds(l.x + l.pad, l.bottomY - 26, 100, 22).build());
-            addRenderableWidget(Button.builder(Component.literal("Закрити"), b -> onClose())
+            addRenderableWidget(Button.builder(HomeCraftGuildI18n.c("button.homecraftguild.close"), b -> onClose())
                     .bounds(l.x + l.panelW - l.pad - 100, l.bottomY - 26, 100, 22).build());
             return;
         }
 
         int footerY = l.bottomY - 28;
         if (view.readOnly) {
-            addRenderableWidget(Button.builder(Component.literal("Таланти"), b -> openTalents())
+            addRenderableWidget(Button.builder(HomeCraftGuildI18n.c("button.homecraftguild.talents"), b -> openTalents())
                     .bounds(l.x + l.panelW - l.pad - 316, footerY, 100, 22).build());
             addRenderableWidget(Button.builder(HomeCraftGuildI18n.c("screen.homecraftguild.achievements.button"), b -> achievementsOpen = true)
                     .bounds(l.x + l.panelW - l.pad - 208, footerY, 100, 22).build());
-            addRenderableWidget(Button.builder(Component.literal("Закрити"), b -> onClose())
+            addRenderableWidget(Button.builder(HomeCraftGuildI18n.c("button.homecraftguild.close"), b -> onClose())
                     .bounds(l.x + l.panelW - l.pad - 100, footerY, 100, 22).build());
         } else if (view.isGuildmaster) {
             boolean footerCompact = l.panelW < 560;
@@ -134,71 +135,82 @@ public final class GuildRosterScreen extends Screen {
             int fieldW = Math.max(110, Math.min(240, fullW - 112));
             int buttonW = 96;
             int fieldX = l.x + l.pad;
-            this.inviteBox = new EditBox(this.font, fieldX, inviteY, fieldW, 22, Component.literal("Нік для запрошення"));
-            this.inviteBox.setHint(Component.literal("Нік гравця"));
+            this.inviteBox = new EditBox(this.font, fieldX, inviteY, fieldW, 22, HomeCraftGuildI18n.c("editbox.homecraftguild.invite_player"));
+            this.inviteBox.setHint(HomeCraftGuildI18n.c("hint.homecraftguild.player_name"));
             this.inviteBox.setMaxLength(32);
             addRenderableWidget(inviteBox);
-            addRenderableWidget(Button.builder(Component.literal("Запросити"), b -> {
+            addRenderableWidget(Button.builder(HomeCraftGuildI18n.c("button.homecraftguild.invite"), b -> {
                 if (inviteBox != null && !inviteBox.getValue().isBlank()) send("invite", inviteBox.getValue(), "");
             }).bounds(fieldX + fieldW + 8, inviteY, buttonW, 22).build());
             int x0 = l.x + l.pad;
             if (footerCompact) {
-                addRenderableWidget(Button.builder(Component.literal("Оновити"), b -> send("request", "", ""))
+                addRenderableWidget(Button.builder(HomeCraftGuildI18n.c("button.homecraftguild.refresh"), b -> send("request", "", ""))
                         .bounds(x0, footerY - 56, 86, 22).build());
-                addRenderableWidget(Button.builder(Component.literal("До тотема"), b -> send("teleport_guild", "", ""))
+                addRenderableWidget(Button.builder(HomeCraftGuildI18n.c("button.homecraftguild.to_totem"), b -> send("teleport_guild", "", ""))
                         .bounds(x0 + 94, footerY - 56, 104, 22).build());
-                addRenderableWidget(Button.builder(Component.literal("Таланти"), b -> openTalents())
+                addRenderableWidget(Button.builder(HomeCraftGuildI18n.c("button.homecraftguild.talents"), b -> openTalents())
                         .bounds(x0, footerY - 28, 86, 22).build());
                 addRenderableWidget(Button.builder(HomeCraftGuildI18n.c("screen.homecraftguild.achievements.button"), b -> achievementsOpen = true)
                         .bounds(x0 + 94, footerY - 28, 110, 22).build());
-                addRenderableWidget(Button.builder(Component.literal("Закрити"), b -> onClose())
+                addRenderableWidget(Button.builder(HomeCraftGuildI18n.c("button.homecraftguild.close"), b -> onClose())
                         .bounds(l.x + l.panelW - l.pad - 100, footerY - 28, 100, 22).build());
             } else {
-                addRenderableWidget(Button.builder(Component.literal("Оновити"), b -> send("request", "", ""))
+                addRenderableWidget(Button.builder(HomeCraftGuildI18n.c("button.homecraftguild.refresh"), b -> send("request", "", ""))
                         .bounds(x0, footerY, 94, 22).build());
                 x0 += 102;
-                addRenderableWidget(Button.builder(Component.literal("До тотема"), b -> send("teleport_guild", "", ""))
+                addRenderableWidget(Button.builder(HomeCraftGuildI18n.c("button.homecraftguild.to_totem"), b -> send("teleport_guild", "", ""))
                         .bounds(x0, footerY, 118, 22).build());
-                addRenderableWidget(Button.builder(Component.literal("Таланти"), b -> openTalents())
+                addRenderableWidget(Button.builder(HomeCraftGuildI18n.c("button.homecraftguild.talents"), b -> openTalents())
                         .bounds(l.x + l.panelW - l.pad - 316, footerY, 100, 22).build());
                 addRenderableWidget(Button.builder(HomeCraftGuildI18n.c("screen.homecraftguild.achievements.button"), b -> achievementsOpen = true)
                         .bounds(l.x + l.panelW - l.pad - 208, footerY, 100, 22).build());
-                addRenderableWidget(Button.builder(Component.literal("Закрити"), b -> onClose())
+                addRenderableWidget(Button.builder(HomeCraftGuildI18n.c("button.homecraftguild.close"), b -> onClose())
                         .bounds(l.x + l.panelW - l.pad - 100, footerY, 100, 22).build());
             }
         } else {
             int x0 = l.x + l.pad;
             boolean footerCompact = l.panelW < 560;
             if (footerCompact) {
-                addRenderableWidget(Button.builder(Component.literal("До тотема"), b -> send("teleport_guild", "", ""))
+                addRenderableWidget(Button.builder(HomeCraftGuildI18n.c("button.homecraftguild.to_totem"), b -> send("teleport_guild", "", ""))
                         .bounds(x0, footerY - 56, 90, 22).build());
-                addRenderableWidget(Button.builder(Component.literal("Оновити"), b -> send("request", "", ""))
+                addRenderableWidget(Button.builder(HomeCraftGuildI18n.c("button.homecraftguild.refresh"), b -> send("request", "", ""))
                         .bounds(x0 + 98, footerY - 56, 74, 22).build());
-                addRenderableWidget(Button.builder(Component.literal("Закрити"), b -> onClose())
+                addRenderableWidget(Button.builder(HomeCraftGuildI18n.c("button.homecraftguild.close"), b -> onClose())
                         .bounds(l.x + l.panelW - l.pad - 80, footerY - 56, 80, 22).build());
-                addRenderableWidget(Button.builder(Component.literal("Вийти з гільдії"), b -> send("leave", "", ""))
+                addRenderableWidget(Button.builder(HomeCraftGuildI18n.c("button.homecraftguild.leave_guild"), b -> send("leave", "", ""))
                         .bounds(x0, footerY - 28, 122, 22).build());
-                addRenderableWidget(Button.builder(Component.literal("Таланти"), b -> openTalents())
+                addRenderableWidget(Button.builder(HomeCraftGuildI18n.c("button.homecraftguild.talents"), b -> openTalents())
                         .bounds(x0 + 130, footerY - 28, 86, 22).build());
                 addRenderableWidget(Button.builder(HomeCraftGuildI18n.c("screen.homecraftguild.achievements.button"), b -> achievementsOpen = true)
                         .bounds(x0 + 224, footerY - 28, 104, 22).build());
             } else {
                 int teleportW = Math.min(128, Math.max(108, l.panelW / 3));
-                addRenderableWidget(Button.builder(Component.literal("До тотема"), b -> send("teleport_guild", "", ""))
+                addRenderableWidget(Button.builder(HomeCraftGuildI18n.c("button.homecraftguild.to_totem"), b -> send("teleport_guild", "", ""))
                         .bounds(x0, footerY - 28, teleportW, 22).build());
-                addRenderableWidget(Button.builder(Component.literal("Вийти з гільдії"), b -> send("leave", "", ""))
+                addRenderableWidget(Button.builder(HomeCraftGuildI18n.c("button.homecraftguild.leave_guild"), b -> send("leave", "", ""))
                         .bounds(x0, footerY, 122, 22).build());
                 x0 += 130;
-                addRenderableWidget(Button.builder(Component.literal("Оновити"), b -> send("request", "", ""))
+                addRenderableWidget(Button.builder(HomeCraftGuildI18n.c("button.homecraftguild.refresh"), b -> send("request", "", ""))
                         .bounds(x0, footerY, 94, 22).build());
-                addRenderableWidget(Button.builder(Component.literal("Таланти"), b -> openTalents())
+                addRenderableWidget(Button.builder(HomeCraftGuildI18n.c("button.homecraftguild.talents"), b -> openTalents())
                         .bounds(l.x + l.panelW - l.pad - 316, footerY, 100, 22).build());
                 addRenderableWidget(Button.builder(HomeCraftGuildI18n.c("screen.homecraftguild.achievements.button"), b -> achievementsOpen = true)
                         .bounds(l.x + l.panelW - l.pad - 208, footerY, 100, 22).build());
-                addRenderableWidget(Button.builder(Component.literal("Закрити"), b -> onClose())
+                addRenderableWidget(Button.builder(HomeCraftGuildI18n.c("button.homecraftguild.close"), b -> onClose())
                         .bounds(l.x + l.panelW - l.pad - 100, footerY, 100, 22).build());
             }
         }
+    }
+
+    private void refreshLiveLanguage() {
+        String now = HomeCraftGuildI18n.languageStamp();
+        if (now.equals(liveLanguageStamp)) return;
+        liveLanguageStamp = now;
+        String inviteValue = inviteBox == null ? "" : inviteBox.getValue();
+        helpLines = buildHelpLines();
+        clearWidgets();
+        init();
+        if (inviteBox != null && !inviteValue.isBlank()) inviteBox.setValue(inviteValue);
     }
 
     private void openTalents() {
@@ -424,10 +436,10 @@ public final class GuildRosterScreen extends Screen {
         contextX = Math.min(Math.max(8, x), this.width - contextW - 8);
         contextY = Math.min(Math.max(8, y), this.height - contextH - 8);
         int ry = contextY + 24;
-        addContext("Будівельник", "rank", row.uuid, "BUILDER", row.role.equalsIgnoreCase("BUILDER"), ry); ry += 20;
-        addContext("Завгосп", "rank", row.uuid, "QUARTERMASTER", row.role.equalsIgnoreCase("QUARTERMASTER"), ry); ry += 20;
-        addContext("Воїн", "rank", row.uuid, "WARRIOR", row.role.equalsIgnoreCase("WARRIOR"), ry); ry += 20;
-        addContext("Фермер", "rank", row.uuid, "FARMER", row.role.equalsIgnoreCase("FARMER"), ry);
+        addContext(localizedRoleLabel("BUILDER"), "rank", row.uuid, "BUILDER", row.role.equalsIgnoreCase("BUILDER"), ry); ry += 20;
+        addContext(localizedRoleLabel("QUARTERMASTER"), "rank", row.uuid, "QUARTERMASTER", row.role.equalsIgnoreCase("QUARTERMASTER"), ry); ry += 20;
+        addContext(localizedRoleLabel("WARRIOR"), "rank", row.uuid, "WARRIOR", row.role.equalsIgnoreCase("WARRIOR"), ry); ry += 20;
+        addContext(localizedRoleLabel("FARMER"), "rank", row.uuid, "FARMER", row.role.equalsIgnoreCase("FARMER"), ry);
     }
 
     private void addContext(String label, String action, String target, String extra, boolean active, int y) {
@@ -450,6 +462,7 @@ public final class GuildRosterScreen extends Screen {
 
     @Override
     public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
+        refreshLiveLanguage();
         graphics.fill(0, 0, this.width, this.height, 0xAA05070D);
         Layout l = layout();
         graphics.fill(l.x, l.y, l.x + l.panelW, l.y + l.panelH, 0xF0101119);
@@ -468,31 +481,31 @@ public final class GuildRosterScreen extends Screen {
     }
 
     private void renderInvites(GuiGraphics graphics, int mouseX, int mouseY, Layout l) {
-        graphics.drawCenteredString(this.font, "Запрошення до гільдій", this.width / 2, l.y + 16, 0xFFFFF3DC);
-        graphics.drawCenteredString(this.font, "Тут показані лише гільдії, які запросили тебе", this.width / 2, l.y + 34, 0xFF9AA4B2);
+        graphics.drawCenteredString(this.font, HomeCraftGuildI18n.t("screen.homecraftguild.invites.title"), this.width / 2, l.y + 16, 0xFFFFF3DC);
+        graphics.drawCenteredString(this.font, HomeCraftGuildI18n.t("screen.homecraftguild.invites.subtitle"), this.width / 2, l.y + 34, 0xFF9AA4B2);
         if (view.invites.isEmpty()) {
-            graphics.drawCenteredString(this.font, "У вас немає запрошень до гільдій", this.width / 2, l.contentY + 46, 0xFFD8DEE9);
+            graphics.drawCenteredString(this.font, HomeCraftGuildI18n.t("screen.homecraftguild.invites.empty"), this.width / 2, l.contentY + 46, 0xFFD8DEE9);
         } else {
-            graphics.drawString(this.font, "Оберіть гільдію:", l.x + l.pad, l.contentY + 12, 0xFFFFD99A, false);
+            graphics.drawString(this.font, HomeCraftGuildI18n.t("screen.homecraftguild.invites.choose"), l.x + l.pad, l.contentY + 12, 0xFFFFD99A, false);
             for (InviteRow row : inviteRows) {
                 graphics.fill(row.x, row.y, row.x + row.w, row.y + row.h, 0x70202A34);
                 graphics.drawString(this.font, trim(row.guildName, Math.max(10, row.w / 7 - 28)), row.x + 8, row.y + 5, 0xFFFFF3DC, false);
-                graphics.drawString(this.font, "Запросив: " + emptyDash(row.invitedBy), row.x + 8, row.y + 19, 0xFF9AA4B2, false);
+                graphics.drawString(this.font, HomeCraftGuildI18n.t("screen.homecraftguild.invites.invited_by", emptyDash(row.invitedBy)), row.x + 8, row.y + 19, 0xFF9AA4B2, false);
             }
         }
     }
 
     private void renderGuild(GuiGraphics graphics, int mouseX, int mouseY, Layout l) {
         tooltipAreas.clear();
-        String title = "Рівень " + view.guildLevel + " · " + trim(view.guildName, Math.max(14, (l.panelW - l.pad * 2) / 7));
+        String title = HomeCraftGuildI18n.t("screen.homecraftguild.roster.guild_title", view.guildLevel, trim(view.guildName, Math.max(14, (l.panelW - l.pad * 2) / 7)));
         graphics.drawCenteredString(this.font, title, this.width / 2, l.y + 12, 0xFFFFF3DC);
         drawInfoButton(graphics, mouseX, mouseY, l);
         drawXpBar(graphics, l.x + l.pad, l.y + 30, l.panelW - l.pad * 2, 10);
         int memberColor = view.members.size() >= view.memberLimit ? 0xFFFF7777 : 0xFFD8DEE9;
-        String roleLine = view.readOnly ? "Перегляд складу" : "Роль: " + view.roleLabel;
-        graphics.drawString(this.font, roleLine + " · учасники " + view.members.size() + "/" + view.memberLimit, l.x + l.pad, l.y + 46, memberColor, false);
+        String roleLine = view.readOnly ? HomeCraftGuildI18n.t("screen.homecraftguild.roster.readonly") : HomeCraftGuildI18n.t("screen.homecraftguild.roster.role", localizedRoleLabel(view.roleLabel));
+        graphics.drawString(this.font, HomeCraftGuildI18n.t("screen.homecraftguild.roster.member_count_line", roleLine, view.members.size(), view.memberLimit), l.x + l.pad, l.y + 46, memberColor, false);
         if (!view.readOnly && view.isGuildmaster && l.panelW > 620) {
-            graphics.drawString(this.font, "Кнопки біля учасника: роль або виключення", l.x + l.panelW - l.pad - 252, l.y + 46, 0xFF9AA4B2, false);
+            graphics.drawString(this.font, HomeCraftGuildI18n.t("screen.homecraftguild.roster.member_buttons_hint"), l.x + l.panelW - l.pad - 252, l.y + 46, 0xFF9AA4B2, false);
         }
 
         int fullW = l.panelW - l.pad * 2;
@@ -534,7 +547,7 @@ public final class GuildRosterScreen extends Screen {
 
         if (!view.readOnly && view.isGuildmaster) {
             int inviteLabelY = l.panelW < 560 ? l.bottomY - 114 : l.bottomY - 58;
-            graphics.drawString(this.font, view.members.size() >= view.memberLimit ? "Гільдія заповнена" : "Запросити гравця", l.x + l.pad, inviteLabelY - 11, view.members.size() >= view.memberLimit ? 0xFFFF7777 : 0xFFFFD99A, false);
+            graphics.drawString(this.font, view.members.size() >= view.memberLimit ? HomeCraftGuildI18n.t("screen.homecraftguild.roster.guild_full") : HomeCraftGuildI18n.t("screen.homecraftguild.roster.invite_player"), l.x + l.pad, inviteLabelY - 11, view.members.size() >= view.memberLimit ? 0xFFFF7777 : 0xFFFFD99A, false);
         }
         renderContextMenu(graphics, mouseX, mouseY);
         renderKickConfirm(graphics, mouseX, mouseY);
@@ -548,7 +561,7 @@ public final class GuildRosterScreen extends Screen {
         boolean hover = inside(mouseX, mouseY, x, y, s, s);
         graphics.fill(x, y, x + s, y + s, hover ? 0xFF4E5661 : 0xFF313842);
         graphics.drawCenteredString(this.font, "i", x + s / 2, y + 5, 0xFFFFF3DC);
-        tooltipAreas.add(new TooltipArea(x, y, s, s, java.util.List.of("Інформація", "Повний опис системи гільдії, ролей, бафів, територій і големів.")));
+        tooltipAreas.add(new TooltipArea(x, y, s, s, java.util.List.of(HomeCraftGuildI18n.t("tooltip.homecraftguild.info.title"), HomeCraftGuildI18n.t("tooltip.homecraftguild.info.description"))));
     }
 
     private void drawXpBar(GuiGraphics graphics, int x, int y, int w, int h) {
@@ -556,12 +569,12 @@ public final class GuildRosterScreen extends Screen {
         int levelSize = Math.max(0, view.guildXpLevelSize);
         int fill = levelSize <= 0 ? w : Math.max(0, Math.min(w, (int) Math.round(w * (view.guildXpInLevel / (double) Math.max(1, levelSize)))));
         graphics.fill(x, y, x + fill, y + h, 0xFFFFA914);
-        String text = levelSize <= 0 ? "Максимальний рівень" : view.guildXpInLevel + "/" + levelSize + " досвіду до рівня " + (view.guildLevel + 1);
+        String text = levelSize <= 0 ? HomeCraftGuildI18n.t("screen.homecraftguild.roster.max_level") : HomeCraftGuildI18n.t("screen.homecraftguild.roster.xp_to_next", view.guildXpInLevel, levelSize, view.guildLevel + 1);
         graphics.drawCenteredString(this.font, text, x + w / 2, y + 1, 0xFFFFFFFF);
     }
 
     private int renderMembers(GuiGraphics graphics, int mouseX, int mouseY, int x, int y, int w, int bottom) {
-        drawSection(graphics, x, y, w, Math.max(56, bottom - y), "Учасники " + view.members.size() + "/" + view.memberLimit);
+        drawSection(graphics, x, y, w, Math.max(56, bottom - y), HomeCraftGuildI18n.t("screen.homecraftguild.roster.members_section", view.members.size(), view.memberLimit));
         memberRows.clear();
         memberActions.clear();
         int innerX = x + 6;
@@ -596,16 +609,16 @@ public final class GuildRosterScreen extends Screen {
             int nameW = Math.max(60, row.w - roleW - actionsW - 26);
 
             graphics.drawString(this.font, trim(crown + row.name, Math.max(8, nameW / 6)), row.x + 8, row.y + 4, row.guildmaster ? 0xFFFFD99A : 0xFFD8DEE9, false);
-            graphics.drawString(this.font, trim(row.roleLabel, 14) + " " + online, row.x + row.w - roleW - actionsW - 4, row.y + 4, row.online ? 0xFF7FE39A : 0xFF7D8796, false);
-            String bedLine = "Ліжко: " + (row.bedCoords == null || row.bedCoords.isBlank() ? "—" : row.bedCoords);
+            graphics.drawString(this.font, trim(localizedRoleLabel(row.role == null || row.role.isBlank() ? row.roleLabel : row.role), 14) + " " + online, row.x + row.w - roleW - actionsW - 4, row.y + 4, row.online ? 0xFF7FE39A : 0xFF7D8796, false);
+            String bedLine = HomeCraftGuildI18n.t("screen.homecraftguild.roster.bed", row.bedCoords == null || row.bedCoords.isBlank() ? "—" : row.bedCoords);
             int bedColor = "—".equals(row.bedCoords) ? 0xFF7D8796 : 0xFF9AFFB4;
             graphics.drawString(this.font, trim(bedLine, Math.max(10, (row.w - actionsW - 18) / 6)), row.x + 8, row.y + 17, bedColor, false);
-            tooltipAreas.add(new TooltipArea(row.x + 8, row.y + 16, Math.max(40, row.w - actionsW - 16), 12, java.util.List.of("Координати ліжка", "Показує закріплене ліжко учасника на території гільдії.")));
+            tooltipAreas.add(new TooltipArea(row.x + 8, row.y + 16, Math.max(40, row.w - actionsW - 16), 12, java.util.List.of(HomeCraftGuildI18n.t("tooltip.homecraftguild.bed_coords.title"), HomeCraftGuildI18n.t("tooltip.homecraftguild.bed_coords.description"))));
 
             if (roleButtonW > 0) {
                 int bx = row.x + row.w - actionsW;
-                drawMiniButton(graphics, mouseX, mouseY, bx, row.y + 8, roleButtonW, 16, "Роль");
-                tooltipAreas.add(new TooltipArea(bx, row.y + 8, roleButtonW, 16, splitTooltip("Змінити роль\n" + roleTooltip(row.role))));
+                drawMiniButton(graphics, mouseX, mouseY, bx, row.y + 8, roleButtonW, 16, HomeCraftGuildI18n.t("button.homecraftguild.role"));
+                tooltipAreas.add(new TooltipArea(bx, row.y + 8, roleButtonW, 16, java.util.List.of(HomeCraftGuildI18n.t("tooltip.homecraftguild.change_role.title"), roleTooltip(row.role))));
                 MemberAction roleAction = new MemberAction();
                 roleAction.kind = "role_menu";
                 roleAction.member = row;
@@ -617,7 +630,7 @@ public final class GuildRosterScreen extends Screen {
 
                 int kx = bx + roleButtonW + 6;
                 drawMiniButton(graphics, mouseX, mouseY, kx, row.y + 8, kickButtonW, 16, "✕");
-                tooltipAreas.add(new TooltipArea(kx, row.y + 8, kickButtonW, 16, java.util.List.of("Виключити з гільдії", "Потрібне підтвердження перед виключенням гравця.")));
+                tooltipAreas.add(new TooltipArea(kx, row.y + 8, kickButtonW, 16, java.util.List.of(HomeCraftGuildI18n.t("tooltip.homecraftguild.kick_member.title"), HomeCraftGuildI18n.t("tooltip.homecraftguild.kick_member.description"))));
                 MemberAction kickAction = new MemberAction();
                 kickAction.kind = "kick";
                 kickAction.member = row;
@@ -630,13 +643,13 @@ public final class GuildRosterScreen extends Screen {
         }
 
         if (view.members.size() > visibleRows) {
-            graphics.drawString(this.font, "Показано: " + (membersScroll + 1) + "-" + Math.min(view.members.size(), membersScroll + visibleRows) + " з " + view.members.size(), x + 8, bottom - 11, 0xFF9AA4B2, false);
+            graphics.drawString(this.font, HomeCraftGuildI18n.shownRange(membersScroll + 1, Math.min(view.members.size(), membersScroll + visibleRows), view.members.size()), x + 8, bottom - 11, 0xFF9AA4B2, false);
         }
         return bottom;
     }
 
     private int renderInfoAndBuffs(GuiGraphics graphics, int x, int y, int w, int bottom) {
-        drawSection(graphics, x, y, w, Math.max(56, bottom - y), "Активні бафи гільдії");
+        drawSection(graphics, x, y, w, Math.max(56, bottom - y), HomeCraftGuildI18n.t("screen.homecraftguild.roster.active_buffs_section"));
         int innerX = x + 8;
         int innerY = y + 8;
         int innerW = w - 16;
@@ -653,42 +666,42 @@ public final class GuildRosterScreen extends Screen {
             drawY += 12;
         }
         if (lines.size() > visibleLines) {
-            graphics.drawString(this.font, "Показано: " + (infoScroll + 1) + "-" + Math.min(lines.size(), infoScroll + visibleLines) + " з " + lines.size(), x + 8, bottom - 11, 0xFF9AA4B2, false);
+            graphics.drawString(this.font, HomeCraftGuildI18n.shownRange(infoScroll + 1, Math.min(lines.size(), infoScroll + visibleLines), lines.size()), x + 8, bottom - 11, 0xFF9AA4B2, false);
         }
         return bottom;
     }
 
     private List<LineEntry> buildInfoBuffLines() {
         List<LineEntry> lines = new ArrayList<>();
-        lines.add(new LineEntry("Активні бафи учасників", 0xFFFFD99A, "Бонуси учасників активні за членство в гільдії. Територія не потрібна для XP, зіль, шкоди, броні, швидкості, стрибка або постійних vanilla-ефектів."));
+        lines.add(new LineEntry(HomeCraftGuildI18n.t("screen.homecraftguild.roster.member_buffs_title"), 0xFFFFD99A, HomeCraftGuildI18n.t("tooltip.homecraftguild.member_buffs")));
         boolean memberBuffsActive = true;
-        addActiveBuff(lines, "Досвід гравця", "+" + view.xpBonus + "%", memberBuffsActive && view.xpBonus > 0, 0xFF7BD7FF, "Базовий бонус + талантові покращення. Бонус досвіду не повинен повертатися до старих завищених значень без талантів.");
-        addActiveBuff(lines, "Тривалість корисних зіль", "+" + view.potionBonus + "%", memberBuffsActive && view.potionBonus > 0, 0xFFB58CFF, "Працює через серверне продовження тривалості ефектів, а не через клієнтський розрахунок.");
-        addActiveBuff(lines, "Шкода зброєю", "+" + view.damageBonus + "%", memberBuffsActive && view.damageBonus > 0, 0xFFFFB347, "Працює тільки на справжню зброю: sword/axe/mace/trident/bow/crossbow і підтримані modded weapon suffixes.");
-        addActiveBuff(lines, "Броня", "+" + view.armorBonus + "%", memberBuffsActive && view.armorBonus > 0, 0xFF6BA8FF, "Працює тільки для реально вдягненої броні в armor slot.");
-        addActiveBuff(lines, "Швидкість руху", "+" + view.speedBonus + "%", memberBuffsActive && view.speedBonus > 0, 0xFF9AFFB4, "Дається тільки талантами гілки учасників.");
-        addActiveBuff(lines, "Стрибок", "+" + view.jumpBonus, memberBuffsActive && !"0".equals(view.jumpBonus), 0xFFB7A7FF, "Легкий бонус до сили стрибка, не політ.");
-        addActiveBuff(lines, "Стійкість проти hostile mobs", "-" + view.damageReductionBonus + "% отриманої шкоди", memberBuffsActive && view.damageReductionBonus > 0, 0xFFFFD38A, "Не застосовується до PvP, якщо PvP-логіка не готова.");
-        addActiveBuff(lines, "Нічне бачення", "безкінечний ефект", memberBuffsActive && view.nightVision, 0xFF86FFB7, "Окремий гільдійний marker effect + vanilla Night Vision.");
-        addActiveBuff(lines, "Подих глибин", "безкінечний ефект", memberBuffsActive && view.waterBreathing, 0xFF5FD7FF, "Окремий гільдійний marker effect + vanilla Water Breathing.");
-        addActiveBuff(lines, "Вогняний захист", "безкінечний ефект", memberBuffsActive && view.fireResistance, 0xFFFF8A3D, "Окремий гільдійний marker effect + vanilla Fire Resistance.");
-        addActiveBuff(lines, "Досвід гільдії з мобів", "+" + view.mobKillGuildXpBonus + "%", view.mobKillGuildXpBonus > 0, 0xFFFFD66B, "Рівневий бонус до досвіду гільдії з убивств мобів.");
+        addActiveBuff(lines, HomeCraftGuildI18n.t("buff.homecraftguild.player_xp"), "+" + view.xpBonus + "%", memberBuffsActive && view.xpBonus > 0, 0xFF7BD7FF, HomeCraftGuildI18n.t("tooltip.homecraftguild.buff.player_xp"));
+        addActiveBuff(lines, HomeCraftGuildI18n.t("buff.homecraftguild.potion_duration"), "+" + view.potionBonus + "%", memberBuffsActive && view.potionBonus > 0, 0xFFB58CFF, HomeCraftGuildI18n.t("tooltip.homecraftguild.buff.potion_duration"));
+        addActiveBuff(lines, HomeCraftGuildI18n.t("buff.homecraftguild.weapon_damage"), "+" + view.damageBonus + "%", memberBuffsActive && view.damageBonus > 0, 0xFFFFB347, HomeCraftGuildI18n.t("tooltip.homecraftguild.buff.weapon_damage"));
+        addActiveBuff(lines, HomeCraftGuildI18n.t("buff.homecraftguild.armor"), "+" + view.armorBonus + "%", memberBuffsActive && view.armorBonus > 0, 0xFF6BA8FF, HomeCraftGuildI18n.t("tooltip.homecraftguild.buff.armor"));
+        addActiveBuff(lines, HomeCraftGuildI18n.t("buff.homecraftguild.movement_speed"), "+" + view.speedBonus + "%", memberBuffsActive && view.speedBonus > 0, 0xFF9AFFB4, HomeCraftGuildI18n.t("tooltip.homecraftguild.buff.movement_speed"));
+        addActiveBuff(lines, HomeCraftGuildI18n.t("buff.homecraftguild.jump"), "+" + view.jumpBonus, memberBuffsActive && !"0".equals(view.jumpBonus), 0xFFB7A7FF, HomeCraftGuildI18n.t("tooltip.homecraftguild.buff.jump"));
+        addActiveBuff(lines, HomeCraftGuildI18n.t("buff.homecraftguild.hostile_resilience"), HomeCraftGuildI18n.t("screen.homecraftguild.roster.reduced_damage", view.damageReductionBonus), memberBuffsActive && view.damageReductionBonus > 0, 0xFFFFD38A, HomeCraftGuildI18n.t("tooltip.homecraftguild.buff.hostile_resilience"));
+        addActiveBuff(lines, HomeCraftGuildI18n.t("buff.homecraftguild.night_vision"), HomeCraftGuildI18n.t("screen.homecraftguild.roster.infinite_effect"), memberBuffsActive && view.nightVision, 0xFF86FFB7, HomeCraftGuildI18n.t("tooltip.homecraftguild.buff.night_vision"));
+        addActiveBuff(lines, HomeCraftGuildI18n.t("buff.homecraftguild.water_breathing"), HomeCraftGuildI18n.t("screen.homecraftguild.roster.infinite_effect"), memberBuffsActive && view.waterBreathing, 0xFF5FD7FF, HomeCraftGuildI18n.t("tooltip.homecraftguild.buff.water_breathing"));
+        addActiveBuff(lines, HomeCraftGuildI18n.t("buff.homecraftguild.fire_resistance"), HomeCraftGuildI18n.t("screen.homecraftguild.roster.infinite_effect"), memberBuffsActive && view.fireResistance, 0xFFFF8A3D, HomeCraftGuildI18n.t("tooltip.homecraftguild.buff.fire_resistance"));
+        addActiveBuff(lines, HomeCraftGuildI18n.t("buff.homecraftguild.mob_guild_xp"), "+" + view.mobKillGuildXpBonus + "%", view.mobKillGuildXpBonus > 0, 0xFFFFD66B, HomeCraftGuildI18n.t("tooltip.homecraftguild.buff.mob_guild_xp"));
 
         lines.add(new LineEntry("", 0xFFFFFFFF, ""));
-        lines.add(new LineEntry("Активні бафи големів", 0xFFFFD99A, "Показані тільки talent-based бонуси големів. Статичні 4x/6x HP і 1.5x/1.75x damage лишаються базою гільдійних големів."));
-        addActiveBuff(lines, "Max HP големів", "+" + view.golemTalentHealth + "%", view.golemTalentHealth > 0, 0xFF9AFFB4, "Додається поверх статичних гільдійних множників, не поверх vanilla 100 HP.");
-        addActiveBuff(lines, "Шкода големів", "+" + view.golemTalentDamage + "%", view.golemTalentDamage > 0, 0xFFFFB347, "Додається поверх staticDamageMultiplier звичайного/елітного голема.");
-        addActiveBuff(lines, "Швидкість големів", "+" + view.golemTalentSpeed + "%", view.golemTalentSpeed > 0, 0xFFBEE7FF, "Додається як talent speed modifier для гільдійних големів.");
-        addActiveBuff(lines, "Лікування біля тотема", "+" + view.golemTalentHealing + "%", view.golemTalentHealing > 0, 0xFF86FFB7, "Підсилює швидкість лікування біля тотема.");
-        addActiveBuff(lines, "Позабойова регенерація", "1 HP кожні " + view.golemOocRegenSeconds + " сек.", view.golemOocRegenSeconds > 0, 0xFF86FFB7, "Працює тільки поза боєм, на території гільдії, зі stagger по UUID.");
-        addActiveBuff(lines, "Безпечні маршрути", "+" + view.golemRouteEfficiency + "%", view.golemRouteEfficiency > 0, 0xFFB7A7FF, "Зменшує fallback cooldown і підвищує шанс safe detour без глобальних scan-сплесків.");
-        addActiveBuff(lines, "Перехоплення загрози", "активно", view.golemInterceptTalent, 0xFFFFD38A, "Големи швидше кидають patrol task і реагують на напад біля учасників.");
-        addActiveBuff(lines, "Нічна варта", "активно", view.golemNightWatchTalent, 0xFFBEE7FF, "Покращує нічне патрулювання поруч з учасниками.");
-        addActiveBuff(lines, "Командирська ланка", "активно", view.golemEliteCommandTalent, 0xFFFFD99A, "Елітний голем краще координує route reservation і розподіл точок.");
-        addActiveBuff(lines, "Нищівна сила", "+" + view.golemCrushingForce + "% проти hostile mobs", view.golemCrushingForce > 0, 0xFFFF7777, "Не застосовується до friendly players і учасників гільдії.");
+        lines.add(new LineEntry(HomeCraftGuildI18n.t("screen.homecraftguild.roster.golem_buffs_title"), 0xFFFFD99A, HomeCraftGuildI18n.t("tooltip.homecraftguild.golem_buffs")));
+        addActiveBuff(lines, HomeCraftGuildI18n.t("buff.homecraftguild.golem_max_hp"), "+" + view.golemTalentHealth + "%", view.golemTalentHealth > 0, 0xFF9AFFB4, HomeCraftGuildI18n.t("tooltip.homecraftguild.buff.golem_max_hp"));
+        addActiveBuff(lines, HomeCraftGuildI18n.t("buff.homecraftguild.golem_damage"), "+" + view.golemTalentDamage + "%", view.golemTalentDamage > 0, 0xFFFFB347, HomeCraftGuildI18n.t("tooltip.homecraftguild.buff.golem_damage"));
+        addActiveBuff(lines, HomeCraftGuildI18n.t("buff.homecraftguild.golem_speed"), "+" + view.golemTalentSpeed + "%", view.golemTalentSpeed > 0, 0xFFBEE7FF, HomeCraftGuildI18n.t("tooltip.homecraftguild.buff.golem_speed"));
+        addActiveBuff(lines, HomeCraftGuildI18n.t("buff.homecraftguild.golem_totem_healing"), "+" + view.golemTalentHealing + "%", view.golemTalentHealing > 0, 0xFF86FFB7, HomeCraftGuildI18n.t("tooltip.homecraftguild.buff.golem_totem_healing"));
+        addActiveBuff(lines, HomeCraftGuildI18n.t("buff.homecraftguild.golem_ooc_regen"), HomeCraftGuildI18n.t("screen.homecraftguild.roster.golem_ooc_regen_value", view.golemOocRegenSeconds), view.golemOocRegenSeconds > 0, 0xFF86FFB7, HomeCraftGuildI18n.t("tooltip.homecraftguild.buff.golem_ooc_regen"));
+        addActiveBuff(lines, HomeCraftGuildI18n.t("buff.homecraftguild.safe_routes"), "+" + view.golemRouteEfficiency + "%", view.golemRouteEfficiency > 0, 0xFFB7A7FF, HomeCraftGuildI18n.t("tooltip.homecraftguild.buff.safe_routes"));
+        addActiveBuff(lines, HomeCraftGuildI18n.t("buff.homecraftguild.threat_intercept"), HomeCraftGuildI18n.t("screen.homecraftguild.roster.active"), view.golemInterceptTalent, 0xFFFFD38A, HomeCraftGuildI18n.t("tooltip.homecraftguild.buff.threat_intercept"));
+        addActiveBuff(lines, HomeCraftGuildI18n.t("buff.homecraftguild.night_watch"), HomeCraftGuildI18n.t("screen.homecraftguild.roster.active"), view.golemNightWatchTalent, 0xFFBEE7FF, HomeCraftGuildI18n.t("tooltip.homecraftguild.buff.night_watch"));
+        addActiveBuff(lines, HomeCraftGuildI18n.t("buff.homecraftguild.elite_command"), HomeCraftGuildI18n.t("screen.homecraftguild.roster.active"), view.golemEliteCommandTalent, 0xFFFFD99A, HomeCraftGuildI18n.t("tooltip.homecraftguild.buff.elite_command"));
+        addActiveBuff(lines, HomeCraftGuildI18n.t("buff.homecraftguild.crushing_force"), HomeCraftGuildI18n.t("screen.homecraftguild.roster.crushing_force_value", view.golemCrushingForce), view.golemCrushingForce > 0, 0xFFFF7777, HomeCraftGuildI18n.t("tooltip.homecraftguild.buff.crushing_force"));
 
         boolean onlyDefaults = lines.size() <= 4;
-        if (onlyDefaults) lines.add(new LineEntry("Поки немає активних талантових бафів. Базові бонуси вже показані вище.", 0xFF9AA4B2, "Відкрий дерево талантів і вибери напрям розвитку."));
+        if (onlyDefaults) lines.add(new LineEntry(HomeCraftGuildI18n.t("screen.homecraftguild.roster.no_talent_buffs"), 0xFF9AA4B2, HomeCraftGuildI18n.t("tooltip.homecraftguild.no_talent_buffs")));
         return lines;
     }
 
@@ -726,7 +739,7 @@ public final class GuildRosterScreen extends Screen {
     }
 
     private void renderTerritories(GuiGraphics graphics, int x, int y, int w, int bottom) {
-        drawSection(graphics, x, y, w, Math.max(44, bottom - y), "Території " + view.territories.size() + "/" + view.territoryLimit);
+        drawSection(graphics, x, y, w, Math.max(44, bottom - y), HomeCraftGuildI18n.t("screen.homecraftguild.roster.territories_section", view.territories.size(), view.territoryLimit));
         int innerX = x + 8;
         int innerY = y + 8;
         int innerH = Math.max(18, bottom - y - 14);
@@ -735,7 +748,7 @@ public final class GuildRosterScreen extends Screen {
         territoriesArea.set(innerX, innerY, w - 16, innerH, visibleRows);
 
         if (view.territories.isEmpty()) {
-            graphics.drawString(this.font, "Гільдійних територій немає", innerX, innerY + 4, 0xFF9AA4B2, false);
+            graphics.drawString(this.font, HomeCraftGuildI18n.t("screen.homecraftguild.roster.no_territories"), innerX, innerY + 4, 0xFF9AA4B2, false);
             return;
         }
 
@@ -745,15 +758,15 @@ public final class GuildRosterScreen extends Screen {
             int i = territoriesScroll + visibleIndex;
             if (i >= view.territories.size()) break;
             TerritoryRow t = view.territories.get(i);
-            graphics.drawString(this.font, trim("#" + (i + 1) + " " + t.dimension + " · центр " + t.x + ", " + t.y + ", " + t.z, Math.max(12, (w - 16) / 6)), innerX, rowY, 0xFFD8DEE9, false);
-            graphics.drawString(this.font, trim("межі X " + t.minX + ".." + t.maxX + " · Z " + t.minZ + ".." + t.maxZ + " · " + t.size + "x" + t.size + (t.spawnClipped ? " · біля спавну" : ""), Math.max(12, (w - 16) / 6)), innerX, rowY + 11, 0xFF9AA4B2, false);
+            graphics.drawString(this.font, trim(HomeCraftGuildI18n.t("screen.homecraftguild.roster.territory_center", i + 1, friendlyDimension(t.dimension), t.x, t.y, t.z), Math.max(12, (w - 16) / 6)), innerX, rowY, 0xFFD8DEE9, false);
+            graphics.drawString(this.font, trim(HomeCraftGuildI18n.t("screen.homecraftguild.roster.territory_bounds", t.minX, t.maxX, t.minZ, t.maxZ, t.size, t.spawnClipped ? HomeCraftGuildI18n.t("screen.homecraftguild.roster.near_spawn") : ""), Math.max(12, (w - 16) / 6)), innerX, rowY + 11, 0xFF9AA4B2, false);
             rowY += rowH;
         }
-        if (view.territories.size() > visibleRows) graphics.drawString(this.font, "Показано: " + (territoriesScroll + 1) + "-" + Math.min(view.territories.size(), territoriesScroll + visibleRows) + " з " + view.territories.size(), x + 8, bottom - 11, 0xFF9AA4B2, false);
+        if (view.territories.size() > visibleRows) graphics.drawString(this.font, HomeCraftGuildI18n.shownRange(territoriesScroll + 1, Math.min(view.territories.size(), territoriesScroll + visibleRows), view.territories.size()), x + 8, bottom - 11, 0xFF9AA4B2, false);
     }
 
     private void renderGolems(GuiGraphics graphics, int mouseX, int mouseY, int x, int y, int w, int bottom) {
-        drawSection(graphics, x, y, w, Math.max(44, bottom - y), "Големи " + view.golems.size() + "/" + view.maxGolems + " · звичайні " + view.maxOrdinaryGolems + " · елітні " + view.maxEliteGolems);
+        drawSection(graphics, x, y, w, Math.max(44, bottom - y), HomeCraftGuildI18n.t("screen.homecraftguild.roster.golems_section", view.golems.size(), view.maxGolems, view.maxOrdinaryGolems, view.maxEliteGolems));
         golemActions.clear();
         int innerX = x + 8;
         int innerY = y + 8;
@@ -763,7 +776,7 @@ public final class GuildRosterScreen extends Screen {
         golemsArea.set(innerX, innerY, w - 16, innerH, visibleRows);
 
         if (view.golems.isEmpty()) {
-            graphics.drawString(this.font, "Найнятих големів немає", innerX, innerY + 4, 0xFF9AA4B2, false);
+            graphics.drawString(this.font, HomeCraftGuildI18n.t("screen.homecraftguild.roster.no_golems"), innerX, innerY + 4, 0xFF9AA4B2, false);
             return;
         }
 
@@ -776,38 +789,38 @@ public final class GuildRosterScreen extends Screen {
             boolean canManage = !view.readOnly && view.isGuildmaster;
             int actionsW = canManage ? (golem.dead ? 160 : 96) : 0;
             int textMax = Math.max(10, (w - actionsW - 20) / 6);
-            String label = golem.name + " · " + (golem.elite ? "елітний захисник" : "звичайний захисник");
+            String label = HomeCraftGuildI18n.t(golem.elite ? "screen.homecraftguild.roster.golem_elite_label" : "screen.homecraftguild.roster.golem_normal_label", golem.name);
             int nameColor = golem.dead ? 0xFFFF7777 : (golem.elite ? 0xFFFFD99A : 0xFFD8DEE9);
             graphics.drawString(this.font, trim(label, textMax), innerX, rowY, nameColor, false);
-            String health = golem.hpText == null || golem.hpText.isBlank() ? "Здоров’я ?" : "Здоров’я " + golem.hpText;
-            graphics.drawString(this.font, trim(health + " · " + golem.status, textMax), innerX, rowY + 12, golem.dead ? 0xFFFF9A9A : 0xFF9AA4B2, false);
-            graphics.drawString(this.font, trim("Місце: " + golem.x + ", " + golem.y + ", " + golem.z, textMax), innerX, rowY + 23, 0xFF7D8796, false);
+            String health = golem.hpText == null || golem.hpText.isBlank() ? HomeCraftGuildI18n.t("screen.homecraftguild.roster.health_unknown") : HomeCraftGuildI18n.t("screen.homecraftguild.roster.health", golem.hpText);
+            graphics.drawString(this.font, trim(health + " · " + friendlyGolemStatus(golem.status, golem.dead, golem.elite), textMax), innerX, rowY + 12, golem.dead ? 0xFFFF9A9A : 0xFF9AA4B2, false);
+            graphics.drawString(this.font, trim(HomeCraftGuildI18n.t("screen.homecraftguild.roster.location", golem.x, golem.y, golem.z), textMax), innerX, rowY + 23, 0xFF7D8796, false);
             if (canManage) {
                 int bx = x + w - actionsW - 8;
                 int by = rowY + 8;
                 if (golem.dead) {
-                    drawGolemActionButton(graphics, mouseX, mouseY, bx, by, 96, 18, "Відродити");
-                    tooltipAreas.add(new TooltipArea(bx, by, 96, 18, java.util.List.of("Відродити голема", "Голем повернеться біля безпечного тотема.")));
+                    drawGolemActionButton(graphics, mouseX, mouseY, bx, by, 96, 18, HomeCraftGuildI18n.t("button.homecraftguild.revive"));
+                    tooltipAreas.add(new TooltipArea(bx, by, 96, 18, java.util.List.of(HomeCraftGuildI18n.t("tooltip.homecraftguild.revive_golem.title"), HomeCraftGuildI18n.t("tooltip.homecraftguild.revive_golem.description"))));
                     addGolemAction(golem.uuid, "revive_golem", bx, by, 96, 18);
 
                     int dx = bx + 104;
                     drawGolemDeleteButton(graphics, mouseX, mouseY, dx, by, 54, 18);
-                    tooltipAreas.add(new TooltipArea(dx, by, 54, 18, java.util.List.of("Видалити голема", "Повністю прибирає його зі списку гільдії і чистить runtime-стан.")));
+                    tooltipAreas.add(new TooltipArea(dx, by, 54, 18, java.util.List.of(HomeCraftGuildI18n.t("tooltip.homecraftguild.delete_golem.title"), HomeCraftGuildI18n.t("tooltip.homecraftguild.delete_golem.description"))));
                     addGolemAction(golem.uuid, "delete_golem", dx, by, 54, 18);
                 } else {
-                    drawGolemActionButton(graphics, mouseX, mouseY, bx, by, 32, 18, "До");
-                    tooltipAreas.add(new TooltipArea(bx, by, 32, 18, java.util.List.of("До тотема", "Повертає голема біля найближчого тотема гільдії.")));
+                    drawGolemActionButton(graphics, mouseX, mouseY, bx, by, 32, 18, HomeCraftGuildI18n.t("button.homecraftguild.to_short"));
+                    tooltipAreas.add(new TooltipArea(bx, by, 32, 18, java.util.List.of(HomeCraftGuildI18n.t("tooltip.homecraftguild.to_totem.title"), HomeCraftGuildI18n.t("tooltip.homecraftguild.to_totem.description"))));
                     addGolemAction(golem.uuid, "teleport_golem_totem", bx, by, 32, 18);
 
                     int dx = bx + 38;
                     drawGolemDeleteButton(graphics, mouseX, mouseY, dx, by, 54, 18);
-                    tooltipAreas.add(new TooltipArea(dx, by, 54, 18, java.util.List.of("Видалити голема", "Повністю прибирає його зі списку гільдії і чистить runtime-стан.")));
+                    tooltipAreas.add(new TooltipArea(dx, by, 54, 18, java.util.List.of(HomeCraftGuildI18n.t("tooltip.homecraftguild.delete_golem.title"), HomeCraftGuildI18n.t("tooltip.homecraftguild.delete_golem.description"))));
                     addGolemAction(golem.uuid, "delete_golem", dx, by, 54, 18);
                 }
             }
             rowY += rowH;
         }
-        if (view.golems.size() > visibleRows) graphics.drawString(this.font, "Показано: " + (golemsScroll + 1) + "-" + Math.min(view.golems.size(), golemsScroll + visibleRows) + " з " + view.golems.size(), x + 8, bottom - 11, 0xFF9AA4B2, false);
+        if (view.golems.size() > visibleRows) graphics.drawString(this.font, HomeCraftGuildI18n.shownRange(golemsScroll + 1, Math.min(view.golems.size(), golemsScroll + visibleRows), view.golems.size()), x + 8, bottom - 11, 0xFF9AA4B2, false);
     }
 
     private void drawGolemActionButton(GuiGraphics graphics, int mouseX, int mouseY, int x, int y, int w, int h, String label) {
@@ -819,7 +832,7 @@ public final class GuildRosterScreen extends Screen {
     private void drawGolemDeleteButton(GuiGraphics graphics, int mouseX, int mouseY, int x, int y, int w, int h) {
         boolean hover = inside(mouseX, mouseY, x, y, w, h);
         graphics.fill(x, y, x + w, y + h, hover ? 0xFF7A2B2B : 0xFF542222);
-        graphics.drawCenteredString(this.font, "Видал.", x + w / 2, y + 5, 0xFFFFD8D8);
+        graphics.drawCenteredString(this.font, HomeCraftGuildI18n.t("button.homecraftguild.delete_short"), x + w / 2, y + 5, 0xFFFFD8D8);
     }
 
     private void addGolemAction(String uuid, String actionName, int x, int y, int w, int h) {
@@ -848,7 +861,7 @@ public final class GuildRosterScreen extends Screen {
         if (contextActions.isEmpty() || contextMember == null) return;
         graphics.fill(contextX, contextY, contextX + contextW, contextY + contextH, 0xF0181B22);
         graphics.fill(contextX, contextY, contextX + contextW, contextY + 2, 0xFFFFA914);
-        graphics.drawString(this.font, "Роль: " + trim(contextMember.name, 16), contextX + 7, contextY + 8, 0xFFFFF3DC, false);
+        graphics.drawString(this.font, HomeCraftGuildI18n.t("screen.homecraftguild.roster.role_menu", trim(contextMember.name, 16)), contextX + 7, contextY + 8, 0xFFFFF3DC, false);
         for (ContextAction action : contextActions) {
             boolean hover = inside(mouseX, mouseY, action.x, action.y, action.w, action.h);
             int bg = action.active ? 0xFF6C5414 : (hover ? 0xFF4E5661 : 0xFF313842);
@@ -866,7 +879,7 @@ public final class GuildRosterScreen extends Screen {
         graphics.fill(0, 0, this.width, this.height, 0xAA000000);
         graphics.fill(x, y, x + w, y + h, 0xF0151920);
         graphics.fill(x, y, x + w, y + 3, 0xFFFFA914);
-        graphics.drawString(this.font, "Інформація про гільдію", x + 12, y + 10, 0xFFFFF3DC, false);
+        graphics.drawString(this.font, HomeCraftGuildI18n.t("screen.homecraftguild.help.title"), x + 12, y + 10, 0xFFFFF3DC, false);
 
         helpCloseW = 20;
         helpCloseH = 18;
@@ -891,7 +904,7 @@ public final class GuildRosterScreen extends Screen {
             drawY += 12;
         }
         if (wrappedHelpLines.size() > visibleLines) {
-            graphics.drawString(this.font, "Показано: " + (helpScroll + 1) + "-" + Math.min(wrappedHelpLines.size(), helpScroll + visibleLines) + " з " + wrappedHelpLines.size(), x + 12, y + h - 12, 0xFF9AA4B2, false);
+            graphics.drawString(this.font, HomeCraftGuildI18n.shownRange(helpScroll + 1, Math.min(wrappedHelpLines.size(), helpScroll + visibleLines), wrappedHelpLines.size()), x + 12, y + h - 12, 0xFF9AA4B2, false);
         }
     }
 
@@ -1090,10 +1103,10 @@ public final class GuildRosterScreen extends Screen {
         graphics.fill(0, 0, this.width, this.height, 0x88000000);
         graphics.fill(confirmBoxX, confirmBoxY, confirmBoxX + confirmBoxW, confirmBoxY + confirmBoxH, 0xF0151920);
         graphics.fill(confirmBoxX, confirmBoxY, confirmBoxX + confirmBoxW, confirmBoxY + 3, 0xFFB84D4D);
-        graphics.drawCenteredString(this.font, "Підтвердження виключення", confirmBoxX + confirmBoxW / 2, confirmBoxY + 10, 0xFFFFF3DC);
-        graphics.drawCenteredString(this.font, "Виключити гравця " + trim(kickConfirmMember.name, 20) + " з гільдії?", confirmBoxX + confirmBoxW / 2, confirmBoxY + 34, 0xFFD8DEE9);
-        drawMiniButton(graphics, mouseX, mouseY, confirmYesX, confirmYesY, confirmYesW, confirmYesH, "Так, виключити");
-        drawMiniButton(graphics, mouseX, mouseY, confirmNoX, confirmNoY, confirmNoW, confirmNoH, "Скасувати");
+        graphics.drawCenteredString(this.font, HomeCraftGuildI18n.t("screen.homecraftguild.kick_confirm.title"), confirmBoxX + confirmBoxW / 2, confirmBoxY + 10, 0xFFFFF3DC);
+        graphics.drawCenteredString(this.font, HomeCraftGuildI18n.t("screen.homecraftguild.kick_confirm.question", trim(kickConfirmMember.name, 20)), confirmBoxX + confirmBoxW / 2, confirmBoxY + 34, 0xFFD8DEE9);
+        drawMiniButton(graphics, mouseX, mouseY, confirmYesX, confirmYesY, confirmYesW, confirmYesH, HomeCraftGuildI18n.t("button.homecraftguild.kick_yes"));
+        drawMiniButton(graphics, mouseX, mouseY, confirmNoX, confirmNoY, confirmNoW, confirmNoH, HomeCraftGuildI18n.t("button.homecraftguild.cancel"));
     }
 
     private void renderHoveredTooltip(GuiGraphics graphics, int mouseX, int mouseY) {
@@ -1142,49 +1155,73 @@ public final class GuildRosterScreen extends Screen {
 
     private List<String> buildHelpLines() {
         List<String> lines = new ArrayList<>();
-        lines.add("Що таке гільдія:");
-        lines.add("• Гільдія — це команда з власною територією, ролями, ліжками, розвитком і захисниками.");
-        lines.add("• Основна ціль гільдії — створити безпечну базу, розвивати рівень, відкривати більші ліміти територій і купувати охоронців.");
-        lines.add("• Гілдмайстер керує ролями, запрошеннями, територіями й покупкою големів. Будівельник допомагає з базою та ліжками.");
+        lines.add(HomeCraftGuildI18n.t("help.homecraftguild.guild.what_title"));
+        lines.add(HomeCraftGuildI18n.t("help.homecraftguild.guild.what_1"));
+        lines.add(HomeCraftGuildI18n.t("help.homecraftguild.guild.what_2"));
+        lines.add(HomeCraftGuildI18n.t("help.homecraftguild.guild.what_3"));
         lines.add("");
-        lines.add("Гільдійний тотем:");
-        lines.add("• Тотем створює захищену територію. Кілька суміжних тотемів однієї гільдії працюють як один простір.");
-        lines.add("• Рецепт тотема: ABA / BEB / ABA. A — уламок аметисту, B — будь-який банер, E — смарагд.");
-        lines.add("• Поставити тотем може Гілдмайстер. Він не ставиться на spawn, у чужій території, при перетині або якщо ліміт територій вичерпано.");
+        lines.add(HomeCraftGuildI18n.t("help.homecraftguild.guild.totem_title"));
+        lines.add(HomeCraftGuildI18n.t("help.homecraftguild.guild.totem_1"));
+        lines.add(HomeCraftGuildI18n.t("help.homecraftguild.guild.totem_2"));
+        lines.add(HomeCraftGuildI18n.t("help.homecraftguild.guild.totem_3"));
         lines.add("");
-        lines.add("Ліжка гільдії:");
-        lines.add("• Учасник має одне активне закріплене ліжко. Якщо вибрати нове — старе стане вільним.");
-        lines.add("• Чуже закріплене ліжко не можна перезаписати або зробити своїм spawn.");
-        lines.add("• Гілдмайстер і Будівельник можуть ставити багато вільних ліжок для учасників.");
+        lines.add(HomeCraftGuildI18n.t("help.homecraftguild.guild.beds_title"));
+        lines.add(HomeCraftGuildI18n.t("help.homecraftguild.guild.beds_1"));
+        lines.add(HomeCraftGuildI18n.t("help.homecraftguild.guild.beds_2"));
+        lines.add(HomeCraftGuildI18n.t("help.homecraftguild.guild.beds_3"));
         lines.add("");
-        lines.add("Големи і ціни:");
-        lines.add("• Звичайні големи: рівні 1-2 — 1 голем, 3-4 — 2, 5-6 — 3, 7 — 4.");
-        lines.add("• Ціни звичайних големів: 1-й — 1 смарагд, 2-й — 3, 3-й — 10, 4-й — 20.");
-        lines.add("• Елітний голем відкривається з 5 рівня. Ліміт — 1 елітний голем на гільдію.");
-        lines.add("• Ціна елітного голема: 50 смарагдів на 5 рівні, 60 на 6 рівні, 70 на 7 рівні.");
+        lines.add(HomeCraftGuildI18n.t("help.homecraftguild.guild.golems_title"));
+        lines.add(HomeCraftGuildI18n.t("help.homecraftguild.guild.golems_1"));
+        lines.add(HomeCraftGuildI18n.t("help.homecraftguild.guild.golems_2"));
+        lines.add(HomeCraftGuildI18n.t("help.homecraftguild.guild.golems_3"));
+        lines.add(HomeCraftGuildI18n.t("help.homecraftguild.guild.golems_4"));
         lines.add("");
-        lines.add("Стати големів:");
-        lines.add("• Звичайний голем має статично зашиті +300% до максимального HP від бази та +50% до урону.");
-        lines.add("• Елітний голем має статично зашиті +500% до максимального HP від бази та +75% до урону.");
-        lines.add("• Удень, якщо HP нижче 50% від власного гільдійного максимуму, лікування має найвищий пріоритет.");
-        lines.add("• Голем лікується до 100% і не має скидатися до vanilla HP після рестарту або переспавну.");
-        lines.add("• Уночі големи тримаються ближче до учасників на поверхні, але не йдуть у шахти за підземними цілями.");
+        lines.add(HomeCraftGuildI18n.t("help.homecraftguild.guild.golem_stats_title"));
+        lines.add(HomeCraftGuildI18n.t("help.homecraftguild.guild.golem_stats_1"));
+        lines.add(HomeCraftGuildI18n.t("help.homecraftguild.guild.golem_stats_2"));
+        lines.add(HomeCraftGuildI18n.t("help.homecraftguild.guild.golem_stats_3"));
+        lines.add(HomeCraftGuildI18n.t("help.homecraftguild.guild.golem_stats_4"));
+        lines.add(HomeCraftGuildI18n.t("help.homecraftguild.guild.golem_stats_5"));
         lines.add("");
-        lines.add("Коротко про бонуси:");
-        lines.add("• Гільдія дає базово +5% досвіду та +10% тривалості корисних зіль; сильніші бонуси відкриваються талантами.");
-        lines.add("• Броня отримує бонус тільки коли вона реально вдягнена.");
-        lines.add("• Зброя отримує бонус для мечів, сокир, булави, тризуба, луків і арбалетів. Кирки, сапки, лопати, блоки й матеріали бонус зброї не отримують.");
+        lines.add(HomeCraftGuildI18n.t("help.homecraftguild.guild.bonuses_title"));
+        lines.add(HomeCraftGuildI18n.t("help.homecraftguild.guild.bonuses_1"));
+        lines.add(HomeCraftGuildI18n.t("help.homecraftguild.guild.bonuses_2"));
+        lines.add(HomeCraftGuildI18n.t("help.homecraftguild.guild.bonuses_3"));
         return lines;
     }
 
-    private String roleTooltip(String role) {
-        String normalized = role == null ? "" : role.trim().toUpperCase(Locale.ROOT);
+    private String localizedRoleLabel(String roleOrLabel) {
+        String normalized = normalizeRole(roleOrLabel);
         return switch (normalized) {
-            case "GUILDMASTER" -> "Гілдмайстер: повний контроль над гільдією, ролями, големами, запрошеннями та територіями.";
-            case "BUILDER" -> "Будівельник: може будувати на гільдійній території, але не керує ролями чи фермою.";
-            case "QUARTERMASTER" -> "Завгосп: має доступ до управління сховищем та внутрішньої логістики гільдії.";
-            case "FARMER" -> "Фермер: разом із Гілдмайстром може садити, збирати та керувати фермою на гільдійній території.";
-            default -> "Воїн: базовий учасник гільдії без додаткових прав керування.";
+            case "GUILDMASTER" -> HomeCraftGuildI18n.t("role.homecraftguild.guildmaster");
+            case "BUILDER" -> HomeCraftGuildI18n.t("role.homecraftguild.builder");
+            case "QUARTERMASTER" -> HomeCraftGuildI18n.t("role.homecraftguild.quartermaster");
+            case "FARMER" -> HomeCraftGuildI18n.t("role.homecraftguild.farmer");
+            case "WARRIOR" -> HomeCraftGuildI18n.t("role.homecraftguild.warrior");
+            default -> roleOrLabel == null || roleOrLabel.isBlank() ? HomeCraftGuildI18n.t("screen.homecraftguild.common.none") : roleOrLabel;
+        };
+    }
+
+    private String normalizeRole(String roleOrLabel) {
+        String value = roleOrLabel == null ? "" : roleOrLabel.trim().toUpperCase(Locale.ROOT);
+        return switch (value) {
+            case "ГІЛДМАЙСТЕР", "GUILD MASTER", "GUILDMASTER", "MASTER" -> "GUILDMASTER";
+            case "БУДІВЕЛЬНИК", "BUILDER" -> "BUILDER";
+            case "ЗАВГОСП", "QUARTERMASTER" -> "QUARTERMASTER";
+            case "ФЕРМЕР", "FARMER" -> "FARMER";
+            case "ВОЇН", "УЧАСНИК", "MEMBER", "WARRIOR" -> "WARRIOR";
+            default -> value;
+        };
+    }
+
+    private String roleTooltip(String role) {
+        String normalized = normalizeRole(role);
+        return switch (normalized) {
+            case "GUILDMASTER" -> HomeCraftGuildI18n.t("tooltip.homecraftguild.role.guildmaster");
+            case "BUILDER" -> HomeCraftGuildI18n.t("tooltip.homecraftguild.role.builder");
+            case "QUARTERMASTER" -> HomeCraftGuildI18n.t("tooltip.homecraftguild.role.quartermaster");
+            case "FARMER" -> HomeCraftGuildI18n.t("tooltip.homecraftguild.role.farmer");
+            default -> HomeCraftGuildI18n.t("tooltip.homecraftguild.role.warrior");
         };
     }
 
@@ -1218,8 +1255,8 @@ public final class GuildRosterScreen extends Screen {
 
     private static final class GuildView {
         String mode = "INVITES";
-        String guildName = "немає";
-        String roleLabel = "немає";
+        String guildName = "";
+        String roleLabel = "";
         boolean isGuildmaster;
         boolean readOnly;
         int memberLimit = 20;
@@ -1343,7 +1380,7 @@ public final class GuildRosterScreen extends Screen {
             row.bedCoords = part(p, 6);
             row.bedStatus = part(p, 7);
             if (row.bedCoords == null || row.bedCoords.isBlank()) row.bedCoords = "—";
-            if (row.bedStatus == null || row.bedStatus.isBlank()) row.bedStatus = row.bedCoords.equals("—") ? "немає" : "закріплено";
+            if (row.bedStatus == null || row.bedStatus.isBlank()) row.bedStatus = row.bedCoords.equals("—") ? "none" : "bound";
             return row;
         }
     }
@@ -1379,9 +1416,9 @@ public final class GuildRosterScreen extends Screen {
             if (row.hp >= 0 && row.maxHp > 0) row.hpText = row.hp + "/" + row.maxHp;
             else if (row.maxHp > 0) row.hpText = "?/" + row.maxHp;
             else row.hpText = "?";
-            if (row.name == null || row.name.isBlank()) row.name = row.elite ? "РІК" : row.shortId;
+            if (row.name == null || row.name.isBlank()) row.name = row.elite ? HomeCraftGuildI18n.t("entity.homecraftguild.elite_golem") : row.shortId;
             row.x = part(p, 2); row.y = part(p, 3); row.z = part(p, 4);
-            row.status = friendlyGolemStatus(part(p, 5), row.dead, row.elite);
+            row.status = part(p, 5);
             return row;
         }
     }
@@ -1415,7 +1452,7 @@ public final class GuildRosterScreen extends Screen {
             String[] p = line.split("\\|", -1);
             TerritoryRow row = new TerritoryRow();
             row.id = part(p, 0);
-            row.dimension = friendlyDimension(part(p, 1));
+            row.dimension = part(p, 1);
             row.x = part(p, 2); row.y = part(p, 3); row.z = part(p, 4); row.size = part(p, 5);
             row.minX = part(p, 6); row.maxX = part(p, 7); row.minZ = part(p, 8); row.maxZ = part(p, 9);
             row.spawnClipped = Boolean.parseBoolean(part(p, 10));
@@ -1426,27 +1463,27 @@ public final class GuildRosterScreen extends Screen {
     private static String friendlyGolemStatus(String raw, boolean dead, boolean elite) {
         String value = raw == null ? "" : raw.trim();
         String normalized = value.toUpperCase(Locale.ROOT);
-        if (dead || normalized.contains("DEAD") || value.equalsIgnoreCase("загинув")) return "загинув";
-        if (normalized.contains("RESPAWN")) return "очікує відродження";
-        if (normalized.contains("REMOVED")) return "видалений";
-        if (normalized.contains("ORPHAN") || normalized.contains("DATA") || normalized.contains("MISSING")) return "потрібні дані";
-        if (normalized.contains("HEAL") || value.contains("ліку")) return "лікується біля тотема";
-        if (normalized.contains("RETURN")) return "повертається до території";
-        if (normalized.contains("ENGAGE") || normalized.contains("DEFEND") || normalized.contains("CHASE")) return "захищає територію";
-        if (normalized.contains("PATROL")) return "патрулює";
-        if (normalized.contains("STRATEGIC") || normalized.contains("COMMAND")) return elite ? "тримає ключову точку" : "патрулює";
-        if (normalized.contains("RECOVER")) return "відновлюється";
-        if (value.isBlank() || normalized.equals("ALIVE")) return elite ? "тримає ключову точку" : "патрулює";
+        if (dead || normalized.contains("DEAD") || value.equalsIgnoreCase("загинув")) return HomeCraftGuildI18n.t("golem_status.homecraftguild.dead");
+        if (normalized.contains("RESPAWN")) return HomeCraftGuildI18n.t("golem_status.homecraftguild.waiting_respawn");
+        if (normalized.contains("REMOVED")) return HomeCraftGuildI18n.t("golem_status.homecraftguild.removed");
+        if (normalized.contains("ORPHAN") || normalized.contains("DATA") || normalized.contains("MISSING")) return HomeCraftGuildI18n.t("golem_status.homecraftguild.needs_data");
+        if (normalized.contains("HEAL") || value.contains("ліку")) return HomeCraftGuildI18n.t("golem_status.homecraftguild.healing_totem");
+        if (normalized.contains("RETURN")) return HomeCraftGuildI18n.t("golem_status.homecraftguild.returning");
+        if (normalized.contains("ENGAGE") || normalized.contains("DEFEND") || normalized.contains("CHASE")) return HomeCraftGuildI18n.t("golem_status.homecraftguild.defending");
+        if (normalized.contains("PATROL")) return HomeCraftGuildI18n.t("golem_status.homecraftguild.patrolling");
+        if (normalized.contains("STRATEGIC") || normalized.contains("COMMAND")) return elite ? HomeCraftGuildI18n.t("golem_status.homecraftguild.holding_key_point") : HomeCraftGuildI18n.t("golem_status.homecraftguild.patrolling");
+        if (normalized.contains("RECOVER")) return HomeCraftGuildI18n.t("golem_status.homecraftguild.recovering");
+        if (value.isBlank() || normalized.equals("ALIVE")) return elite ? HomeCraftGuildI18n.t("golem_status.homecraftguild.holding_key_point") : HomeCraftGuildI18n.t("golem_status.homecraftguild.patrolling");
         return value;
     }
 
     private static String friendlyDimension(String raw) {
         String value = raw == null ? "" : raw.replace("minecraft:", "").trim().toLowerCase(Locale.ROOT);
         return switch (value) {
-            case "overworld" -> "звичайний світ";
-            case "the_nether", "nether" -> "Незер";
-            case "the_end", "end" -> "Край";
-            default -> raw == null || raw.isBlank() ? "світ" : raw.replace("minecraft:", "");
+            case "overworld" -> HomeCraftGuildI18n.t("dimension.homecraftguild.overworld");
+            case "the_nether", "nether" -> HomeCraftGuildI18n.t("dimension.homecraftguild.nether");
+            case "the_end", "end" -> HomeCraftGuildI18n.t("dimension.homecraftguild.end");
+            default -> raw == null || raw.isBlank() ? HomeCraftGuildI18n.t("dimension.homecraftguild.world") : raw.replace("minecraft:", "");
         };
     }
 

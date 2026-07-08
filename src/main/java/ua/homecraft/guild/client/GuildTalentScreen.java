@@ -20,6 +20,7 @@ public final class GuildTalentScreen extends Screen {
     private final int scrollRows;
     private final String activeBranch;
     private final List<TooltipArea> tooltipAreas = new ArrayList<>();
+    private String liveLanguageStamp = HomeCraftGuildI18n.languageStamp();
 
     public GuildTalentScreen(String snapshot) {
         this(snapshot, 0, "member");
@@ -102,6 +103,13 @@ public final class GuildTalentScreen extends Screen {
         }
     }
 
+    private void refreshLiveLanguage() {
+        String now = HomeCraftGuildI18n.languageStamp();
+        if (now.equals(liveLanguageStamp)) return;
+        liveLanguageStamp = now;
+        if (this.minecraft != null) this.minecraft.setScreen(new GuildTalentScreen(this.snapshot, this.scrollRows, this.activeBranch));
+    }
+
     private void setBranch(String branch) {
         if (this.minecraft != null) this.minecraft.setScreen(new GuildTalentScreen(this.snapshot, 0, branch));
     }
@@ -136,6 +144,7 @@ public final class GuildTalentScreen extends Screen {
 
     @Override
     public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
+        refreshLiveLanguage();
         tooltipAreas.clear();
         graphics.fill(0, 0, this.width, this.height, 0xAA05070D);
         Layout l = layout();

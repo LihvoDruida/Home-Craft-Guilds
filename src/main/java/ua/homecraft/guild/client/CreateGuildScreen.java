@@ -20,7 +20,8 @@ public final class CreateGuildScreen extends Screen {
     private final List<ColorButtonOverlay> colorButtons = new ArrayList<>();
     private EditBox nameBox;
     private String selectedColor = "magenta";
-    private final List<String> helpLines = buildHelpLines();
+    private List<String> helpLines = buildHelpLines();
+    private String liveLanguageStamp = HomeCraftGuildI18n.languageStamp();
     private boolean helpOpen;
     private int helpScroll;
     private int infoX, infoY, infoS;
@@ -95,6 +96,17 @@ public final class CreateGuildScreen extends Screen {
                 .bounds(l.x + l.pad, l.bottomY - 26, l.contentW, 22).build());
     }
 
+    private void refreshLiveLanguage() {
+        String now = HomeCraftGuildI18n.languageStamp();
+        if (now.equals(liveLanguageStamp)) return;
+        liveLanguageStamp = now;
+        String nameValue = nameBox == null ? "" : nameBox.getValue();
+        helpLines = buildHelpLines();
+        clearWidgets();
+        init();
+        if (nameBox != null && !nameValue.isBlank()) nameBox.setValue(nameValue);
+    }
+
     private Layout layout() {
         Layout l = new Layout();
         l.panelW = Math.min(560, Math.max(330, this.width - 24));
@@ -159,6 +171,7 @@ public final class CreateGuildScreen extends Screen {
 
     @Override
     public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
+        refreshLiveLanguage();
         graphics.fill(0, 0, this.width, this.height, 0xAA05070D);
         Layout l = layout();
         graphics.fill(l.x, l.y, l.x + l.panelW, l.y + l.panelH, 0xF0101119);

@@ -57,6 +57,7 @@ public final class GuildNpcAdminScreen extends Screen {
     private int previewScale = 66;
     private double lastMouseX;
     private double lastMouseY;
+    private String liveLanguageStamp = HomeCraftGuildI18n.languageStamp();
 
     private GuildRegistrarEntity previewEntity;
     private String previewEntitySkin = "";
@@ -123,6 +124,15 @@ public final class GuildNpcAdminScreen extends Screen {
         for (String skin : defaults) {
             if (!skins.contains(skin)) skins.add(skin);
         }
+    }
+
+    private void refreshLiveLanguage() {
+        String now = HomeCraftGuildI18n.languageStamp();
+        if (now.equals(liveLanguageStamp)) return;
+        liveLanguageStamp = now;
+        UiState state = captureUiState();
+        rebuildWidgets();
+        restoreUiStateWidgets(state);
     }
 
     @Override
