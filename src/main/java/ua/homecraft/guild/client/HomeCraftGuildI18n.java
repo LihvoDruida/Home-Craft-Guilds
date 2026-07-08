@@ -2,6 +2,7 @@ package ua.homecraft.guild.client;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 
 import java.util.Locale;
 
@@ -41,7 +42,7 @@ public final class HomeCraftGuildI18n {
         return t("screen.homecraftguild.common.shown_range", start, end, total);
     }
 
-    public static Component c(String key, Object... args) {
+    public static MutableComponent c(String key, Object... args) {
         return Component.translatable(key, args);
     }
 
