@@ -89,6 +89,12 @@ public final class HomeCraftGuildI18n {
         if (normalized.equals("заблоковано") || normalized.equals("locked")) normalized = "locked";
         int requiredLevel = extractRequiredLevel(raw);
         if (requiredLevel > 0) return t("talent_status.homecraftguild.required_level", requiredLevel);
+        if (normalized.equals("missing_prerequisite") || normalized.equals("потрібен_попередній_талант")) {
+            return t("talent_status.homecraftguild.missing_prerequisite");
+        }
+        if (normalized.equals("no_points") || normalized.equals("не_вистачає_очок")) {
+            return t("talent_status.homecraftguild.no_points");
+        }
         return fallback("talent_status.homecraftguild." + normalized, raw.isBlank() ? "locked" : raw);
     }
 
@@ -111,6 +117,10 @@ public final class HomeCraftGuildI18n {
 
     private static int extractRequiredLevel(String raw) {
         if (raw == null || raw.isBlank()) return -1;
+        String normalized = raw.trim().toLowerCase(Locale.ROOT);
+        if (normalized.startsWith("required_level:")) {
+            try { return Integer.parseInt(normalized.substring("required_level:".length()).trim()); } catch (Exception ignored) { return -1; }
+        }
         java.util.regex.Matcher matcher = java.util.regex.Pattern.compile("(\\d+)").matcher(raw);
         if (!matcher.find()) return -1;
         String lower = raw.toLowerCase(Locale.ROOT);

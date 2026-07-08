@@ -518,7 +518,8 @@ public final class GuildNpcAdminScreen extends Screen {
             if (!selected.system) { drawClippedText(graphics, HomeCraftGuildI18n.t("screen.homecraftguild.npc_admin.preset_state", selected.presetId, selected.customTrades ? HomeCraftGuildI18n.t("screen.homecraftguild.npc_admin.custom") : HomeCraftGuildI18n.t("screen.homecraftguild.npc_admin.synced")), l.previewX, infoY, l.previewW, 0xFFB8C7DD); infoY += 12; }
             drawClippedText(graphics, HomeCraftGuildI18n.t("screen.homecraftguild.npc_admin.position", selected.pos), l.previewX, infoY, l.previewW, 0xFFB8C7DD); infoY += 12;
             if (previewStatus != null && !previewStatus.isBlank()) {
-                drawClippedText(graphics, previewStatus, l.previewX, infoY, l.previewW, previewStatus.startsWith("Preview OK") ? 0xFF9AE6B4 : 0xFFFF7777);
+                boolean previewHealthy = previewStatus.startsWith(HomeCraftGuildI18n.t("preview.homecraftguild.ready_prefix"));
+                drawClippedText(graphics, previewStatus, l.previewX, infoY, l.previewW, previewHealthy ? 0xFF9AE6B4 : 0xFFFF7777);
             }
             if ("trades".equals(editorTab)) {
                 renderTradeList(graphics, selected, l);
@@ -548,16 +549,21 @@ public final class GuildNpcAdminScreen extends Screen {
         try {
             GuildRegistrarEntity entity = previewEntity(key, skin);
             if (entity != null) {
-                entity.setYRot(previewYaw);
-                entity.setYBodyRot(previewYaw);
-                entity.setYHeadRot(previewYaw);
-                entity.yRotO = previewYaw;
-                entity.yBodyRotO = previewYaw;
-                entity.yHeadRotO = previewYaw;
                 int modelX = x + 6;
                 int modelY = y + 6;
                 int modelW = Math.max(8, w - 12);
                 int modelH = Math.max(80, h - 30);
+                float followYaw = clamp((float) ((mouseX - (modelX + modelW * 0.50D)) * 0.45D), -35.0F, 35.0F);
+                float followPitch = clamp((float) ((mouseY - (modelY + modelH * 0.46D)) * 0.25D), -18.0F, 18.0F);
+                float renderYaw = previewYaw + followYaw;
+                entity.setYRot(renderYaw);
+                entity.setYBodyRot(renderYaw);
+                entity.setYHeadRot(renderYaw);
+                entity.setXRot(followPitch);
+                entity.yRotO = renderYaw;
+                entity.yBodyRotO = renderYaw;
+                entity.yHeadRotO = renderYaw;
+                entity.xRotO = followPitch;
                 rendered = NpcPreviewRenderer.render(graphics, modelX, modelY, modelW, modelH, previewScale, previewYaw, mouseX, mouseY, entity);
             }
         } catch (Throwable ignored) {
@@ -786,6 +792,10 @@ public final class GuildNpcAdminScreen extends Screen {
     private String clean(String value) {
         if (value == null) return "";
         return value.trim().replace('|', ' ').replace(';', ' ').replace('~', ' ');
+    }
+
+    private static float clamp(float value, float min, float max) {
+        return Math.max(min, Math.min(max, value));
     }
 
     private NpcRow selectedRow() {

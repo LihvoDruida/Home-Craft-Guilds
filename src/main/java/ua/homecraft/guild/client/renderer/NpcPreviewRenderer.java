@@ -95,6 +95,7 @@ public final class NpcPreviewRenderer {
         float followY = clamp((float) (mouseY - (y + h * 0.46D)), -70.0F, 70.0F);
         int intIndex = 0;
         int floatIndex = 0;
+        int doubleIndex = 0;
         int entityCount = 0;
         for (Class<?> type : types) if (type.isInstance(entity)) entityCount++;
         if (entityCount <= 0) return null;
@@ -138,7 +139,14 @@ public final class NpcPreviewRenderer {
                 args[i] = Float.valueOf(value);
                 floatIndex++;
             } else if (type == double.class || type == Double.class) {
-                args[i] = Double.valueOf(0.0D);
+                double value = switch (doubleIndex) {
+                    case 0 -> (double) followX;
+                    case 1 -> (double) followY;
+                    case 2 -> (double) yaw;
+                    default -> 0.0D;
+                };
+                args[i] = Double.valueOf(value);
+                doubleIndex++;
             } else if (type == boolean.class || type == Boolean.class) {
                 args[i] = Boolean.FALSE;
             } else if (type.getName().equals("org.joml.Quaternionf")) {

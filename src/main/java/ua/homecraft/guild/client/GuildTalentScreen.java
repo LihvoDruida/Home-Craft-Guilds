@@ -430,7 +430,10 @@ public final class GuildTalentScreen extends Screen {
         String status = "locked";
         String icon = "unknown";
 
-        boolean isAvailable() { return "доступний".equalsIgnoreCase(status) || "available".equalsIgnoreCase(status); }
+        boolean isAvailable() {
+            String normalized = status == null ? "" : status.trim().toLowerCase(Locale.ROOT);
+            return "доступний".equals(normalized) || "available".equals(normalized);
+        }
 
         static TalentRow parse(String line) {
             String[] p = line.split("\\|", -1);

@@ -2885,11 +2885,11 @@ public final class GuildStore {
             }
             int available = GuildTalents.MEMBER.equals(definition.branch()) ? Math.max(0, total - spentMember) : Math.max(0, total - spentGolem);
             String status;
-            if (unlocked) status = "вивчено";
-            else if (level < definition.requiredGuildLevel()) status = "потрібен рівень " + definition.requiredGuildLevel();
-            else if (!prerequisiteOk) status = "потрібен попередній талант";
-            else if (available < definition.cost()) status = "не вистачає очок";
-            else status = "доступний";
+            if (unlocked) status = "unlocked";
+            else if (level < definition.requiredGuildLevel()) status = "required_level:" + definition.requiredGuildLevel();
+            else if (!prerequisiteOk) status = "missing_prerequisite";
+            else if (available < definition.cost()) status = "no_points";
+            else status = "available";
             out.append(escape(definition.id())).append('|')
                     .append(escape(definition.branch())).append('|')
                     .append(definition.row()).append('|')
