@@ -60,7 +60,7 @@ public class GuildRegistrarEntity extends PathfinderMob implements GuildNpcSkinn
         builder.define(DATA_SKIN_ID, DEFAULT_SKIN);
         builder.define(DATA_SYSTEM_NPC, true);
         builder.define(DATA_SLIM_ARMS, false);
-        builder.define(DATA_DISPLAY_NAME, "Гільдійний NPC");
+        builder.define(DATA_DISPLAY_NAME, "lang:npc.homecraftguild.guild_registrar");
         builder.define(DATA_NPC_REVISION, 0L);
     }
 
@@ -183,7 +183,7 @@ public class GuildRegistrarEntity extends PathfinderMob implements GuildNpcSkinn
         String key = tag.getString("homecraft:NpcKey").orElse(DEFAULT_KEY);
         String kind = tag.getString("homecraft:NpcKind").orElse(DEFAULT_KIND);
         String skin = tag.getString("homecraft:NpcSkinId").orElse(DEFAULT_SKIN);
-        String name = tag.getString("homecraft:DisplayName").orElse("Гільдійний NPC");
+        String name = tag.getString("homecraft:DisplayName").orElse("lang:npc.homecraftguild.guild_registrar");
         boolean system = readBooleanValue(tag, "homecraft:SystemNpc", DEFAULT_KEY.equals(normalize(key, DEFAULT_KEY)));
         boolean slim = readBooleanValue(tag, "homecraft:SlimArms", false);
         long revision = tag.getLong("homecraft:NpcRevision").orElse(0L);
@@ -269,7 +269,7 @@ public class GuildRegistrarEntity extends PathfinderMob implements GuildNpcSkinn
     }
 
     public String homecraft$displayName() {
-        return normalizeText(this.entityData.get(DATA_DISPLAY_NAME), "Гільдійний NPC");
+        return normalizeText(this.entityData.get(DATA_DISPLAY_NAME), "lang:npc.homecraftguild.guild_registrar");
     }
 
     public void setupRegistrar(String name) {
@@ -297,9 +297,10 @@ public class GuildRegistrarEntity extends PathfinderMob implements GuildNpcSkinn
         this.entityData.set(DATA_SKIN_ID, safeSkin);
         this.entityData.set(DATA_SYSTEM_NPC, systemNpc);
         this.entityData.set(DATA_SLIM_ARMS, slimArms);
-        this.entityData.set(DATA_DISPLAY_NAME, normalizeText(name, systemNpc ? "Гільдійний Майстер" : "Гільдійний NPC"));
+        String displayName = normalizeText(name, defaultDisplayNameKey(safeKey, systemNpc));
+        this.entityData.set(DATA_DISPLAY_NAME, displayName);
         this.entityData.set(DATA_NPC_REVISION, Math.max(0L, npcRevision));
-        this.setCustomName(Component.literal(normalizeText(name, systemNpc ? "Гільдійний Майстер" : "Гільдійний NPC")));
+        this.setCustomName(displayNameComponent(displayName, safeKey, systemNpc));
         this.setCustomNameVisible(true);
     }
 
@@ -317,6 +318,42 @@ public class GuildRegistrarEntity extends PathfinderMob implements GuildNpcSkinn
     private static String normalizeText(String value, String fallback) {
         if (value == null || value.isBlank()) return fallback;
         return value.trim().replace('|', ' ').replace(';', ' ').replace('~', ' ');
+    }
+
+    private static String defaultDisplayNameKey(String key, boolean systemNpc) {
+        String safe = normalize(key, DEFAULT_KEY);
+        return switch (safe) {
+            case "guild_master" -> "lang:npc.homecraftguild.guild_master";
+            case "guild_registrar" -> "lang:npc.homecraftguild.guild_registrar";
+            case "trader_food" -> "lang:npc.homecraftguild.trader_food";
+            case "trader_tools" -> "lang:npc.homecraftguild.trader_tools";
+            case "trader_weapons" -> "lang:npc.homecraftguild.trader_weapons";
+            case "trader_armor" -> "lang:npc.homecraftguild.trader_armor";
+            case "trader_elite" -> "lang:npc.homecraftguild.trader_elite";
+            default -> systemNpc ? "lang:npc.homecraftguild.guild_master" : "lang:npc.homecraftguild.trader";
+        };
+    }
+
+    private static Component displayNameComponent(String rawName, String key, boolean systemNpc) {
+        String name = normalizeText(rawName, defaultDisplayNameKey(key, systemNpc));
+        String mapped = legacyDefaultNameKey(name, key, systemNpc);
+        if (mapped.startsWith("lang:")) return Component.translatable(mapped.substring("lang:".length()));
+        return Component.literal(mapped);
+    }
+
+    private static String legacyDefaultNameKey(String name, String key, boolean systemNpc) {
+        String value = name == null ? "" : name.trim();
+        if (value.startsWith("lang:")) return value;
+        String lower = value.toLowerCase(java.util.Locale.ROOT);
+        if (lower.equals("гільдійний майстер") || lower.equals("guild master")) return "lang:npc.homecraftguild.guild_master";
+        if (lower.equals("гільдійний реєстратор") || lower.equals("guild registrar")) return "lang:npc.homecraftguild.guild_registrar";
+        if (lower.equals("гільдійний торговець") || lower.equals("guild trader")) return "lang:npc.homecraftguild.trader";
+        if (lower.equals("продуктовий торговець") || lower.equals("food trader")) return "lang:npc.homecraftguild.trader_food";
+        if (lower.equals("торговець інструментами") || lower.equals("tool trader")) return "lang:npc.homecraftguild.trader_tools";
+        if (lower.equals("героїчний зброяр") || lower.equals("heroic weaponsmith")) return "lang:npc.homecraftguild.trader_weapons";
+        if (lower.equals("майстер броні") || lower.equals("armor master")) return "lang:npc.homecraftguild.trader_armor";
+        if (lower.equals("елітний гільдійний торговець") || lower.equals("elite guild trader")) return "lang:npc.homecraftguild.trader_elite";
+        return value.isBlank() ? defaultDisplayNameKey(key, systemNpc) : value;
     }
 
     private static String normalize(String value, String fallback) {

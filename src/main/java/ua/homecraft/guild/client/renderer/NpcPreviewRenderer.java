@@ -23,6 +23,11 @@ public final class NpcPreviewRenderer {
     private NpcPreviewRenderer() {}
 
     public static boolean render(GuiGraphics graphics, int x, int y, int w, int h, int scale, float yaw, GuildRegistrarEntity entity) {
+        return render(graphics, x, y, w, h, scale, yaw, x + w / 2.0D, y + h * 0.45D, entity);
+    }
+
+    public static boolean render(GuiGraphics graphics, int x, int y, int w, int h, int scale, float yaw,
+                                 double mouseX, double mouseY, GuildRegistrarEntity entity) {
         if (graphics == null || entity == null || w <= 8 || h <= 8) return false;
         Minecraft mc = Minecraft.getInstance();
         if (mc == null || mc.level == null) return false;
@@ -36,9 +41,12 @@ public final class NpcPreviewRenderer {
             // First try the same helper path used by the vanilla inventory player preview.
             // This keeps the model proportions/pose consistent with the inventory screen while
             // the GuildRegistrarRenderer still supplies the selected HomeCraft skin.
-            if (submitInventoryScreenPreview(graphics, entity, x, y, w, h, scale, yaw)) return true;
-            if (submitEntityPip(mc, graphics, entity, x, y, w, h, scale, yaw)) return true;
-            if (submitPlayerSkinPip(mc, graphics, entity, profile, x, y, w, h, scale, yaw)) return true;
+            float mouseYaw = clamp((float) ((mouseX - (x + w * 0.50D)) * 0.75D), -55.0F, 55.0F);
+            float mousePitch = clamp((float) ((mouseY - (y + h * 0.46D)) * 0.55D), -38.0F, 38.0F);
+            float renderYaw = yaw + mouseYaw;
+            if (submitInventoryScreenPreview(graphics, entity, x, y, w, h, scale, renderYaw, mouseX, mouseY)) return true;
+            if (submitEntityPip(mc, graphics, entity, x, y, w, h, scale, renderYaw, mousePitch)) return true;
+            if (submitPlayerSkinPip(mc, graphics, entity, profile, x, y, w, h, scale, renderYaw, mousePitch)) return true;
             return renderPaperDollFallback(graphics, profile.texture(), x, y, w, h);
         } catch (Throwable ignored) {
             return renderPaperDollFallback(graphics, profile.texture(), x, y, w, h);
@@ -50,7 +58,8 @@ public final class NpcPreviewRenderer {
     }
 
     private static boolean submitInventoryScreenPreview(GuiGraphics graphics, GuildRegistrarEntity entity,
-                                                        int x, int y, int w, int h, int scale, float yaw) {
+                                                        int x, int y, int w, int h, int scale, float yaw,
+                                                        double mouseX, double mouseY) {
         if (graphics == null || entity == null) return false;
         try {
             Class<?> inventoryScreen = Class.forName("net.minecraft.client.gui.screens.inventory.InventoryScreen");
@@ -59,7 +68,7 @@ public final class NpcPreviewRenderer {
                 if (!java.lang.reflect.Modifier.isStatic(method.getModifiers())) continue;
                 String name = method.getName().toLowerCase(Locale.ROOT);
                 if (!name.contains("renderentityininventory")) continue;
-                Object[] args = inventoryPreviewArgs(method.getParameterTypes(), graphics, entity, x, y, w, h, scale, yaw);
+                Object[] args = inventoryPreviewArgs(method.getParameterTypes(), graphics, entity, x, y, w, h, scale, yaw, mouseX, mouseY);
                 if (args == null) continue;
                 try {
                     method.invoke(null, args);
@@ -73,7 +82,8 @@ public final class NpcPreviewRenderer {
     }
 
     private static Object[] inventoryPreviewArgs(Class<?>[] types, GuiGraphics graphics, GuildRegistrarEntity entity,
-                                                  int x, int y, int w, int h, int scale, float yaw) {
+                                                  int x, int y, int w, int h, int scale, float yaw,
+                                                  double mouseX, double mouseY) {
         if (types == null || types.length == 0) return null;
         Object[] args = new Object[types.length];
         int cx = x + Math.max(1, w / 2);
@@ -81,6 +91,8 @@ public final class NpcPreviewRenderer {
         int x2 = x + Math.max(1, w);
         int y2 = y + Math.max(1, h);
         int safeScale = Math.max(18, Math.min(96, scale));
+        float followX = clamp((float) (mouseX - (x + w * 0.50D)), -80.0F, 80.0F);
+        float followY = clamp((float) (mouseY - (y + h * 0.46D)), -70.0F, 70.0F);
         int intIndex = 0;
         int floatIndex = 0;
         int entityCount = 0;
@@ -118,8 +130,8 @@ public final class NpcPreviewRenderer {
                 intIndex++;
             } else if (type == float.class || type == Float.class) {
                 float value = switch (floatIndex) {
-                    case 0 -> (float) (cx - (x + w * 0.50D));
-                    case 1 -> (float) (cy - (y + h * 0.58D));
+                    case 0 -> followX;
+                    case 1 -> followY;
                     case 2 -> yaw;
                     default -> 0.0F;
                 };
@@ -140,6 +152,10 @@ public final class NpcPreviewRenderer {
         return args;
     }
 
+    private static float clamp(float value, float min, float max) {
+        return Math.max(min, Math.min(max, value));
+    }
+
     private static int countPrimitive(Class<?>[] types, Class<?> primitive) {
         int count = 0;
         if (types == null) return 0;
@@ -148,7 +164,7 @@ public final class NpcPreviewRenderer {
     }
 
     private static boolean submitEntityPip(Minecraft mc, GuiGraphics graphics, GuildRegistrarEntity entity,
-                                           int x, int y, int w, int h, int scale, float yaw) {
+                                           int x, int y, int w, int h, int scale, float yaw, float pitch) {
         try {
             Object renderer = rendererFor(mc, entity);
             if (renderer == null) return false;
@@ -157,8 +173,8 @@ public final class NpcPreviewRenderer {
             if (!extractRenderState(renderer, entity, renderState)) return false;
 
             Object translation = newVector3f(0.0F, -0.15F, 0.0F);
-            Object rotation = newQuaternion(0.0F, 180.0F - yaw, 0.0F);
-            Object camera = newQuaternion(0.0F, 0.0F, 0.0F);
+            Object rotation = newQuaternion(pitch * 0.35F, 180.0F - yaw, 0.0F);
+            Object camera = newQuaternion(pitch * 0.18F, 0.0F, 0.0F);
             float pipScale = Math.max(32.0F, Math.min(92.0F, (float) scale));
 
             if (submitEntityDirect(graphics, renderState, pipScale, translation, rotation, camera, x, y, x + w, y + h)) return true;
@@ -178,14 +194,14 @@ public final class NpcPreviewRenderer {
 
     private static boolean submitPlayerSkinPip(Minecraft mc, GuiGraphics graphics, GuildRegistrarEntity entity,
                                                GuildNpcSkins.SkinProfile profile, int x, int y, int w, int h,
-                                               int scale, float yaw) {
+                                               int scale, float yaw, float pitch) {
         try {
             Object renderer = rendererFor(mc, entity);
             Object model = findPlayerModel(renderer);
             if (model == null) return false;
             Identifier texture = profile.texture();
             float pipScale = Math.max(34.0F, Math.min(96.0F, (float) scale));
-            float xRot = 10.0F;
+            float xRot = 10.0F + pitch * 0.35F;
             float yRot = yaw;
             float yPivot = 0.0F;
 

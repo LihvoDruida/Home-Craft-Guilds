@@ -74,7 +74,7 @@ public final class GuildRosterScreen extends Screen {
     private int helpCloseH;
 
     public GuildRosterScreen(String snapshot) {
-        super(Component.literal("Гільдія"));
+        super(HomeCraftGuildI18n.c("screen.homecraftguild.roster.title"));
         this.snapshot = snapshot == null ? "" : snapshot;
         this.view = GuildView.parse(this.snapshot);
     }
@@ -123,7 +123,7 @@ public final class GuildRosterScreen extends Screen {
         if (view.readOnly) {
             addRenderableWidget(Button.builder(Component.literal("Таланти"), b -> openTalents())
                     .bounds(l.x + l.panelW - l.pad - 316, footerY, 100, 22).build());
-            addRenderableWidget(Button.builder(Component.literal("Досягнення"), b -> achievementsOpen = true)
+            addRenderableWidget(Button.builder(HomeCraftGuildI18n.c("screen.homecraftguild.achievements.button"), b -> achievementsOpen = true)
                     .bounds(l.x + l.panelW - l.pad - 208, footerY, 100, 22).build());
             addRenderableWidget(Button.builder(Component.literal("Закрити"), b -> onClose())
                     .bounds(l.x + l.panelW - l.pad - 100, footerY, 100, 22).build());
@@ -149,7 +149,7 @@ public final class GuildRosterScreen extends Screen {
                         .bounds(x0 + 94, footerY - 56, 104, 22).build());
                 addRenderableWidget(Button.builder(Component.literal("Таланти"), b -> openTalents())
                         .bounds(x0, footerY - 28, 86, 22).build());
-                addRenderableWidget(Button.builder(Component.literal("Досягнення"), b -> achievementsOpen = true)
+                addRenderableWidget(Button.builder(HomeCraftGuildI18n.c("screen.homecraftguild.achievements.button"), b -> achievementsOpen = true)
                         .bounds(x0 + 94, footerY - 28, 110, 22).build());
                 addRenderableWidget(Button.builder(Component.literal("Закрити"), b -> onClose())
                         .bounds(l.x + l.panelW - l.pad - 100, footerY - 28, 100, 22).build());
@@ -161,7 +161,7 @@ public final class GuildRosterScreen extends Screen {
                         .bounds(x0, footerY, 118, 22).build());
                 addRenderableWidget(Button.builder(Component.literal("Таланти"), b -> openTalents())
                         .bounds(l.x + l.panelW - l.pad - 316, footerY, 100, 22).build());
-                addRenderableWidget(Button.builder(Component.literal("Досягнення"), b -> achievementsOpen = true)
+                addRenderableWidget(Button.builder(HomeCraftGuildI18n.c("screen.homecraftguild.achievements.button"), b -> achievementsOpen = true)
                         .bounds(l.x + l.panelW - l.pad - 208, footerY, 100, 22).build());
                 addRenderableWidget(Button.builder(Component.literal("Закрити"), b -> onClose())
                         .bounds(l.x + l.panelW - l.pad - 100, footerY, 100, 22).build());
@@ -180,7 +180,7 @@ public final class GuildRosterScreen extends Screen {
                         .bounds(x0, footerY - 28, 122, 22).build());
                 addRenderableWidget(Button.builder(Component.literal("Таланти"), b -> openTalents())
                         .bounds(x0 + 130, footerY - 28, 86, 22).build());
-                addRenderableWidget(Button.builder(Component.literal("Досягнення"), b -> achievementsOpen = true)
+                addRenderableWidget(Button.builder(HomeCraftGuildI18n.c("screen.homecraftguild.achievements.button"), b -> achievementsOpen = true)
                         .bounds(x0 + 224, footerY - 28, 104, 22).build());
             } else {
                 int teleportW = Math.min(128, Math.max(108, l.panelW / 3));
@@ -193,7 +193,7 @@ public final class GuildRosterScreen extends Screen {
                         .bounds(x0, footerY, 94, 22).build());
                 addRenderableWidget(Button.builder(Component.literal("Таланти"), b -> openTalents())
                         .bounds(l.x + l.panelW - l.pad - 316, footerY, 100, 22).build());
-                addRenderableWidget(Button.builder(Component.literal("Досягнення"), b -> achievementsOpen = true)
+                addRenderableWidget(Button.builder(HomeCraftGuildI18n.c("screen.homecraftguild.achievements.button"), b -> achievementsOpen = true)
                         .bounds(l.x + l.panelW - l.pad - 208, footerY, 100, 22).build());
                 addRenderableWidget(Button.builder(Component.literal("Закрити"), b -> onClose())
                         .bounds(l.x + l.panelW - l.pad - 100, footerY, 100, 22).build());
@@ -904,9 +904,9 @@ public final class GuildRosterScreen extends Screen {
         graphics.fill(0, 0, this.width, this.height, 0xAA000000);
         graphics.fill(x, y, x + w, y + h, 0xF0151920);
         graphics.fill(x, y, x + w, y + 3, 0xFFFFA914);
-        graphics.drawString(this.font, "Досягнення гільдії", x + 12, y + 10, 0xFFFFF3DC, false);
+        graphics.drawString(this.font, HomeCraftGuildI18n.t("screen.homecraftguild.achievements.title"), x + 12, y + 10, 0xFFFFF3DC, false);
         long unlocked = view.achievements.stream().filter(a -> a.unlocked).count();
-        graphics.drawString(this.font, unlocked + "/" + view.achievements.size() + " відкрито", x + 116, y + 10, 0xFF9AA4B2, false);
+        graphics.drawString(this.font, HomeCraftGuildI18n.t("screen.homecraftguild.achievements.unlocked_count", unlocked, view.achievements.size()), x + 116, y + 10, 0xFF9AA4B2, false);
 
         achievementsCloseW = 20;
         achievementsCloseH = 18;
@@ -933,7 +933,7 @@ public final class GuildRosterScreen extends Screen {
         achievementsArea.set(listX, listY, listW, listH, visibleRows);
         achievementsScroll = clamp(achievementsScroll, 0, Math.max(0, view.achievements.size() - visibleRows));
         if (view.achievements.isEmpty()) {
-            graphics.drawString(this.font, "Список ще не завантажений", listX + 8, listY + 8, 0xFF9AA4B2, false);
+            graphics.drawString(this.font, HomeCraftGuildI18n.t("screen.homecraftguild.achievements.not_loaded"), listX + 8, listY + 8, 0xFF9AA4B2, false);
         }
         for (int visibleIndex = 0; visibleIndex < visibleRows; visibleIndex++) {
             int i = achievementsScroll + visibleIndex;
@@ -946,8 +946,10 @@ public final class GuildRosterScreen extends Screen {
             graphics.fill(listX, ry, listX + listW, ry + rowH - 2, bg);
             graphics.fill(listX, ry, listX + 3, ry + rowH - 2, a.unlocked ? 0xFF7FE39A : 0xFF4A5564);
             String mark = a.unlocked ? "✓ " : "□ ";
-            graphics.drawString(this.font, trim(mark + a.title, Math.max(10, (listW - 16) / 6)), listX + 8, ry + 4, a.unlocked ? 0xFFFFF3DC : 0xFFD8DEE9, false);
-            graphics.drawString(this.font, trim(a.category + " · " + a.xp + " досвіду", Math.max(10, (listW - 16) / 6)), listX + 8, ry + 15, 0xFF9AA4B2, false);
+            String title = HomeCraftGuildI18n.achievementTitle(a.id, a.title);
+            String category = HomeCraftGuildI18n.achievementCategory(a.id, a.category);
+            graphics.drawString(this.font, trim(mark + title, Math.max(10, (listW - 16) / 6)), listX + 8, ry + 4, a.unlocked ? 0xFFFFF3DC : 0xFFD8DEE9, false);
+            graphics.drawString(this.font, trim(HomeCraftGuildI18n.t("screen.homecraftguild.achievements.row_meta", category, a.xp), Math.max(10, (listW - 16) / 6)), listX + 8, ry + 15, 0xFF9AA4B2, false);
         }
 
         AchievementRow selected = selectedAchievement();
@@ -966,8 +968,8 @@ public final class GuildRosterScreen extends Screen {
             graphics.drawString(this.font, line, detailsInnerX, dy, color, false);
             dy += 12;
         }
-        if (view.achievements.size() > visibleRows) graphics.drawString(this.font, "Список: " + (achievementsScroll + 1) + "-" + Math.min(view.achievements.size(), achievementsScroll + visibleRows), listX + 8, Math.min(y + h - 12, listY + listH - 12), 0xFF9AA4B2, false);
-        if (lines.size() > visibleLines) graphics.drawString(this.font, "Опис: " + (achievementDetailsScroll + 1) + "-" + Math.min(lines.size(), achievementDetailsScroll + visibleLines) + " з " + lines.size(), detailsX + 8, Math.min(y + h - 12, detailsY + detailsH - 12), 0xFF9AA4B2, false);
+        if (view.achievements.size() > visibleRows) graphics.drawString(this.font, HomeCraftGuildI18n.t("screen.homecraftguild.achievements.list_range", achievementsScroll + 1, Math.min(view.achievements.size(), achievementsScroll + visibleRows)), listX + 8, Math.min(y + h - 12, listY + listH - 12), 0xFF9AA4B2, false);
+        if (lines.size() > visibleLines) graphics.drawString(this.font, HomeCraftGuildI18n.t("screen.homecraftguild.achievements.description_range", achievementDetailsScroll + 1, Math.min(lines.size(), achievementDetailsScroll + visibleLines), lines.size()), detailsX + 8, Math.min(y + h - 12, detailsY + detailsH - 12), 0xFF9AA4B2, false);
     }
 
     private AchievementRow selectedAchievement() {
@@ -984,25 +986,29 @@ public final class GuildRosterScreen extends Screen {
         int wrapWidth = Math.max(80, maxWidthPx <= 0 ? 320 : maxWidthPx);
         List<String> lines = new ArrayList<>();
         if (a == null) {
-            addWrappedLines(lines, "Досягнення не вибрано", wrapWidth);
+            addWrappedLines(lines, HomeCraftGuildI18n.t("screen.homecraftguild.achievements.none_selected"), wrapWidth);
             return lines;
         }
-        addWrappedLines(lines, (a.unlocked ? "✓ " : "□ ") + a.title, wrapWidth);
-        addWrappedLines(lines, "Категорія: " + a.category, wrapWidth);
+        String title = HomeCraftGuildI18n.achievementTitle(a.id, a.title);
+        String category = HomeCraftGuildI18n.achievementCategory(a.id, a.category);
+        String description = HomeCraftGuildI18n.achievementDescription(a.id, a.description);
+        String conditions = HomeCraftGuildI18n.achievementConditions(a.id, a.conditions);
+        String reward = HomeCraftGuildI18n.achievementReward(a.id, a.reward == null || a.reward.isBlank() ? HomeCraftGuildI18n.t("screen.homecraftguild.achievements.default_reward", a.xp) : a.reward);
+        addWrappedLines(lines, (a.unlocked ? "✓ " : "□ ") + title, wrapWidth);
+        addWrappedLines(lines, HomeCraftGuildI18n.t("screen.homecraftguild.achievements.category", category), wrapWidth);
         lines.add("");
-        addAchievementSection(lines, "Опис:", a.description, wrapWidth);
+        addAchievementSection(lines, HomeCraftGuildI18n.t("screen.homecraftguild.achievements.description"), description, wrapWidth);
         lines.add("");
-        addAchievementSection(lines, "Умови:", a.conditions, wrapWidth);
+        addAchievementSection(lines, HomeCraftGuildI18n.t("screen.homecraftguild.achievements.conditions"), conditions, wrapWidth);
         lines.add("");
-        addAchievementSection(lines, "Нагорода:", a.reward == null || a.reward.isBlank() ? (a.xp + " досвіду гільдії") : a.reward, wrapWidth);
+        addAchievementSection(lines, HomeCraftGuildI18n.t("screen.homecraftguild.achievements.reward"), reward, wrapWidth);
         lines.add("");
+        lines.add(HomeCraftGuildI18n.t("screen.homecraftguild.achievements.status"));
         if (a.unlocked) {
-            lines.add("Статус:");
-            addWrappedLines(lines, "✓ Відкрито" + (a.unlockedBy == null || a.unlockedBy.isBlank() ? "" : " · " + a.unlockedBy), wrapWidth);
-            if (a.unlockedAt != null && !a.unlockedAt.isBlank()) addWrappedLines(lines, "Коли: " + friendlyDate(a.unlockedAt), wrapWidth);
+            addWrappedLines(lines, HomeCraftGuildI18n.t("screen.homecraftguild.achievements.status_unlocked") + (a.unlockedBy == null || a.unlockedBy.isBlank() ? "" : " · " + a.unlockedBy), wrapWidth);
+            if (a.unlockedAt != null && !a.unlockedAt.isBlank()) addWrappedLines(lines, HomeCraftGuildI18n.t("screen.homecraftguild.achievements.when", friendlyDate(a.unlockedAt)), wrapWidth);
         } else {
-            lines.add("Статус:");
-            addWrappedLines(lines, "Ще не відкрито", wrapWidth);
+            addWrappedLines(lines, HomeCraftGuildI18n.t("screen.homecraftguild.achievements.status_locked"), wrapWidth);
         }
         return lines;
     }

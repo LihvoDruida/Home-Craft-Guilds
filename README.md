@@ -40,6 +40,19 @@ Install the same jar on the client when you want client UI, NPC screens, territo
 
 The server remains authoritative. Client UI only sends actions; all guild data, permissions, trade validation and territory protection are checked server-side.
 
+
+## Localization
+
+Home Craft Guilds ships with full `en_us` and `uk_ua` language files for registered content, guild effects, tooltips, NPC admin UI, skin labels, NPC presets, talents, and achievements.  Translation parity is enforced by `scripts/validate-i18n.py` and CI.
+
+To add another language, copy `src/main/resources/assets/homecraftguild/lang/en_us.json`, translate values only, keep all keys/placeholders, and run:
+
+```bash
+python3 scripts/validate-i18n.py
+```
+
+More details: `docs/TRANSLATIONS_UA.md`.
+
 ## Build
 
 ```bash
@@ -105,8 +118,8 @@ Minecraft 1.21.11 + NeoForge + Java 21
 Push a `v*` tag to build and publish the release artifact:
 
 ```bash
-git tag v0.1.157
-git push origin v0.1.157
+git tag v0.1.158
+git push origin v0.1.158
 ```
 
 The workflow validates the 1.21.11 lock before building and rejects old multi-loader/multi-version matrix settings.

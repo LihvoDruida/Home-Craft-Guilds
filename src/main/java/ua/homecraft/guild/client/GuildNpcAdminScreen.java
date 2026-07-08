@@ -78,7 +78,7 @@ public final class GuildNpcAdminScreen extends Screen {
     private EditBox enchantBox;
 
     public GuildNpcAdminScreen(String snapshot) {
-        super(Component.literal("Home Craft — NPC Admin"));
+        super(HomeCraftGuildI18n.c("screen.homecraftguild.npc_admin.title"));
         this.snapshot = snapshot == null ? "" : snapshot;
         parseSnapshot(this.snapshot);
         if (!rows.isEmpty()) selectedKey = rows.get(0).key;
@@ -135,13 +135,13 @@ public final class GuildNpcAdminScreen extends Screen {
         int titleY = l.y + 10;
         int filterX = l.leftX;
         String[][] filters = new String[][]{
-                {"all", "Всі"}, {"system", "Системні"}, {"trader", "Торговці"}
+                {"all", "filter.homecraftguild.all"}, {"system", "filter.homecraftguild.system"}, {"trader", "filter.homecraftguild.trader"}
         };
         int fx = filterX;
         int filterW = Math.max(48, (l.leftW - 8) / 3);
         for (String[] f : filters) {
             final String id = f[0];
-            addRenderableWidget(Button.builder(Component.literal((id.equals(filter) ? "● " : "") + f[1]), b -> {
+            addRenderableWidget(Button.builder(Component.literal((id.equals(filter) ? "● " : "") + HomeCraftGuildI18n.t(f[1])), b -> {
                 filter = id;
                 npcScroll = 0;
                 rebuildWidgets();
@@ -149,7 +149,7 @@ public final class GuildNpcAdminScreen extends Screen {
             fx += filterW + 4;
         }
 
-        String[][] tabs = new String[][]{{"main", "Основне"}, {"skins", "Скіни"}, {"trades", "Товари"}, {"diagnostics", "Діагностика"}, {"placed", "Розставлені"}};
+        String[][] tabs = new String[][]{{"main", "tab.homecraftguild.main"}, {"skins", "tab.homecraftguild.skins"}, {"trades", "tab.homecraftguild.trades"}, {"diagnostics", "tab.homecraftguild.diagnostics"}, {"placed", "tab.homecraftguild.placed"}};
         int tabGap = 4;
         int tabW = Math.max(54, Math.min(104, (l.centerW - tabGap * (tabs.length - 1)) / tabs.length));
         for (int i = 0; i < tabs.length; i++) addEditorTabButton(l.centerX + i * (tabW + tabGap), titleY + 22, tabW, tabs[i][0], tabs[i][1]);
@@ -182,23 +182,24 @@ public final class GuildNpcAdminScreen extends Screen {
         int formW = l.centerW;
         int y = l.y + 62;
 
-        keyBox = new EditBox(this.font, formX, y, Math.min(220, formW), 20, Component.literal("Ключ NPC"));
+        keyBox = new EditBox(this.font, formX, y, Math.min(220, formW), 20, HomeCraftGuildI18n.c("field.homecraftguild.npc_key"));
         keyBox.setHint(Component.literal("trader_weapons"));
         keyBox.setMaxLength(32);
         keyBox.setValue(selected == null ? "trader_basic" : selected.key);
         keyBox.setEditable(selected == null || !selected.system);
         addRenderableWidget(keyBox);
 
-        nameBox = new EditBox(this.font, formX, y + 36, formW, 20, Component.literal("Назва NPC"));
-        nameBox.setHint(Component.literal("Назва NPC"));
+        nameBox = new EditBox(this.font, formX, y + 36, formW, 20, HomeCraftGuildI18n.c("field.homecraftguild.npc_name"));
+        nameBox.setHint(HomeCraftGuildI18n.c("field.homecraftguild.npc_name"));
         nameBox.setMaxLength(48);
-        nameBox.setValue(selected == null ? "Гільдійний Торговець" : selected.name);
+        nameBox.setValue(selected == null ? HomeCraftGuildI18n.t("npc.homecraftguild.trader") : selected.name);
         addRenderableWidget(nameBox);
 
         skinBox = new EditBox(this.font, formX, y + 72, Math.max(150, formW - 76), 20, Component.literal("skinId"));
         skinBox.setHint(Component.literal("skinId"));
         skinBox.setMaxLength(48);
         skinBox.setValue(selected == null ? "guild_registrar" : selected.skin);
+        skinBox.setResponder(value -> invalidatePreview());
         addRenderableWidget(skinBox);
         addRenderableWidget(Button.builder(Component.literal("◀"), b -> cycleSkin(-1)).bounds(formX + formW - 70, y + 72, 32, 20).build());
         addRenderableWidget(Button.builder(Component.literal("▶"), b -> cycleSkin(1)).bounds(formX + formW - 34, y + 72, 32, 20).build());
@@ -223,52 +224,53 @@ public final class GuildNpcAdminScreen extends Screen {
                 int bx = formX + (i % 3) * (skinButtonW + 4);
                 int by = modeY + (i / 3) * 22;
                 String marker = skinBox != null && skinId.equalsIgnoreCase(skinBox.getValue().trim()) ? "● " : "";
-                addRenderableWidget(Button.builder(Component.literal(marker + shortenLabel(skinId, 15)), b -> setSkinValue(skinId))
+                String skinLabel = HomeCraftGuildI18n.skinName(skinId) + " (" + skinId + ")";
+                addRenderableWidget(Button.builder(Component.literal(marker + shortenLabel(skinLabel, 18)), b -> setSkinValue(skinId))
                         .bounds(bx, by, skinButtonW, 20).build());
             }
             int actionY = Math.min(l.bottomY - 26, modeY + rowsForSkins * 22 + 4);
             if (skins.size() > maxSkinButtons) {
-                addRenderableWidget(Button.builder(Component.literal("▲ Скіни"), b -> { skinScroll = Math.max(0, skinScroll - 3); rebuildWidgets(); })
+                addRenderableWidget(Button.builder(HomeCraftGuildI18n.c("button.homecraftguild.skins_up"), b -> { skinScroll = Math.max(0, skinScroll - 3); rebuildWidgets(); })
                         .bounds(formX, actionY, 76, 20).build());
-                addRenderableWidget(Button.builder(Component.literal("▼ Скіни"), b -> { skinScroll = Math.min(maxSkinScroll, skinScroll + 3); rebuildWidgets(); })
+                addRenderableWidget(Button.builder(HomeCraftGuildI18n.c("button.homecraftguild.skins_down"), b -> { skinScroll = Math.min(maxSkinScroll, skinScroll + 3); rebuildWidgets(); })
                         .bounds(formX + 80, actionY, 76, 20).build());
             }
             addButtonRows(formX, actionY, formW, 4,
-                    new UiButton("Скинути preview", 126, true, () -> { previewYaw = 180.0F; previewScale = 66; }),
-                    new UiButton("Зберегти назву і скін", 172, true, this::saveSelected));
+                    new UiButton(HomeCraftGuildI18n.t("button.homecraftguild.reset_preview"), 126, true, () -> { previewYaw = 180.0F; previewScale = 66; }),
+                    new UiButton(HomeCraftGuildI18n.t("button.homecraftguild.save_name_skin"), 172, true, this::saveSelected));
         } else if ("diagnostics".equals(editorTab)) {
             // Diagnostics tab has no widgets in rebuildWidgets(); labels are rendered in render().
         } else if ("placed".equals(editorTab)) {
             addButtonRows(formX, modeY, formW, 4,
-                    new UiButton("Оновити список", 118, true, () -> send("npc_admin_refresh", "", "")),
-                    new UiButton("Repair усі NPC", 142, true, () -> send("npc_admin_repair_all", "", "")));
+                    new UiButton(HomeCraftGuildI18n.t("button.homecraftguild.refresh_list"), 118, true, () -> send("npc_admin_refresh", "", "")),
+                    new UiButton(HomeCraftGuildI18n.t("button.homecraftguild.repair_all_npc"), 142, true, () -> send("npc_admin_repair_all", "", "")));
         } else if ("trades".equals(editorTab)) {
             addPresetButtons(formX, modeY, formW, !selectedSystem);
             int actionY = modeY + 48;
             addButtonRows(formX, actionY, formW, 4,
-                    new UiButton("Створити NPC", 128, true, this::createTrader),
-                    new UiButton("Оновити товари з пресету", 190, !selectedSystem, this::applyPresetToSelected),
-                    new UiButton("Оновити список", 112, true, () -> send("npc_admin_refresh", "", "")));
+                    new UiButton(HomeCraftGuildI18n.t("button.homecraftguild.create_npc"), 128, true, this::createTrader),
+                    new UiButton(HomeCraftGuildI18n.t("button.homecraftguild.refresh_trades_from_preset"), 190, !selectedSystem, this::applyPresetToSelected),
+                    new UiButton(HomeCraftGuildI18n.t("button.homecraftguild.refresh_list"), 112, true, () -> send("npc_admin_refresh", "", "")));
         } else {
             addPresetButtons(formX, modeY, formW, !selectedSystem);
             int buttonY = modeY + 52;
             addButtonRows(formX, buttonY, formW, 4,
-                    new UiButton("Зберегти", 92, true, this::saveSelected),
-                    new UiButton("Поставити тут", 106, true, () -> send("npc_admin_tp", activeKey(), "")),
-                    new UiButton("Прибрати", 86, !selectedSystem, () -> send("npc_admin_remove", activeKey(), "")),
-                    new UiButton("Оновити", 82, true, () -> send("npc_admin_refresh", "", "")),
-                    new UiButton("Створити NPC", 128, true, this::createTrader),
-                    new UiButton("Оновити товари з пресету", 190, !selectedSystem, this::applyPresetToSelected));
+                    new UiButton(HomeCraftGuildI18n.t("button.homecraftguild.save"), 92, true, this::saveSelected),
+                    new UiButton(HomeCraftGuildI18n.t("button.homecraftguild.place_here"), 106, true, () -> send("npc_admin_tp", activeKey(), "")),
+                    new UiButton(HomeCraftGuildI18n.t("button.homecraftguild.remove"), 86, !selectedSystem, () -> send("npc_admin_remove", activeKey(), "")),
+                    new UiButton(HomeCraftGuildI18n.t("button.homecraftguild.refresh"), 82, true, () -> send("npc_admin_refresh", "", "")),
+                    new UiButton(HomeCraftGuildI18n.t("button.homecraftguild.create_npc"), 128, true, this::createTrader),
+                    new UiButton(HomeCraftGuildI18n.t("button.homecraftguild.refresh_trades_from_preset"), 190, !selectedSystem, this::applyPresetToSelected));
         }
 
         if ("trades".equals(editorTab) && selected != null) {
             int top = l.bottomY + 30;
             if (!selected.system) {
                 addButtonRows(l.tradeX, top, l.tradeW, 4,
-                        new UiButton("+ Додати товар", 126, true, () -> openTradeEditor(selected, -1)),
-                        new UiButton("Оновити товари з пресету", 186, true, this::applyPresetToSelected),
-                        new UiButton("Товари ▲", 74, true, () -> { tradeScroll = Math.max(0, tradeScroll - 1); rebuildWidgets(); }),
-                        new UiButton("Товари ▼", 74, true, () -> { tradeScroll = tradeScroll + 1; rebuildWidgets(); }));
+                        new UiButton(HomeCraftGuildI18n.t("button.homecraftguild.add_trade"), 126, true, () -> openTradeEditor(selected, -1)),
+                        new UiButton(HomeCraftGuildI18n.t("button.homecraftguild.refresh_trades_from_preset"), 186, true, this::applyPresetToSelected),
+                        new UiButton(HomeCraftGuildI18n.t("button.homecraftguild.trades_up"), 74, true, () -> { tradeScroll = Math.max(0, tradeScroll - 1); rebuildWidgets(); }),
+                        new UiButton(HomeCraftGuildI18n.t("button.homecraftguild.trades_down"), 74, true, () -> { tradeScroll = tradeScroll + 1; rebuildWidgets(); }));
 
                 int tradeButtonsListY = tradeListY(l, selected);
                 int tradeButtonsListH = tradeListH(l, tradeButtonsListY);
@@ -302,17 +304,17 @@ public final class GuildNpcAdminScreen extends Screen {
                 NpcRow row = placedRows.get(tradeScroll + i);
                 int yy = placedListY + 24 + i * rowH2;
                 int ax = l.tradeX + l.tradeW - 280;
-                addRenderableWidget(Button.builder(Component.literal("Вибрати"), b -> { selectedKey = row.key; editorTab = "main"; rebuildWidgets(); }).bounds(ax, yy - 4, 70, 20).build());
-                addRenderableWidget(Button.builder(Component.literal("Поставити тут"), b -> { selectedKey = row.key; send("npc_admin_tp", row.key, ""); }).bounds(ax + 74, yy - 4, 104, 20).build());
-                addRenderableWidget(Button.builder(Component.literal("Видалити"), b -> { selectedKey = row.key; send("npc_admin_remove", row.key, ""); }).bounds(ax + 182, yy - 4, 86, 20).build());
+                addRenderableWidget(Button.builder(HomeCraftGuildI18n.c("button.homecraftguild.select"), b -> { selectedKey = row.key; editorTab = "main"; rebuildWidgets(); }).bounds(ax, yy - 4, 70, 20).build());
+                addRenderableWidget(Button.builder(HomeCraftGuildI18n.c("button.homecraftguild.place_here"), b -> { selectedKey = row.key; send("npc_admin_tp", row.key, ""); }).bounds(ax + 74, yy - 4, 104, 20).build());
+                addRenderableWidget(Button.builder(HomeCraftGuildI18n.c("button.homecraftguild.delete"), b -> { selectedKey = row.key; send("npc_admin_remove", row.key, ""); }).bounds(ax + 182, yy - 4, 86, 20).build());
             }
         }
 
-        addRenderableWidget(Button.builder(Component.literal("Закрити"), b -> onClose()).bounds(l.x + l.w - 112, l.y + l.h - 32, 96, 22).build());
+        addRenderableWidget(Button.builder(HomeCraftGuildI18n.c("button.homecraftguild.close"), b -> onClose()).bounds(l.x + l.w - 112, l.y + l.h - 32, 96, 22).build());
     }
 
     private void addEditorTabButton(int x, int y, int w, String tab, String label) {
-        addRenderableWidget(Button.builder(Component.literal((tab.equals(editorTab) ? "● " : "") + label), b -> {
+        addRenderableWidget(Button.builder(Component.literal((tab.equals(editorTab) ? "● " : "") + HomeCraftGuildI18n.t(label)), b -> {
             editorTab = tab;
             rebuildWidgets();
         }).bounds(x, y, w, 20).build());
@@ -345,7 +347,7 @@ public final class GuildNpcAdminScreen extends Screen {
             String[] pr = TRADE_PRESETS[i];
             int bx = formX + (i % 3) * (presetW + 4);
             int by = presetY + (i / 3) * 22;
-            Button button = Button.builder(Component.literal("+ " + pr[1]), b -> presetTrader(pr[0], pr[2], pr[3]))
+            Button button = Button.builder(Component.literal("+ " + HomeCraftGuildI18n.npcPresetLabel(pr[0], pr[1])), b -> presetTrader(pr[0], pr[2], pr[3]))
                     .bounds(bx, by, presetW, 20).build();
             button.active = active;
             addRenderableWidget(button);
@@ -363,7 +365,7 @@ public final class GuildNpcAdminScreen extends Screen {
     private void presetTrader(String key, String name, String skin) {
         if (keyBox != null && (selectedRow() == null || !selectedRow().system)) keyBox.setValue(key);
         if (presetBox != null && (selectedRow() == null || !selectedRow().system)) presetBox.setValue(key);
-        if (nameBox != null) nameBox.setValue(name);
+        if (nameBox != null) nameBox.setValue(HomeCraftGuildI18n.npcPresetName(key, name));
         setSkinValue(skin);
     }
 
@@ -373,8 +375,13 @@ public final class GuildNpcAdminScreen extends Screen {
         if (!safe.equals(skinBox.getValue())) {
             skinBox.setValue(safe);
         }
+        invalidatePreview();
+    }
+
+    private void invalidatePreview() {
         previewEntity = null;
         previewEntitySkin = "";
+        previewEntityKey = "";
         previewStatus = "";
     }
 
@@ -391,7 +398,7 @@ public final class GuildNpcAdminScreen extends Screen {
 
     private void createTrader() {
         String key = keyBox == null ? "trader_basic" : clean(keyBox.getValue()).toLowerCase(Locale.ROOT);
-        String name = nameBox == null ? "Гільдійний Торговець" : nameBox.getValue();
+        String name = nameBox == null ? HomeCraftGuildI18n.t("npc.homecraftguild.trader") : nameBox.getValue();
         String skin = skinBox == null ? "guild_registrar" : skinBox.getValue();
         String preset = presetBox == null ? key : presetBox.getValue();
         Minecraft.getInstance().setScreen(new CreateNpcScreen(this, key, name, skin, preset));
@@ -461,33 +468,33 @@ public final class GuildNpcAdminScreen extends Screen {
         graphics.fill(l.previewX - 6, l.y + 48, l.previewX + l.previewW + 6, l.bottomY, 0x66000000);
         graphics.fill(l.tradeX - 6, l.bottomY + 8, l.tradeX + l.tradeW + 6, l.y + l.h - 42, 0x66000000);
 
-        graphics.drawString(this.font, "Редактор NPC — серверні дані", l.x + 12, l.y + 10, 0xFFFFFFFF, false);
+        graphics.drawString(this.font, HomeCraftGuildI18n.t("screen.homecraftguild.npc_admin.header"), l.x + 12, l.y + 10, 0xFFFFFFFF, false);
         graphics.drawString(this.font, "NPC", l.leftX, l.y + 50, 0xFFFFD166, false);
-        graphics.drawString(this.font, "Основні налаштування", l.centerX, l.y + 50, 0xFFFFD166, false);
-        graphics.drawString(this.font, "3D preview", l.previewX, l.y + 50, 0xFFFFD166, false);
-        String bottomTitle = "placed".equals(editorTab) ? "Розставлені NPC" : ("trades".equals(editorTab) ? "Товари" : "Готові списки / товари");
+        graphics.drawString(this.font, HomeCraftGuildI18n.t("screen.homecraftguild.npc_admin.main_settings"), l.centerX, l.y + 50, 0xFFFFD166, false);
+        graphics.drawString(this.font, HomeCraftGuildI18n.t("screen.homecraftguild.npc_admin.preview"), l.previewX, l.y + 50, 0xFFFFD166, false);
+        String bottomTitle = "placed".equals(editorTab) ? HomeCraftGuildI18n.t("screen.homecraftguild.npc_admin.placed_npcs") : ("trades".equals(editorTab) ? HomeCraftGuildI18n.t("screen.homecraftguild.npc_admin.trades") : HomeCraftGuildI18n.t("screen.homecraftguild.npc_admin.presets_or_trades"));
         graphics.drawString(this.font, bottomTitle, l.tradeX, l.bottomY + 14, 0xFFFFD166, false);
 
         int formY = l.y + 62;
-        graphics.drawString(this.font, "Ключ", l.centerX, formY - 11, 0xFF9AA8BD, false);
-        graphics.drawString(this.font, "Назва", l.centerX, formY + 25, 0xFF9AA8BD, false);
-        graphics.drawString(this.font, "Скін", l.centerX, formY + 61, 0xFF9AA8BD, false);
+        graphics.drawString(this.font, HomeCraftGuildI18n.t("field.homecraftguild.key"), l.centerX, formY - 11, 0xFF9AA8BD, false);
+        graphics.drawString(this.font, HomeCraftGuildI18n.t("field.homecraftguild.name"), l.centerX, formY + 25, 0xFF9AA8BD, false);
+        graphics.drawString(this.font, HomeCraftGuildI18n.t("field.homecraftguild.skin"), l.centerX, formY + 61, 0xFF9AA8BD, false);
         if ("skins".equals(editorTab)) {
-            graphics.drawString(this.font, "Список скінів — вибір одразу міняє preview", l.centerX, formY + 96, 0xFF9AA8BD, false);
+            graphics.drawString(this.font, HomeCraftGuildI18n.t("screen.homecraftguild.npc_admin.skin_list_hint"), l.centerX, formY + 96, 0xFF9AA8BD, false);
         } else if ("diagnostics".equals(editorTab)) {
             // Diagnostics tab has no widgets in rebuildWidgets(); labels are rendered in render().
         } else if ("trades".equals(editorTab)) {
-            graphics.drawString(this.font, "Товари: готові пресети + редагування кожної позиції нижче", l.centerX, formY + 96, 0xFF9AA8BD, false);
+            graphics.drawString(this.font, HomeCraftGuildI18n.t("screen.homecraftguild.npc_admin.trades_hint"), l.centerX, formY + 96, 0xFF9AA8BD, false);
         } else if ("placed".equals(editorTab)) {
-            graphics.drawString(this.font, "Список розставлених NPC у server config + repair", l.centerX, formY + 96, 0xFF9AA8BD, false);
+            graphics.drawString(this.font, HomeCraftGuildI18n.t("screen.homecraftguild.npc_admin.placed_hint"), l.centerX, formY + 96, 0xFF9AA8BD, false);
         } else {
-            graphics.drawString(this.font, "Готові типи торговців", l.centerX, formY + 96, 0xFF9AA8BD, false);
+            graphics.drawString(this.font, HomeCraftGuildI18n.t("screen.homecraftguild.npc_admin.preset_hint"), l.centerX, formY + 96, 0xFF9AA8BD, false);
         }
 
         int previewTop = l.y + 72;
         int availablePreview = Math.max(160, l.bottomY - previewTop - 82);
         int previewH = Math.max(160, Math.min(286, availablePreview));
-        renderNpcPreview(graphics, l.previewX, previewTop, l.previewW, previewH);
+        renderNpcPreview(graphics, l.previewX, previewTop, l.previewW, previewH, mouseX, mouseY);
         if (selected != null) {
             int infoY = previewTop + previewH + 8;
             int c = selected.system ? 0xFF9AE6B4 : 0xFFBFD7FF;
@@ -513,7 +520,7 @@ public final class GuildNpcAdminScreen extends Screen {
         super.render(graphics, mouseX, mouseY, partialTick);
     }
 
-    private void renderNpcPreview(GuiGraphics graphics, int x, int y, int w, int h) {
+    private void renderNpcPreview(GuiGraphics graphics, int x, int y, int w, int h, double mouseX, double mouseY) {
         graphics.fill(x, y, x + w, y + h, 0xAA000000);
         String skin = skinBox == null ? "guild_registrar" : skinBox.getValue().trim().toLowerCase(Locale.ROOT);
         if (skin.isBlank()) skin = "guild_registrar";
@@ -532,20 +539,20 @@ public final class GuildNpcAdminScreen extends Screen {
                 entity.yRotO = previewYaw;
                 entity.yBodyRotO = previewYaw;
                 entity.yHeadRotO = previewYaw;
-                rendered = NpcPreviewRenderer.render(graphics, x, y, w, h, previewScale, previewYaw, entity);
+                rendered = NpcPreviewRenderer.render(graphics, x, y, w, h, previewScale, previewYaw, mouseX, mouseY, entity);
             }
         } catch (Throwable ignored) {
             rendered = false;
         }
 
         if (!rendered) {
-            previewStatus = "Preview fallback: 2D skin parts";
-            graphics.drawString(this.font, "NPC preview", x + 12, y + 28, 0xFFFFD166, false);
-            drawWrapped(graphics, "3D inventory path недоступний у цьому mapping, показано безпечний skin fallback.", x + 12, y + 46, w - 24, 0xFFFF7777);
+            previewStatus = HomeCraftGuildI18n.t("preview.homecraftguild.fallback_status");
+            graphics.drawString(this.font, HomeCraftGuildI18n.t("preview.homecraftguild.npc_preview"), x + 12, y + 28, 0xFFFFD166, false);
+            drawWrapped(graphics, HomeCraftGuildI18n.t("preview.homecraftguild.mapping_fallback"), x + 12, y + 46, w - 24, 0xFFFF7777);
         } else {
-            previewStatus = missingSkin ? "Preview OK: fallback skin, missing skinId=" + skin : "Preview OK: skin=" + skin;
+            previewStatus = missingSkin ? HomeCraftGuildI18n.t("preview.homecraftguild.missing_skin", skin) : HomeCraftGuildI18n.t("preview.homecraftguild.ok_skin", skin);
         }
-        drawClippedText(graphics, "skinId: " + skin, x + 8, y + h - 14, w - 16, 0xFFB8C7DD);
+        drawClippedText(graphics, "skinId: " + skin + " · " + HomeCraftGuildI18n.skinName(skin), x + 8, y + h - 14, w - 16, 0xFFB8C7DD);
     }
 
     private GuildRegistrarEntity previewEntity(String key, String skin) {
@@ -573,8 +580,8 @@ public final class GuildNpcAdminScreen extends Screen {
         graphics.fill(listX, listY, listX + listW, listY + listH, 0x77000000);
         int headerY = listY + 8;
         graphics.drawString(this.font, "NPC", listX + 8, headerY, 0xFFFFD166, false);
-        graphics.drawString(this.font, "Стан / позиція / скін", listX + 220, headerY, 0xFFFFD166, false);
-        graphics.drawString(this.font, "Дії", listX + listW - 270, headerY, 0xFFFFD166, false);
+        graphics.drawString(this.font, HomeCraftGuildI18n.t("screen.homecraftguild.npc_admin.state_pos_skin"), listX + 220, headerY, 0xFFFFD166, false);
+        graphics.drawString(this.font, HomeCraftGuildI18n.t("screen.homecraftguild.npc_admin.actions"), listX + listW - 270, headerY, 0xFFFFD166, false);
         int rowH = 24;
         int visible = Math.max(1, (listH - 32) / rowH);
         int maxScroll = Math.max(0, rows.size() - visible);
@@ -587,7 +594,7 @@ public final class GuildNpcAdminScreen extends Screen {
             drawClippedText(graphics, (row.enabled ? "placed" : "off") + " · " + row.kind + " · " + row.skin + " · " + row.pos, listX + 220, yy, listW - 510, 0xFFB8C7DD);
         }
         if (rows.isEmpty()) {
-            graphics.drawString(this.font, "NPC у конфігу не знайдені.", listX + 8, listY + 34, 0xFF9AA8BD, false);
+            graphics.drawString(this.font, HomeCraftGuildI18n.t("screen.homecraftguild.npc_admin.no_npcs"), listX + 8, listY + 34, 0xFF9AA8BD, false);
         }
     }
 
@@ -599,14 +606,14 @@ public final class GuildNpcAdminScreen extends Screen {
         int listH = tradeListH(l, listY);
         graphics.fill(listX, listY, listX + listW, listY + listH, 0x99000000);
         if (selected.system) {
-            drawWrapped(graphics, "Це системний NPC. Торгівля вимкнена. Можна змінювати тільки назву і skinId.", listX + 8, listY + 10, listW - 16, 0xFFFFD166);
+            drawWrapped(graphics, HomeCraftGuildI18n.t("screen.homecraftguild.npc_admin.system_no_trade"), listX + 8, listY + 10, listW - 16, 0xFFFFD166);
             return;
         }
         int headerY = listY + 6;
         graphics.drawString(this.font, "#", listX + 8, headerY, 0xFFFFD166, false);
-        graphics.drawString(this.font, "Товар", listX + 38, headerY, 0xFFFFD166, false);
-        graphics.drawString(this.font, "Дії", listX + listW - 166, headerY, 0xFFFFD166, false);
-        graphics.drawString(this.font, "Поточних товарів: " + selected.trades.size(), listX + listW - 280, headerY, 0xFF9AA8BD, false);
+        graphics.drawString(this.font, HomeCraftGuildI18n.t("screen.homecraftguild.npc_admin.trade"), listX + 38, headerY, 0xFFFFD166, false);
+        graphics.drawString(this.font, HomeCraftGuildI18n.t("screen.homecraftguild.npc_admin.actions"), listX + listW - 166, headerY, 0xFFFFD166, false);
+        graphics.drawString(this.font, HomeCraftGuildI18n.t("screen.homecraftguild.npc_admin.current_trades", selected.trades.size()), listX + listW - 280, headerY, 0xFF9AA8BD, false);
         int rowY = listY + 26;
         int rowH = 22;
         int visible = Math.max(1, (listH - 28) / rowH);
@@ -621,7 +628,7 @@ public final class GuildNpcAdminScreen extends Screen {
             drawClippedText(graphics, humanTrade(selected.trades.get(idx)), listX + 38, yy, listW - 250, 0xFFBFD7FF);
         }
         if (selected.trades.isEmpty()) {
-            graphics.drawString(this.font, "Товарів ще немає. Натисни готовий пресет або додай товар через окреме вікно.", listX + 8, rowY, 0xFF9AA8BD, false);
+            graphics.drawString(this.font, HomeCraftGuildI18n.t("screen.homecraftguild.npc_admin.no_trades"), listX + 8, rowY, 0xFF9AA8BD, false);
         }
     }
 
@@ -635,7 +642,7 @@ public final class GuildNpcAdminScreen extends Screen {
         drawClippedText(graphics, "snapshot revision/cache: " + revisionFromSnapshot(snapshot), listX + 10, y, listW - 20, 0xFFB8C7DD); y += 12;
         drawClippedText(graphics, "npcKey=" + selected.key + " skin=" + selected.skin + " preset=" + selected.presetId, listX + 10, y, listW - 20, 0xFFB8C7DD); y += 12;
         drawClippedText(graphics, "trades=" + selected.trades.size() + " customTrades=" + selected.customTrades + " tradesHash=" + selected.tradesHash, listX + 10, y, listW - 20, 0xFFB8C7DD); y += 12;
-        drawWrapped(graphics, "Діагностика не малює кнопки інших вкладок. Якщо після save екран скаче — це regression у UiState.", listX + 10, y + 4, listW - 20, 0xFFFFD166);
+        drawWrapped(graphics, HomeCraftGuildI18n.t("screen.homecraftguild.npc_admin.diagnostics_hint"), listX + 10, y + 4, listW - 20, 0xFFFFD166);
     }
 
     private String revisionFromSnapshot(String raw) {
@@ -651,8 +658,8 @@ public final class GuildNpcAdminScreen extends Screen {
         int listH = Math.max(36, l.y + l.h - 48 - listY);
         graphics.fill(listX, listY, listX + listW, listY + listH, 0x77000000);
         String msg = selected.system
-                ? "Системний NPC: можна змінювати тільки назву та skinId. Торгівля вимкнена."
-                : "Для редагування товарів відкрий вкладку «Товари». Там кожен товар має свою кнопку редагування та видалення.";
+                ? HomeCraftGuildI18n.t("screen.homecraftguild.npc_admin.system_hint")
+                : HomeCraftGuildI18n.t("screen.homecraftguild.npc_admin.trade_hint");
         drawWrapped(graphics, msg, listX + 10, listY + 12, listW - 20, selected.system ? 0xFFFFD166 : 0xFFB8C7DD);
     }
 
@@ -947,10 +954,10 @@ public final class GuildNpcAdminScreen extends Screen {
         private String validationMessage = "";
 
         CreateNpcScreen(GuildNpcAdminScreen parent, String key, String name, String skin, String preset) {
-            super(Component.literal("Створення NPC"));
+            super(HomeCraftGuildI18n.c("screen.homecraftguild.npc_admin.create_title"));
             this.parent = parent;
             this.initialKey = key == null || key.isBlank() ? "trader_basic" : key;
-            this.initialName = name == null || name.isBlank() ? "Гільдійний Торговець" : name;
+            this.initialName = name == null || name.isBlank() ? HomeCraftGuildI18n.t("npc.homecraftguild.trader") : name;
             this.initialSkin = skin == null || skin.isBlank() ? "guild_registrar" : skin;
             this.initialPreset = preset == null || preset.isBlank() ? this.initialKey : preset;
         }
@@ -964,13 +971,13 @@ public final class GuildNpcAdminScreen extends Screen {
             int y = (this.height - h) / 2;
             int inner = w - 24;
             keyBox = edit(x + 12, y + 42, inner, "npcKey", "trader_weapons", initialKey);
-            nameBox = edit(x + 12, y + 78, inner, "displayName", "Гільдійний Торговець", initialName);
+            nameBox = edit(x + 12, y + 78, inner, "displayName", HomeCraftGuildI18n.t("npc.homecraftguild.trader"), initialName);
             skinBox = edit(x + 12, y + 114, inner, "skinId", "guild_registrar", initialSkin);
             presetBox = edit(x + 12, y + 150, inner, "traderPresetId", "trader_basic", initialPreset);
             addRenderableWidget(keyBox); addRenderableWidget(nameBox); addRenderableWidget(skinBox); addRenderableWidget(presetBox);
-            addRenderableWidget(Button.builder(Component.literal("Перевірити"), b -> check()).bounds(x + w - 328, y + h - 34, 100, 22).build());
-            addRenderableWidget(Button.builder(Component.literal("Створити"), b -> create()).bounds(x + w - 220, y + h - 34, 100, 22).build());
-            addRenderableWidget(Button.builder(Component.literal("Скасувати"), b -> Minecraft.getInstance().setScreen(parent)).bounds(x + w - 112, y + h - 34, 100, 22).build());
+            addRenderableWidget(Button.builder(HomeCraftGuildI18n.c("button.homecraftguild.check"), b -> check()).bounds(x + w - 328, y + h - 34, 100, 22).build());
+            addRenderableWidget(Button.builder(HomeCraftGuildI18n.c("button.homecraftguild.create"), b -> create()).bounds(x + w - 220, y + h - 34, 100, 22).build());
+            addRenderableWidget(Button.builder(HomeCraftGuildI18n.c("button.homecraftguild.cancel"), b -> Minecraft.getInstance().setScreen(parent)).bounds(x + w - 112, y + h - 34, 100, 22).build());
         }
 
         private EditBox edit(int x, int y, int w, String title, String hint, String value) {
@@ -989,7 +996,7 @@ public final class GuildNpcAdminScreen extends Screen {
             int y = (this.height - h) / 2;
             graphics.fill(0, 0, this.width, this.height, 0x99000000);
             graphics.fill(x, y, x + w, y + h, 0xEE101522);
-            graphics.drawString(this.font, "Створення торгового NPC у позиції гравця", x + 12, y + 12, 0xFFFFFFFF, false);
+            graphics.drawString(this.font, HomeCraftGuildI18n.t("screen.homecraftguild.npc_admin.create_dialog_header"), x + 12, y + 12, 0xFFFFFFFF, false);
             graphics.drawString(this.font, "npcKey", x + 12, y + 31, 0xFFFFD166, false);
             graphics.drawString(this.font, "displayName", x + 12, y + 67, 0xFFFFD166, false);
             graphics.drawString(this.font, "skinId", x + 12, y + 103, 0xFFFFD166, false);
@@ -999,7 +1006,7 @@ public final class GuildNpcAdminScreen extends Screen {
         }
 
         private void check() {
-            validationMessage = "Перевірка на сервері...";
+            validationMessage = HomeCraftGuildI18n.t("screen.homecraftguild.npc_admin.checking_server");
             ClientPacketDistributor.sendToServer(new GuildActionPayload("npc_admin_create_check", cleanStatic(keyBox.getValue()), buildParams()));
         }
 
@@ -1072,7 +1079,7 @@ public final class GuildNpcAdminScreen extends Screen {
         private boolean pendingSave;
 
         TradeEditScreen(GuildNpcAdminScreen parent, String npcKey, int index, String raw) {
-            super(Component.literal(index >= 0 ? "Редагування товару" : "Новий товар"));
+            super(HomeCraftGuildI18n.c(index >= 0 ? "screen.homecraftguild.npc_admin.edit_trade_title" : "screen.homecraftguild.npc_admin.new_trade_title"));
             this.parent = parent;
             this.npcKey = npcKey == null || npcKey.isBlank() ? "trader_basic" : npcKey;
             this.index = index;
@@ -1093,7 +1100,7 @@ public final class GuildNpcAdminScreen extends Screen {
             int yy = y + 42;
             buyItemBox = edit(x + 12, yy, itemW, "buy", "minecraft:emerald", values.getOrDefault("buy", "minecraft:emerald"));
             buyCountBox = edit(x + 18 + itemW, yy, countW, "buyCount", "1", values.getOrDefault("buycount", "1")); yy += 36;
-            buy2ItemBox = edit(x + 12, yy, itemW, "buy2", "optional second item", values.getOrDefault("buy2", values.getOrDefault("secondbuy", "")));
+            buy2ItemBox = edit(x + 12, yy, itemW, "buy2", HomeCraftGuildI18n.t("field.homecraftguild.optional_second_item"), values.getOrDefault("buy2", values.getOrDefault("secondbuy", "")));
             buy2CountBox = edit(x + 18 + itemW, yy, countW, "buy2Count", "1", values.getOrDefault("buy2count", values.getOrDefault("secondbuycount", "1"))); yy += 36;
             sellItemBox = edit(x + 12, yy, itemW, "sell", "minecraft:iron_sword", values.getOrDefault("sell", "minecraft:bread"));
             sellCountBox = edit(x + 18 + itemW, yy, countW, "sellCount", "1", values.getOrDefault("sellcount", "1")); yy += 36;
@@ -1101,18 +1108,18 @@ public final class GuildNpcAdminScreen extends Screen {
             int smallW = Math.max(48, (inner - smallGap * 5) / 6);
             maxUsesBox = edit(x + 12, yy, smallW, "max", "16", values.getOrDefault("max", values.getOrDefault("maxuses", "16")));
             xpBox = edit(x + 12 + (smallW + smallGap), yy, smallW, "xp", "0", values.getOrDefault("xp", "0"));
-            roleBox = edit(x + 12 + (smallW + smallGap) * 2, yy, smallW, "role", "any/member", values.getOrDefault("role", "member"));
+            roleBox = edit(x + 12 + (smallW + smallGap) * 2, yy, smallW, "role", HomeCraftGuildI18n.t("field.homecraftguild.role_hint"), values.getOrDefault("role", "member"));
             limitBox = edit(x + 12 + (smallW + smallGap) * 3, yy, smallW, "limit", "0", values.getOrDefault("limit", values.getOrDefault("perplayer", "0")));
             resetBox = edit(x + 12 + (smallW + smallGap) * 4, yy, smallW, "reset", "never", values.getOrDefault("reset", values.getOrDefault("resetpolicy", "never")));
-            damageBox = edit(x + 12 + (smallW + smallGap) * 5, yy, smallW, "+урон", "0/2", values.getOrDefault("damage", values.getOrDefault("extradamage", values.getOrDefault("bonusdamage", "0")))); yy += 46;
-            tradeNameBox = edit(x + 12, yy, inner, "name", "Назва товару", values.getOrDefault("name", "")); yy += 36;
+            damageBox = edit(x + 12 + (smallW + smallGap) * 5, yy, smallW, "damage", "0/2", values.getOrDefault("damage", values.getOrDefault("extradamage", values.getOrDefault("bonusdamage", "0")))); yy += 46;
+            tradeNameBox = edit(x + 12, yy, inner, "name", HomeCraftGuildI18n.t("field.homecraftguild.trade_name"), values.getOrDefault("name", "")); yy += 36;
             enchantBox = edit(x + 12, yy, inner, "ench", "sharpness:5+unbreaking:3", values.getOrDefault("ench", values.getOrDefault("enchant", "")));
             addRenderableWidget(buyItemBox); addRenderableWidget(buyCountBox); addRenderableWidget(buy2ItemBox); addRenderableWidget(buy2CountBox); addRenderableWidget(sellItemBox); addRenderableWidget(sellCountBox);
             addRenderableWidget(maxUsesBox); addRenderableWidget(xpBox); addRenderableWidget(roleBox); addRenderableWidget(limitBox); addRenderableWidget(resetBox); addRenderableWidget(damageBox); addRenderableWidget(tradeNameBox); addRenderableWidget(enchantBox);
             int buttonY = y + h - 34;
-            addRenderableWidget(Button.builder(Component.literal("Перевірити"), b -> checkTrade()).bounds(x + w - 328, buttonY, 100, 22).build());
-            addRenderableWidget(Button.builder(Component.literal("Зберегти"), b -> saveTrade()).bounds(x + w - 220, buttonY, 100, 22).build());
-            addRenderableWidget(Button.builder(Component.literal("Скасувати"), b -> Minecraft.getInstance().setScreen(parent)).bounds(x + w - 112, buttonY, 100, 22).build());
+            addRenderableWidget(Button.builder(HomeCraftGuildI18n.c("button.homecraftguild.check"), b -> checkTrade()).bounds(x + w - 328, buttonY, 100, 22).build());
+            addRenderableWidget(Button.builder(HomeCraftGuildI18n.c("button.homecraftguild.save"), b -> saveTrade()).bounds(x + w - 220, buttonY, 100, 22).build());
+            addRenderableWidget(Button.builder(HomeCraftGuildI18n.c("button.homecraftguild.cancel"), b -> Minecraft.getInstance().setScreen(parent)).bounds(x + w - 112, buttonY, 100, 22).build());
         }
 
         private int dialogWidth() {
@@ -1139,16 +1146,16 @@ public final class GuildNpcAdminScreen extends Screen {
             int y = (this.height - h) / 2;
             graphics.fill(0, 0, this.width, this.height, 0x99000000);
             graphics.fill(x, y, x + w, y + h, 0xEE101522);
-            graphics.drawString(this.font, (index >= 0 ? "Редагування товару #" + index : "Новий товар") + " для " + npcKey, x + 12, y + 12, 0xFFFFFFFF, false);
-            graphics.drawString(this.font, "Купує", x + 12, y + 31, 0xFFFFD166, false);
+            graphics.drawString(this.font, (index >= 0 ? HomeCraftGuildI18n.t("screen.homecraftguild.npc_admin.edit_trade", index) : HomeCraftGuildI18n.t("screen.homecraftguild.npc_admin.new_trade")) + " " + HomeCraftGuildI18n.t("screen.homecraftguild.npc_admin.for_npc", npcKey), x + 12, y + 12, 0xFFFFFFFF, false);
+            graphics.drawString(this.font, HomeCraftGuildI18n.t("screen.homecraftguild.npc_admin.buys"), x + 12, y + 31, 0xFFFFD166, false);
             graphics.drawString(this.font, "x", x + 18 + (w - 36) / 2, y + 31, 0xFFFFD166, false);
-            graphics.drawString(this.font, "Друга ціна (опційно)", x + 12, y + 67, 0xFFFFD166, false);
+            graphics.drawString(this.font, HomeCraftGuildI18n.t("screen.homecraftguild.npc_admin.second_price"), x + 12, y + 67, 0xFFFFD166, false);
             graphics.drawString(this.font, "x", x + 18 + (w - 36) / 2, y + 67, 0xFFFFD166, false);
-            graphics.drawString(this.font, "Продає", x + 12, y + 103, 0xFFFFD166, false);
+            graphics.drawString(this.font, HomeCraftGuildI18n.t("screen.homecraftguild.npc_admin.sells"), x + 12, y + 103, 0xFFFFD166, false);
             graphics.drawString(this.font, "x", x + 18 + (w - 36) / 2, y + 103, 0xFFFFD166, false);
-            graphics.drawString(this.font, "max / xp / роль / ліміт / reset / +урон", x + 12, y + 139, 0xFFFFD166, false);
-            graphics.drawString(this.font, "Назва товару", x + 12, y + 185, 0xFFFFD166, false);
-            graphics.drawString(this.font, "Зачарування", x + 12, y + 221, 0xFFFFD166, false);
+            graphics.drawString(this.font, HomeCraftGuildI18n.t("screen.homecraftguild.npc_admin.trade_meta"), x + 12, y + 139, 0xFFFFD166, false);
+            graphics.drawString(this.font, HomeCraftGuildI18n.t("field.homecraftguild.trade_name"), x + 12, y + 185, 0xFFFFD166, false);
+            graphics.drawString(this.font, HomeCraftGuildI18n.t("screen.homecraftguild.npc_admin.enchantments"), x + 12, y + 221, 0xFFFFD166, false);
             if (validationMessage != null && !validationMessage.isBlank()) graphics.drawString(this.font, validationMessage, x + 12, y + h - 52, validationMessage.startsWith("OK") ? 0xFF9AE6B4 : 0xFFFF7777, false);
             super.render(graphics, mouseX, mouseY, partialTick);
         }
@@ -1165,7 +1172,7 @@ public final class GuildNpcAdminScreen extends Screen {
             String spec = buildSpec();
             pendingSave = save;
             lastRequestedIndex = index;
-            validationMessage = save ? "Перевірка на сервері перед збереженням..." : "Перевірка на сервері...";
+            validationMessage = save ? HomeCraftGuildI18n.t("screen.homecraftguild.npc_admin.trade_checking_save") : HomeCraftGuildI18n.t("screen.homecraftguild.npc_admin.trade_checking");
             if (save && index >= 0) {
                 ClientPacketDistributor.sendToServer(new GuildActionPayload("npc_admin_trade_set", npcKey, index + ";" + spec));
             } else if (save) {

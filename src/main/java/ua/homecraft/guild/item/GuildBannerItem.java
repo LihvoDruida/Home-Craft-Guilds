@@ -38,7 +38,7 @@ public final class GuildBannerItem extends Item {
         BlockPlaceContext checkedContext = BlockPlaceContext.at(placeContext, placePos, context.getClickedFace());
 
         if (ua.homecraft.guild.server.GuildStore.isSpawnPosition(level, placePos)) {
-            player.displayClientMessage(Component.literal("Home Craft Guilds: гільдійний тотем не можна ставити у spawn-зоні. Предмет повернуто."), true);
+            player.displayClientMessage(Component.translatable("message.homecraftguild.guild_banner.spawn_denied"), true);
             return InteractionResult.FAIL;
         }
         if (!level.getBlockState(placePos).canBeReplaced(checkedContext)) return InteractionResult.FAIL;
@@ -51,23 +51,23 @@ public final class GuildBannerItem extends Item {
             return InteractionResult.FAIL;
         }
         if (!player.getAbilities().instabuild) context.getItemInHand().shrink(1);
-        player.displayClientMessage(Component.literal("Home Craft Guilds: гільдійний тотем встановлено."), true);
+        player.displayClientMessage(Component.translatable("message.homecraftguild.guild_banner.placed"), true);
         return InteractionResult.SUCCESS;
     }
 
     @Override
     public void appendHoverText(ItemStack stack, TooltipContext context, TooltipDisplay display, Consumer<Component> tooltip, TooltipFlag flag) {
-        tooltip.accept(Component.literal("Гільдійний тотем / банер").withStyle(ChatFormatting.LIGHT_PURPLE));
-        tooltip.accept(Component.literal("Ставить гільдійну територію.").withStyle(ChatFormatting.GRAY));
-        tooltip.accept(Component.literal("Рецепт: ABA / BEB / ABA").withStyle(ChatFormatting.DARK_AQUA));
-        tooltip.accept(Component.literal("A — уламок аметисту, B — будь-який банер, E — смарагд.").withStyle(ChatFormatting.GRAY));
+        tooltip.accept(Component.translatable("tooltip.homecraftguild.guild_banner.title").withStyle(ChatFormatting.LIGHT_PURPLE));
+        tooltip.accept(Component.translatable("tooltip.homecraftguild.guild_banner.description").withStyle(ChatFormatting.GRAY));
+        tooltip.accept(Component.translatable("tooltip.homecraftguild.guild_banner.recipe").withStyle(ChatFormatting.DARK_AQUA));
+        tooltip.accept(Component.translatable("tooltip.homecraftguild.guild_banner.recipe_items").withStyle(ChatFormatting.GRAY));
         tooltip.accept(Component.empty());
-        tooltip.accept(Component.literal("Що відкриває гільдія:").withStyle(ChatFormatting.DARK_AQUA));
-        tooltip.accept(Component.literal("• територію, бафи, ліжка, големів і розвиток рівнів").withStyle(ChatFormatting.GRAY));
-        tooltip.accept(Component.literal("• База: +5% XP, +10% зіль; вище — через таланти").withStyle(ChatFormatting.GREEN));
-        tooltip.accept(Component.literal("• бонуси здоров’я, броні, шкоди й нічний зір через рівні").withStyle(ChatFormatting.AQUA));
+        tooltip.accept(Component.translatable("tooltip.homecraftguild.guild_banner.unlocks_title").withStyle(ChatFormatting.DARK_AQUA));
+        tooltip.accept(Component.translatable("tooltip.homecraftguild.guild_banner.unlocks_systems").withStyle(ChatFormatting.GRAY));
+        tooltip.accept(Component.translatable("tooltip.homecraftguild.guild_banner.unlocks_base_buffs").withStyle(ChatFormatting.GREEN));
+        tooltip.accept(Component.translatable("tooltip.homecraftguild.guild_banner.unlocks_level_buffs").withStyle(ChatFormatting.AQUA));
         tooltip.accept(Component.empty());
-        tooltip.accept(Component.literal("Ставити може лише Гілдмайстер поза spawn-зоною і без перетину територій.").withStyle(ChatFormatting.GOLD));
+        tooltip.accept(Component.translatable("tooltip.homecraftguild.guild_banner.placement_rule").withStyle(ChatFormatting.GOLD));
     }
 
     @Override

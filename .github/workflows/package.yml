@@ -50,6 +50,10 @@ jobs:
         shell: bash
         run: python3 scripts/validate-cliff-config.py
 
+      - name: Validate localization files
+        shell: bash
+        run: python3 scripts/validate-i18n.py
+
   build-neoforge-1-21-11:
     name: Build NeoForge for Minecraft 1.21.11
     runs-on: ubuntu-latest
@@ -87,7 +91,7 @@ jobs:
 
           MOD_VERSION="${TAG#v}"
           if [[ -z "${MOD_VERSION}" ]]; then
-            echo "Could not resolve mod version. Expected tag format like v0.1.156" >&2
+            echo "Could not resolve mod version. Expected tag format like v0.1.158" >&2
             exit 1
           fi
 

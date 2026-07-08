@@ -30,7 +30,7 @@ public final class GuildTalentScreen extends Screen {
     }
 
     public GuildTalentScreen(String snapshot, int scrollRows, String activeBranch) {
-        super(Component.literal("Таланти гільдії"));
+        super(HomeCraftGuildI18n.c("screen.homecraftguild.talents.title"));
         this.snapshot = snapshot == null ? "" : snapshot;
         this.view = TalentsView.parse(this.snapshot);
         this.scrollRows = Math.max(0, scrollRows);
@@ -46,18 +46,18 @@ public final class GuildTalentScreen extends Screen {
         Layout l = layout();
         int topY = l.y + 36;
         int buttonW = l.compact ? 68 : 78;
-        addRenderableWidget(Button.builder(Component.literal("Назад"), b -> {
+        addRenderableWidget(Button.builder(HomeCraftGuildI18n.c("button.homecraftguild.back"), b -> {
             if (this.minecraft != null) this.minecraft.setScreen(new GuildRosterScreen(this.snapshot));
         }).bounds(l.x + l.pad, topY, buttonW, 22).build());
-        addRenderableWidget(Button.builder(Component.literal("Оновити"), b -> send("request", "", ""))
+        addRenderableWidget(Button.builder(HomeCraftGuildI18n.c("button.homecraftguild.refresh"), b -> send("request", "", ""))
                 .bounds(l.x + l.pad + buttonW + 8, topY, l.compact ? 76 : 82, 22).build());
 
         if (l.compact) {
             int tabsY = topY + 28;
             int tabW = Math.max(86, (l.panelW - l.pad * 2 - 8) / 2);
-            addRenderableWidget(Button.builder(Component.literal("member".equals(activeBranch) ? "✓ Учасники" : "Учасники"), b -> setBranch("member"))
+            addRenderableWidget(Button.builder(Component.literal(("member".equals(activeBranch) ? "✓ " : "") + HomeCraftGuildI18n.t("talent_branch.homecraftguild.member")), b -> setBranch("member"))
                     .bounds(l.x + l.pad, tabsY, tabW, 22).build());
-            addRenderableWidget(Button.builder(Component.literal("golem".equals(activeBranch) ? "✓ Големи" : "Големи"), b -> setBranch("golem"))
+            addRenderableWidget(Button.builder(Component.literal(("golem".equals(activeBranch) ? "✓ " : "") + HomeCraftGuildI18n.t("talent_branch.homecraftguild.golem")), b -> setBranch("golem"))
                     .bounds(l.x + l.pad + tabW + 8, tabsY, tabW, 22).build());
         }
 
@@ -82,7 +82,7 @@ public final class GuildTalentScreen extends Screen {
 
     private void addResetButtonIfAllowed(String branch, int x, int y, int colW) {
         if (!view.canManageTalents) return;
-        String label = "member".equals(branch) ? "Скинути учасників" : "Скинути големів";
+        String label = "member".equals(branch) ? HomeCraftGuildI18n.t("button.homecraftguild.reset_members") : HomeCraftGuildI18n.t("button.homecraftguild.reset_golems");
         int w = Math.min(colW - 8, colW < 220 ? 118 : 144);
         addRenderableWidget(Button.builder(Component.literal(label), b -> send("reset_talent_branch", branch, ""))
                 .bounds(x + colW - w, y, w, 20).build());
@@ -96,7 +96,7 @@ public final class GuildTalentScreen extends Screen {
             if (y < yStart || y + rowH > bottomY) continue;
             if (view.canManageTalents && !row.unlocked && row.isAvailable()) {
                 int w = colW < 230 ? 58 : 72;
-                addRenderableWidget(Button.builder(Component.literal(colW < 230 ? "+" : "Вивчити"), b -> send("unlock_talent", row.id, ""))
+                addRenderableWidget(Button.builder(Component.literal(colW < 230 ? "+" : HomeCraftGuildI18n.t("button.homecraftguild.unlock")), b -> send("unlock_talent", row.id, ""))
                         .bounds(x + colW - w - 8, y + rowH - 26, w, 18).build());
             }
         }
@@ -141,17 +141,17 @@ public final class GuildTalentScreen extends Screen {
         Layout l = layout();
         graphics.fill(l.x, l.y, l.x + l.panelW, l.y + l.panelH, 0xEC10131A);
         graphics.fill(l.x + 1, l.y + 1, l.x + l.panelW - 1, l.y + 28, 0xFF202633);
-        graphics.drawString(this.font, trimToWidth("Таланти гільдії", Math.max(80, l.panelW / 3)), l.x + l.pad, l.y + 10, 0xFFFFD99A, false);
-        String levelLine = "Рівень: " + view.guildLevel + " / 7";
+        graphics.drawString(this.font, trimToWidth(HomeCraftGuildI18n.t("screen.homecraftguild.talents.title"), Math.max(80, l.panelW / 3)), l.x + l.pad, l.y + 10, 0xFFFFD99A, false);
+        String levelLine = HomeCraftGuildI18n.t("screen.homecraftguild.talents.level", view.guildLevel);
         graphics.drawString(this.font, levelLine, l.x + l.pad + Math.min(150, Math.max(92, l.panelW / 3)), l.y + 10, 0xFFD8DEE9, false);
         if (!l.compact) {
-            String mode = view.canManageTalents ? "Керує глава гільдії" : "Перегляд: керує тільки глава";
+            String mode = view.canManageTalents ? HomeCraftGuildI18n.t("screen.homecraftguild.talents.manage_mode") : HomeCraftGuildI18n.t("screen.homecraftguild.talents.view_mode");
             graphics.drawString(this.font, trimToWidth(mode, 230), l.x + l.panelW - l.pad - 230, l.y + 10, view.canManageTalents ? 0xFF9AFFB4 : 0xFFFFC06A, false);
         }
 
         if (l.compact) {
-            drawTabState(graphics, l.x + l.pad, l.y + 64, (l.panelW - l.pad * 2 - 8) / 2, "member", "Учасники");
-            drawTabState(graphics, l.x + l.pad + (l.panelW - l.pad * 2 - 8) / 2 + 8, l.y + 64, (l.panelW - l.pad * 2 - 8) / 2, "golem", "Големи");
+            drawTabState(graphics, l.x + l.pad, l.y + 64, (l.panelW - l.pad * 2 - 8) / 2, "member", HomeCraftGuildI18n.t("talent_branch.homecraftguild.member"));
+            drawTabState(graphics, l.x + l.pad + (l.panelW - l.pad * 2 - 8) / 2 + 8, l.y + 64, (l.panelW - l.pad * 2 - 8) / 2, "golem", HomeCraftGuildI18n.t("talent_branch.homecraftguild.golem"));
             renderBranch(graphics, activeBranch, l.x + l.pad, l.branchY, l.panelW - l.pad * 2, l.bottomY - 10);
         } else {
             int gap = 12;
@@ -174,9 +174,9 @@ public final class GuildTalentScreen extends Screen {
         int available = member ? view.memberAvailable : view.golemAvailable;
         int total = member ? view.memberTotal : view.golemTotal;
         int spent = member ? view.memberSpent : view.golemSpent;
-        String title = member ? "Учасники" : "Големи";
+        String title = member ? HomeCraftGuildI18n.t("talent_branch.homecraftguild.member") : HomeCraftGuildI18n.t("talent_branch.homecraftguild.golem");
         graphics.fill(x, y, x + w, y + 24, member ? 0xFF223022 : 0xFF222A35);
-        graphics.drawString(this.font, trimToWidth(title + " — очки: " + available + " / " + total + " · витрачено " + spent, w - 16), x + 8, y + 8, 0xFFFFFFFF, false);
+        graphics.drawString(this.font, trimToWidth(HomeCraftGuildI18n.t("screen.homecraftguild.talents.points_line", title, available, total, spent), w - 16), x + 8, y + 8, 0xFFFFFFFF, false);
 
         List<TalentRow> rows = view.branchRows(branch);
         int rowH = rowHeight(w);
@@ -192,32 +192,35 @@ public final class GuildTalentScreen extends Screen {
             int reserveButton = (view.canManageTalents && !row.unlocked && row.isAvailable()) ? (w < 230 ? 70 : 88) : 8;
             int tx = x + 36;
             int textW = Math.max(64, w - 44 - reserveButton);
-            graphics.drawString(this.font, trimToWidth(row.title, textW), tx, ry + 6, row.unlocked ? 0xFF9AFFB4 : 0xFFFFD99A, false);
-            List<String> effectLines = wrapText(row.effect, textW);
+            String rowTitle = HomeCraftGuildI18n.talentTitle(row.id, row.title);
+            String rowEffect = HomeCraftGuildI18n.talentEffect(row.id, row.effect);
+            graphics.drawString(this.font, trimToWidth(rowTitle, textW), tx, ry + 6, row.unlocked ? 0xFF9AFFB4 : 0xFFFFD99A, false);
+            List<String> effectLines = wrapText(rowEffect, textW);
             int lineY = ry + 20;
             for (int n = 0; n < Math.min(2, effectLines.size()); n++) {
                 graphics.drawString(this.font, effectLines.get(n), tx, lineY, 0xFFD8DEE9, false);
                 lineY += 11;
             }
-            String req = "Рів. " + row.requiredLevel + " • " + row.status;
+            String req = HomeCraftGuildI18n.t("screen.homecraftguild.talents.req_line", row.requiredLevel, HomeCraftGuildI18n.talentStatus(row.status));
             graphics.drawString(this.font, trimToWidth(req, Math.max(64, w - 46)), tx, ry + rowH - 17, row.unlocked ? 0xFF9AFFB4 : (row.isAvailable() ? 0xFFFFC06A : 0xFF9AA4B2), false);
             tooltipAreas.add(new TooltipArea(x, ry, w, rowH - 4, talentTooltip(row)));
         }
         int visible = visibleRowsFor(w, yStart, bottom);
         if (rows.size() > visible) {
-            graphics.drawString(this.font, "Показано: " + (scrollRows + 1) + "-" + Math.min(rows.size(), scrollRows + visible) + " з " + rows.size(), x + 8, bottom - 11, 0xFF9AA4B2, false);
+            graphics.drawString(this.font, HomeCraftGuildI18n.t("screen.homecraftguild.common.shown", scrollRows + 1, Math.min(rows.size(), scrollRows + visible), rows.size()), x + 8, bottom - 11, 0xFF9AA4B2, false);
         }
     }
 
     private List<String> talentTooltip(TalentRow row) {
         List<String> out = new ArrayList<>();
-        out.add(row.title);
-        out.addAll(wrapPlain(row.description, 48));
-        if (!row.effect.isBlank()) out.add("Ефект: " + row.effect);
-        out.add("Вартість: " + row.cost + " очко");
-        out.add("Вимога: рівень гільдії " + row.requiredLevel);
-        if (!row.prerequisite.isBlank()) out.add("Потрібно: " + row.prerequisite.replace(',', '+'));
-        out.add("Статус: " + row.status);
+        out.add(HomeCraftGuildI18n.talentTitle(row.id, row.title));
+        out.addAll(wrapPlain(HomeCraftGuildI18n.talentDescription(row.id, row.description), 48));
+        String effect = HomeCraftGuildI18n.talentEffect(row.id, row.effect);
+        if (!effect.isBlank()) out.add(HomeCraftGuildI18n.t("screen.homecraftguild.talents.tooltip_effect", effect));
+        out.add(HomeCraftGuildI18n.t("screen.homecraftguild.talents.tooltip_cost", row.cost));
+        out.add(HomeCraftGuildI18n.t("screen.homecraftguild.talents.tooltip_required", row.requiredLevel));
+        if (!row.prerequisite.isBlank()) out.add(HomeCraftGuildI18n.t("screen.homecraftguild.talents.tooltip_prereq", row.prerequisite.replace(',', '+')));
+        out.add(HomeCraftGuildI18n.t("screen.homecraftguild.talents.tooltip_status", HomeCraftGuildI18n.talentStatus(row.status)));
         return out;
     }
 
