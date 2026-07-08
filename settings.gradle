@@ -1,0 +1,19 @@
+pluginManagement {
+    repositories {
+        gradlePluginPortal()
+        maven { url = 'https://maven.neoforged.net/releases' }
+        mavenCentral()
+    }
+}
+
+dependencyResolutionManagement {
+    // NeoForge ModDevGradle adds the official Mojang Minecraft Libraries repository.
+    // FAIL_ON_PROJECT_REPOS breaks that plugin, so allow project/plugin repositories.
+    repositoriesMode.set(RepositoriesMode.PREFER_PROJECT)
+    repositories {
+        mavenCentral()
+        maven { url = 'https://maven.neoforged.net/releases' }
+    }
+}
+
+rootProject.name = 'homecraft-guild-neoforge'

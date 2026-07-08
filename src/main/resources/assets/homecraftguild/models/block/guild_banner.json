@@ -1,0 +1,680 @@
+{
+	"format_version": "1.21.11",
+	"credit": "Made with Blockbench",
+	"ambientocclusion": false,
+	"textures": {
+		"stone": "homecraftguild:block/guild_totem_stone",
+		"trim": "homecraftguild:block/guild_totem_trim",
+		"ring": "homecraftguild:block/guild_totem_ring",
+		"particle": "homecraftguild:block/guild_totem_crystal",
+		"crystal": "homecraftguild:block/guild_totem_crystal"
+	},
+	"elements": [
+		{
+			"from": [
+				0.5,
+				0,
+				0.5
+			],
+			"to": [
+				15.5,
+				2,
+				15.5
+			],
+			"faces": {
+				"north": {
+					"uv": [
+						2.5,
+						14,
+						13.5,
+						16
+					],
+					"texture": "#stone"
+				},
+				"east": {
+					"uv": [
+						2.5,
+						14,
+						13.5,
+						16
+					],
+					"texture": "#stone"
+				},
+				"south": {
+					"uv": [
+						2.5,
+						14,
+						13.5,
+						16
+					],
+					"texture": "#stone"
+				},
+				"west": {
+					"uv": [
+						2.5,
+						14,
+						13.5,
+						16
+					],
+					"texture": "#stone"
+				},
+				"up": {
+					"uv": [
+						1.5,
+						1.5,
+						14.5,
+						14.5
+					],
+					"texture": "#trim"
+				},
+				"down": {
+					"uv": [
+						2.5,
+						2.5,
+						13.5,
+						13.5
+					],
+					"texture": "#stone"
+				}
+			}
+		},
+		{
+			"from": [
+				2.4,
+				2,
+				2.4
+			],
+			"to": [
+				13.6,
+				3.2,
+				13.6
+			],
+			"faces": {
+				"north": {
+					"uv": [
+						3.4,
+						12.8,
+						12.6,
+						14
+					],
+					"texture": "#ring"
+				},
+				"east": {
+					"uv": [
+						3.4,
+						12.8,
+						12.6,
+						14
+					],
+					"texture": "#ring"
+				},
+				"south": {
+					"uv": [
+						3.4,
+						12.8,
+						12.6,
+						14
+					],
+					"texture": "#ring"
+				},
+				"west": {
+					"uv": [
+						3.4,
+						12.8,
+						12.6,
+						14
+					],
+					"texture": "#ring"
+				},
+				"up": {
+					"uv": [
+						3.4,
+						3.4,
+						12.6,
+						12.6
+					],
+					"texture": "#ring"
+				},
+				"down": {
+					"uv": [
+						3.4,
+						3.4,
+						12.6,
+						12.6
+					],
+					"texture": "#stone"
+				}
+			}
+		},
+		{
+			"from": [
+				6.65,
+				8.2,
+				6.65
+			],
+			"to": [
+				9.35,
+				9.35,
+				9.35
+			],
+			"rotation": {
+				"angle": 0,
+				"axis": "y",
+				"origin": [
+					0,
+					5,
+					0
+				]
+			},
+			"faces": {
+				"north": {
+					"uv": [
+						6.65,
+						7.65,
+						9.35,
+						8.8
+					],
+					"texture": "#trim"
+				},
+				"east": {
+					"uv": [
+						6.65,
+						7.65,
+						9.35,
+						8.8
+					],
+					"texture": "#trim"
+				},
+				"south": {
+					"uv": [
+						6.65,
+						7.65,
+						9.35,
+						8.8
+					],
+					"texture": "#trim"
+				},
+				"west": {
+					"uv": [
+						6.65,
+						7.65,
+						9.35,
+						8.8
+					],
+					"texture": "#trim"
+				},
+				"up": {
+					"uv": [
+						6.65,
+						6.65,
+						9.35,
+						9.35
+					],
+					"texture": "#trim"
+				},
+				"down": {
+					"uv": [
+						6.65,
+						6.65,
+						9.35,
+						9.35
+					],
+					"texture": "#trim"
+				}
+			}
+		},
+		{
+			"from": [
+				6.2,
+				9,
+				6.2
+			],
+			"to": [
+				9.8,
+				27.8,
+				9.8
+			],
+			"rotation": {
+				"angle": 0,
+				"axis": "y",
+				"origin": [
+					0,
+					4,
+					0
+				]
+			},
+			"faces": {
+				"north": {
+					"uv": [
+						6.2,
+						0,
+						9.8,
+						16
+					],
+					"texture": "#crystal"
+				},
+				"east": {
+					"uv": [
+						6.2,
+						0,
+						9.8,
+						16
+					],
+					"texture": "#crystal"
+				},
+				"south": {
+					"uv": [
+						6.2,
+						0,
+						9.8,
+						16
+					],
+					"texture": "#crystal"
+				},
+				"west": {
+					"uv": [
+						6.2,
+						0,
+						9.8,
+						16
+					],
+					"texture": "#crystal"
+				},
+				"up": {
+					"uv": [
+						6.2,
+						6.2,
+						9.8,
+						9.8
+					],
+					"texture": "#crystal"
+				},
+				"down": {
+					"uv": [
+						6.2,
+						6.2,
+						9.8,
+						9.8
+					],
+					"texture": "#crystal"
+				}
+			}
+		},
+		{
+			"from": [
+				5.5,
+				9.2,
+				6.6
+			],
+			"to": [
+				10.5,
+				27.6,
+				9.4
+			],
+			"rotation": {
+				"angle": 45,
+				"axis": "y",
+				"origin": [
+					8,
+					18.4,
+					8
+				]
+			},
+			"faces": {
+				"north": {
+					"uv": [
+						5.5,
+						0,
+						10.5,
+						16
+					],
+					"texture": "#crystal"
+				},
+				"east": {
+					"uv": [
+						6.6,
+						0,
+						9.4,
+						16
+					],
+					"texture": "#crystal"
+				},
+				"south": {
+					"uv": [
+						5.5,
+						0,
+						10.5,
+						16
+					],
+					"texture": "#crystal"
+				},
+				"west": {
+					"uv": [
+						6.6,
+						0,
+						9.4,
+						16
+					],
+					"texture": "#crystal"
+				},
+				"up": {
+					"uv": [
+						5.5,
+						6.6,
+						10.5,
+						9.4
+					],
+					"texture": "#crystal"
+				},
+				"down": {
+					"uv": [
+						5.5,
+						6.6,
+						10.5,
+						9.4
+					],
+					"texture": "#crystal"
+				}
+			}
+		},
+		{
+			"from": [
+				6.85,
+				25.8,
+				6.85
+			],
+			"to": [
+				9.15,
+				29,
+				9.15
+			],
+			"rotation": {
+				"angle": 0,
+				"axis": "y",
+				"origin": [
+					0,
+					2,
+					0
+				]
+			},
+			"faces": {
+				"north": {
+					"uv": [
+						6.85,
+						0,
+						9.15,
+						3.2
+					],
+					"texture": "#crystal"
+				},
+				"east": {
+					"uv": [
+						6.85,
+						0,
+						9.15,
+						3.2
+					],
+					"texture": "#crystal"
+				},
+				"south": {
+					"uv": [
+						6.85,
+						0,
+						9.15,
+						3.2
+					],
+					"texture": "#crystal"
+				},
+				"west": {
+					"uv": [
+						6.85,
+						0,
+						9.15,
+						3.2
+					],
+					"texture": "#crystal"
+				},
+				"up": {
+					"uv": [
+						6.85,
+						6.85,
+						9.15,
+						9.15
+					],
+					"texture": "#crystal"
+				},
+				"down": {
+					"uv": [
+						6.85,
+						6.85,
+						9.15,
+						9.15
+					],
+					"texture": "#crystal"
+				}
+			}
+		},
+		{
+			"from": [
+				7.25,
+				28,
+				7.25
+			],
+			"to": [
+				8.75,
+				31.8,
+				8.75
+			],
+			"rotation": {
+				"angle": 0,
+				"axis": "y",
+				"origin": [
+					0,
+					1,
+					0
+				]
+			},
+			"faces": {
+				"north": {
+					"uv": [
+						7.25,
+						0,
+						8.75,
+						3.8
+					],
+					"texture": "#crystal"
+				},
+				"east": {
+					"uv": [
+						7.25,
+						0,
+						8.75,
+						3.8
+					],
+					"texture": "#crystal"
+				},
+				"south": {
+					"uv": [
+						7.25,
+						0,
+						8.75,
+						3.8
+					],
+					"texture": "#crystal"
+				},
+				"west": {
+					"uv": [
+						7.25,
+						0,
+						8.75,
+						3.8
+					],
+					"texture": "#crystal"
+				},
+				"up": {
+					"uv": [
+						7.25,
+						7.25,
+						8.75,
+						8.75
+					],
+					"texture": "#crystal"
+				},
+				"down": {
+					"uv": [
+						7.25,
+						7.25,
+						8.75,
+						8.75
+					],
+					"texture": "#crystal"
+				}
+			}
+		},
+		{
+			"from": [
+				6.85,
+				6.2,
+				6.85
+			],
+			"to": [
+				9.15,
+				9,
+				9.15
+			],
+			"rotation": {
+				"angle": 0,
+				"axis": "y",
+				"origin": [
+					0,
+					4,
+					0
+				]
+			},
+			"faces": {
+				"north": {
+					"uv": [
+						6.85,
+						8,
+						9.15,
+						10.8
+					],
+					"texture": "#crystal"
+				},
+				"east": {
+					"uv": [
+						6.85,
+						8,
+						9.15,
+						10.8
+					],
+					"texture": "#crystal"
+				},
+				"south": {
+					"uv": [
+						6.85,
+						8,
+						9.15,
+						10.8
+					],
+					"texture": "#crystal"
+				},
+				"west": {
+					"uv": [
+						6.85,
+						8,
+						9.15,
+						10.8
+					],
+					"texture": "#crystal"
+				},
+				"up": {
+					"uv": [
+						6.85,
+						6.85,
+						9.15,
+						9.15
+					],
+					"texture": "#crystal"
+				},
+				"down": {
+					"uv": [
+						6.85,
+						6.85,
+						9.15,
+						9.15
+					],
+					"texture": "#crystal"
+				}
+			}
+		},
+		{
+			"from": [
+				7.25,
+				-1.9,
+				7.25
+			],
+			"to": [
+				8.75,
+				2.2,
+				8.75
+			],
+			"faces": {
+				"north": {
+					"uv": [
+						7.25,
+						11.9,
+						8.75,
+						16
+					],
+					"texture": "#crystal"
+				},
+				"east": {
+					"uv": [
+						7.25,
+						11.9,
+						8.75,
+						16
+					],
+					"texture": "#crystal"
+				},
+				"south": {
+					"uv": [
+						7.25,
+						11.9,
+						8.75,
+						16
+					],
+					"texture": "#crystal"
+				},
+				"west": {
+					"uv": [
+						7.25,
+						11.9,
+						8.75,
+						16
+					],
+					"texture": "#crystal"
+				},
+				"up": {
+					"uv": [
+						7.25,
+						7.25,
+						8.75,
+						8.75
+					],
+					"texture": "#crystal"
+				},
+				"down": {
+					"uv": [
+						7.25,
+						7.25,
+						8.75,
+						8.75
+					],
+					"texture": "#crystal"
+				}
+			}
+		}
+	]
+}

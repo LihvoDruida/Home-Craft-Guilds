@@ -1,0 +1,17 @@
+{
+  "item.homecraftguild.guild_banner": "Гільдійний кристалічний тотем",
+  "effect.homecraftguild.guild_passive": "Гільдійна підтримка",
+  "effect.homecraftguild.guild_territory_health": "Сила території",
+  "effect.homecraftguild.guild_health": "Гільдійна витривалість",
+  "effect.homecraftguild.guild_armor": "Гільдійна броня",
+  "effect.homecraftguild.guild_damage": "Гільдійна майстерність зброї",
+  "effect.homecraftguild.guild_night_vision": "Гільдійний зір у темряві",
+  "block.homecraftguild.guild_banner": "Гільдійний кристалічний тотем",
+  "block.homecraftguildguild_banner": "Гільдійний кристалічний тотем",
+  "subtitle.homecraftguild.golem.whine": "Гільдійний голем відгукується",
+  "effect.homecraftguild.guild_player_xp": "Гільдійний досвід гравця",
+  "effect.homecraftguild.guild_potion_duration": "Тривалість гільдійних зіль",
+  "effect.homecraftguild.guild_mob_xp": "Досвід гільдії за мобів",
+  "effect.homecraftguild.guild_water_breathing": "Гільдійний подих глибин",
+  "effect.homecraftguild.guild_fire_resistance": "Гільдійний вогняний захист"
+}

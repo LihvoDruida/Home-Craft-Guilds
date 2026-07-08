@@ -1,0 +1,10 @@
+{
+  "pack": {
+    "description": "Home Craft Guilds resources for Minecraft 1.21.11",
+    "pack_format": 81,
+    "supported_formats": {
+      "min_inclusive": 64,
+      "max_inclusive": 81
+    }
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "ABA",
+    "BEB",
+    "ABA"
+  ],
+  "key": {
+    "A": "minecraft:amethyst_shard",
+    "B": "#minecraft:banners",
+    "E": "minecraft:emerald"
+  },
+  "result": {
+    "id": "homecraftguild:guild_banner",
+    "count": 1
+  },
+  "show_notification": true
+}

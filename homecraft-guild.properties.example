@@ -1,0 +1,212 @@
+# Optional HomeCraft ecosystem integrations.
+# auto = use optional integrations only when the matching addon/site runtime is detected.
+# standalone = never run optional HomeCraft integration logic.
+# force = allow optional integration logic even when auto-detect cannot confirm it.
+homecraftIntegrationMode=auto
+spawnBoundaryIntegrationEnabled=true
+territorySyncRequiresHomeCraftMap=true
+
+apiBaseUrl=http://127.0.0.1:3000
+serverSecret=change-this-to-the-same-secret-as-site
+
+guildCreateEmeraldCost=3
+maxGuildMembers=20
+guildNpcName=Гільдійний Реєстратор
+guildNpcEnabled=false
+guildNpcDimension=minecraft:overworld
+guildNpcX=0.5
+guildNpcY=64.0
+guildNpcZ=0.5
+guildNpcYaw=0.0
+
+personalBannerLimit=2
+personalClaimSize=48
+
+guildBannerLimit=4
+guildClaimSize=64
+
+creativeBypass=true
+territorySyncEnabled=false
+territorySyncIntervalSeconds=30
+debug=false
+
+maxGuildGolems=5
+golemProtectRange=24
+golemAiIntervalTicks=20
+guildBlockMonsterSpawns=true
+
+# Guild golem state-machine AI
+guildGolemAiEnabled=true
+guildGolemMaxPerGuild=5
+guildGolemHealthMultiplier=4.0
+guildGolemDamageMultiplier=1.5
+guildGolemChaseOutsideTerritoryBlocks=16
+guildGolemTargetScanIntervalTicks=20
+guildGolemPathRecalcCooldownTicks=20
+guildGolemTargetStickinessTicks=80
+
+guildEliteGolemEnabled=true
+guildEliteGolemMaxPerGuild=1
+guildEliteGolemHealthMultiplier=6.0
+guildEliteGolemDamageMultiplier=1.75
+guildEliteGolemChaseOutsideTerritoryBlocks=24
+guildEliteGolemTargetScanIntervalTicks=20
+guildEliteGolemPathRecalcCooldownTicks=30
+guildEliteGolemTargetStickinessTicks=120
+guildEliteGolemProtectGuildMasterPriority=true
+guildEliteGolemIgnoreWeakTargetsWhenNormalGolemsAvailable=true
+guildEliteGolemStrategicPatrolEnabled=true
+
+guildGolemPatrolEnabled=true
+guildGolemNightPatrolEnabled=true
+guildGolemNightPatrolNearMembers=true
+guildGolemNightMemberSupportRadiusBlocks=14
+guildGolemNightIgnoreUndergroundMembers=true
+guildGolemSquadCoordinatorEnabled=true
+guildGolemSquadUpdateIntervalTicks=40
+guildGolemPatrolReplanIntervalTicks=80
+guildGolemLowPriorityIntervalTicks=100
+guildGolemMaxThreatScanRadius=32
+guildEliteGolemMaxThreatScanRadius=40
+guildGolemMaxPathFailuresBeforeRecover=3
+guildGolemMaxPathFailuresBeforeTeleportRecover=6
+
+# Golem healing at guild totems. The server checks HP cheaply and only sends a small healing-state event; particles are drawn client-side.
+guildGolemHealingEnabled=true
+guildGolemHealingStartHealthPercent=50
+guildGolemHealingStopHealthPercent=98
+guildGolemDayHealingRequiresFullHealth=true
+guildGolemHealingCheckIntervalTicks=40
+guildGolemHealingRadiusBlocks=5
+guildGolemHealingMinPerSlice=1.0
+guildGolemHealingMaxHealthPercentPerSlice=3.5
+guildGolemHealingApplyIntervalTicks=20
+guildGolemHealingParticleIntervalTicks=16
+guildGolemHealingRequireSafeTotemPoint=true
+guildGolemHealingCancelUnsafeFallback=true
+
+guildGolemRespawnEnabled=true
+guildGolemRespawnCostEnabled=false
+guildEliteGolemRespawnEnabled=true
+guildEliteGolemRespawnCostEnabled=true
+
+guildGolemLagLevel2Throttle=true
+guildGolemLagLevel3CriticalOnly=true
+guildGolemLagLevel3DisableCosmetics=true
+guildGolemLagLevel3TargetScanMultiplier=3
+guildGolemLagLevel3PathRecalcMultiplier=3
+
+guildGolemDebug=false
+guildGolemDebugStateChanges=false
+guildGolemDebugPathFailures=false
+guildGolemDebugTargetSelection=false
+guildGolemRouteFallbackEnabled=true
+guildGolemRouteAvoidWater=true
+guildGolemRouteAvoidDeepDrops=true
+guildGolemRouteMaxStartsPerTick=4
+guildGolemRouteMaxSafeChecks=40
+guildGolemRouteAsyncEnabled=true
+guildGolemRouteCacheTtlTicks=600
+guildGolemRouteDebug=false
+
+# Guild beds: personal respawn beds on guild territory.
+guildBedsEnabled=true
+guildBedsRequireGuildTerritory=true
+guildBedsOneClaimedBedPerMember=true
+guildBedsOnePlacedBedPerMember=true
+guildBedsGuildMasterUnlimitedPlacement=true
+guildBedsBuilderUnlimitedPlacement=true
+guildBedsAllowReclaim=true
+guildBedsShowOwnerLabel=true
+guildBedsOwnerLabelMaxDistance=32
+guildBedsOwnerLabelYOffset=1.35
+guildBedsLabelCellSize=64
+guildBedsHideExactCoordsForNonMembers=true
+guildBedsAllowGuildMasterFreeBed=true
+guildBedsAllowBuilderFreeBed=true
+guildBedsValidateOnServerStart=true
+guildBedsDebug=false
+
+# Guild totem cleanup: removes saved guild territories whose totem block is no longer physically present in a loaded chunk.
+guildTotemCleanupEnabled=true
+guildTotemCleanupOnServerStart=true
+guildTotemCleanupIntervalSeconds=120
+guildTotemCleanupMaxChecksPerPass=32
+
+# Guild talents: separate member/golem branches. Level 5 and 7 give +2 points per branch.
+guildTalentsEnabled=true
+guildTalentMaxGuildLevel=7
+guildTalentResetCostEmeralds=3
+guildTalentDebug=false
+guildTalentLevel1Points=1
+guildTalentLevel2Points=1
+guildTalentLevel3Points=1
+guildTalentLevel4Points=1
+guildTalentLevel5Points=2
+guildTalentLevel6Points=1
+guildTalentLevel7Points=2
+guildBaseXpBonusPercent=5
+guildBasePotionDurationBonusPercent=10
+guildBaseWeaponDamageBonusPercent=5
+guildBaseArmorBonusPercent=5
+guildMemberMaxSpeedBonusPercent=25
+guildMemberMaxJumpBonus=0.15
+guildGolemTalentMaxHealthBonusPercent=25
+guildGolemTalentMaxDamageBonusPercent=15
+guildGolemTalentMaxSpeedBonusPercent=15
+guildGolemTalentMaxHealingSpeedBonusPercent=30
+
+# --- HomeCraft NPC registry v121 ---
+# Skins are addon-owned only. Server sends ids; client uses assets/homecraftguild/textures/entity/npc/<skinId>.png.
+guildNpcRegistryRevision=0
+guildNpcSkinIds=guild_master,guild_registrar,trader_armor,medieval_armor,medieval_knight,fighter_guy,boy_green
+guildNpcKeys=guild_master,trader_basic,trader_food,trader_tools,trader_weapons,trader_armor,trader_elite
+
+guildNpc.guild_master.enabled=false
+guildNpc.guild_master.kind=system
+guildNpc.guild_master.system=true
+guildNpc.guild_master.skinId=guild_master
+guildNpc.guild_master.name=Гільдійний Майстер
+guildNpc.guild_master.dimension=minecraft:overworld
+guildNpc.guild_master.x=0.5
+guildNpc.guild_master.y=64.0
+guildNpc.guild_master.z=0.5
+guildNpc.guild_master.yaw=0.0
+
+# Basic guild trader. Guild crystal is guildmaster-only.
+guildNpc.trader_basic.enabled=false
+guildNpc.trader_basic.kind=trader
+guildNpc.trader_basic.system=false
+guildNpc.trader_basic.skinId=guild_registrar
+guildNpc.trader_basic.name=Гільдійний Торговець
+guildNpc.trader_basic.trades=buy=minecraft:emerald,buyCount=40,sell=homecraftguild:guild_banner,sellCount=1,max=4,xp=5,role=guildmaster,limit=4,name=Кристал гільдії
+
+# Food/tool traders.
+guildNpc.trader_food.enabled=false
+guildNpc.trader_food.kind=trader
+guildNpc.trader_food.system=false
+guildNpc.trader_food.skinId=boy_green
+guildNpc.trader_food.name=Продуктовий торговець
+guildNpc.trader_food.tradesVersion=v125
+guildNpc.trader_food.trades=buy=minecraft:emerald,buyCount=1,sell=minecraft:bread,sellCount=8,max=16,xp=0,role=any,limit=0
+
+guildNpc.trader_tools.enabled=false
+guildNpc.trader_tools.kind=trader
+guildNpc.trader_tools.system=false
+guildNpc.trader_tools.skinId=fighter_guy
+guildNpc.trader_tools.name=Торговець інструментами
+guildNpc.trader_tools.tradesVersion=v125
+guildNpc.trader_tools.trades=buy=minecraft:emerald,buyCount=4,sell=minecraft:iron_pickaxe,sellCount=1,max=8,xp=1,role=member,limit=0
+
+# Weapons/armor use built-in defaults from HomeCraftGuildConfig if omitted. v144 defaults also buy metal ingots: 10 copper=1 emerald, 10 iron=2, 10 gold=3, 10 netherite=5.
+guildNpc.trader_weapons.enabled=false
+guildNpc.trader_weapons.kind=trader
+guildNpc.trader_weapons.system=false
+guildNpc.trader_weapons.skinId=medieval_knight
+guildNpc.trader_weapons.name=Героїчний зброяр
+
+guildNpc.trader_armor.enabled=false
+guildNpc.trader_armor.kind=trader
+guildNpc.trader_armor.system=false
+guildNpc.trader_armor.skinId=trader_armor
+guildNpc.trader_armor.name=Майстер броні

@@ -1,0 +1,17 @@
+{
+  "criteria": {
+    "auto_unlock": {
+      "trigger": "minecraft:tick"
+    }
+  },
+  "requirements": [
+    [
+      "auto_unlock"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "homecraftguild:guild_banner"
+    ]
+  }
+}

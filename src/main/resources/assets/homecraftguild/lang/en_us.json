@@ -1,0 +1,17 @@
+{
+  "item.homecraftguild.guild_banner": "Guild Crystal Totem",
+  "effect.homecraftguild.guild_passive": "Guild Support",
+  "effect.homecraftguild.guild_territory_health": "Territory Fortitude",
+  "effect.homecraftguild.guild_health": "Guild Fortitude",
+  "effect.homecraftguild.guild_armor": "Guild Armor",
+  "effect.homecraftguild.guild_damage": "Guild Weapon Mastery",
+  "effect.homecraftguild.guild_night_vision": "Guild Night Sight",
+  "block.homecraftguild.guild_banner": "Guild Crystal Totem",
+  "block.homecraftguildguild_banner": "Guild Crystal Totem",
+  "subtitle.homecraftguild.golem.whine": "Guild golem responds",
+  "effect.homecraftguild.guild_player_xp": "Guild Player Experience",
+  "effect.homecraftguild.guild_potion_duration": "Guild Potion Duration Bonus",
+  "effect.homecraftguild.guild_mob_xp": "Guild Mob Experience",
+  "effect.homecraftguild.guild_water_breathing": "Guild Deep Breath",
+  "effect.homecraftguild.guild_fire_resistance": "Guild Fire Ward"
+}

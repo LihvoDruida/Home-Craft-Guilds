@@ -1,0 +1,20 @@
+{
+  "golem.whine_1": {
+    "subtitle": "subtitle.homecraftguild.golem.whine",
+    "sounds": [
+      {
+        "name": "homecraftguild:golem/whine_1",
+        "stream": false
+      }
+    ]
+  },
+  "golem.whine_2": {
+    "subtitle": "subtitle.homecraftguild.golem.whine",
+    "sounds": [
+      {
+        "name": "homecraftguild:golem/whine_2",
+        "stream": false
+      }
+    ]
+  }
+}
