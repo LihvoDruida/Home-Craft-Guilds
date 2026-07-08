@@ -63,8 +63,8 @@ def main() -> int:
         fail(f"neo_version must stay on the {TARGET_NEO_LINE}.x line for Minecraft {TARGET_MC}; got {neo_version!r}")
 
     mod_version = gradle_props.get("mod_version", "")
-    if not re.fullmatch(r"[0-9]+\.[0-9]+\.[0-9]+(?:[-+A-Za-z0-9.]+)?", mod_version):
-        fail(f"mod_version must be release-like, got {mod_version!r}")
+    if not re.fullmatch(r"[0-9]+\.[0-9]+(?:\.[0-9]+)?(?:[-+A-Za-z0-9.]+)?", mod_version):
+        fail(f"mod_version must be release-like tag version such as '1.0' or '0.1.163', got {mod_version!r}")
 
     require_contains(ROOT / "settings.gradle", "rootProject.name = 'homecraft-guild-neoforge'")
     require_contains(ROOT / "build.gradle", "id 'net.neoforged.moddev' version '2.0.141'")
