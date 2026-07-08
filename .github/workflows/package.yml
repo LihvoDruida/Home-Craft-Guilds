@@ -46,6 +46,10 @@ jobs:
         shell: bash
         run: python3 scripts/validate-release-1.21.11.py
 
+      - name: Validate git-cliff config
+        shell: bash
+        run: python3 scripts/validate-cliff-config.py
+
   build-neoforge-1-21-11:
     name: Build NeoForge for Minecraft 1.21.11
     runs-on: ubuntu-latest
@@ -170,6 +174,18 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Generate release changelog with git-cliff
+        uses: orhun/git-cliff-action@v4
+        with:
+          config: cliff.toml
+          args: --latest --strip header --output RELEASE_CHANGELOG.md
+
+      - name: Verify generated release changelog
+        shell: bash
+        run: |
+          test -s RELEASE_CHANGELOG.md
+          cat RELEASE_CHANGELOG.md
+
       - name: Download NeoForge artifact
         uses: actions/download-artifact@v4
         with:
@@ -187,7 +203,7 @@ jobs:
         with:
           fail_on_unmatched_files: false
           files: release-jars/*
-          body_path: CHANGELOG.md
+          body_path: RELEASE_CHANGELOG.md
 
   curseforge-publish:
     name: Publish NeoForge 1.21.11 to CurseForge
@@ -200,6 +216,16 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
+
+      - name: Generate CurseForge changelog with git-cliff
+        uses: orhun/git-cliff-action@v4
+        with:
+          config: cliff.toml
+          args: --latest --strip header --output RELEASE_CHANGELOG.md
+
+      - name: Verify generated CurseForge changelog
+        shell: bash
+        run: test -s RELEASE_CHANGELOG.md
 
       - name: Download NeoForge artifact
         uses: actions/download-artifact@v4
@@ -217,7 +243,7 @@ jobs:
           name: Home Craft Guilds ${{ needs.build-neoforge-1-21-11.outputs.mod_version }} [Minecraft 1.21.11] NeoForge
           version: neoforge-${{ needs.build-neoforge-1-21-11.outputs.mod_version }}+mc1.21.11
           version-type: release
-          changelog-file: curseforge/CHANGELOG_CURSEFORGE.md
+          changelog-file: RELEASE_CHANGELOG.md
           loaders: |
             neoforge
           game-versions: |

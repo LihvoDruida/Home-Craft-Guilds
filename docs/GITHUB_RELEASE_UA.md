@@ -18,6 +18,7 @@ Matrix-збірки для Fabric/Forge/Quilt або інших Minecraft-вер
 - [ ] `neo_version` залишається в лінії `21.11.x`.
 - [ ] `.github/workflows/package.yml` збирає тільки `buildNeoForge`.
 - [ ] `README.md`, `CHANGELOG.md`, `LICENSE`, `docs/*` оновлені.
+- [ ] `cliff.toml` валідний, а workflow генерує `RELEASE_CHANGELOG.md`.
 - [ ] Старі `AUDIT_V*.md`, `javac.*.args`, локальні build/log файли не потрапляють у чистий release source.
 - [ ] `homecraft-guild.properties.example` містить автономні інтеграції за замовчуванням.
 
@@ -25,12 +26,14 @@ Matrix-збірки для Fabric/Forge/Quilt або інших Minecraft-вер
 
 ```bash
 python3 scripts/validate-release-1.21.11.py
+python3 scripts/validate-cliff-config.py
 ```
 
 Windows, якщо Python доступний як `py`:
 
 ```bat
 py scripts\validate-release-1.21.11.py
+py scripts\validate-cliff-config.py
 ```
 
 ## Локальна збірка
@@ -50,8 +53,8 @@ build/libs/homecraftguild-neoforge-1.21.11-<mod_version>+mc1.21.11-neoforge.jar
 Release запускається тільки тегом:
 
 ```bash
-git tag v0.1.156
-git push origin v0.1.156
+git tag v0.1.157
+git push origin v0.1.157
 ```
 
 Workflow робить тільки одну збірку:
@@ -68,3 +71,19 @@ Home Craft Guilds / NeoForge / Minecraft 1.21.11 / Java 21
 - [ ] Створення гільдії, тотем, UI, ліжка, големи не падають без інших addon-ів.
 - [ ] З `homecraftIntegrationMode=standalone` optional-інтеграції не запускаються.
 - [ ] З `territorySyncEnabled=true` і `territorySyncRequiresHomeCraftMap=false` site sync працює тільки з валідним `apiBaseUrl`/`serverSecret`.
+
+## Автоматичний changelog через git-cliff
+
+`cliff.toml` лежить у корені репозиторію. При тегу `v*` workflow генерує `RELEASE_CHANGELOG.md` командою git-cliff і використовує цей файл як текст релізу на GitHub та CurseForge.
+
+Потрібно писати коміти у Conventional Commits стилі:
+
+```text
+feat: add guild territory preview
+fix: prevent NPC trader sync without map integration
+perf: reduce territory border refresh cost
+refactor: isolate HomeCraft integration gates
+chore: update release metadata
+```
+
+`docs`, `style`, `test` за поточною конфігурацією не потрапляють у release notes.

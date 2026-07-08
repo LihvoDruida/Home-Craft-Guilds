@@ -105,16 +105,29 @@ Minecraft 1.21.11 + NeoForge + Java 21
 Push a `v*` tag to build and publish the release artifact:
 
 ```bash
-git tag v0.1.156
-git push origin v0.1.156
+git tag v0.1.157
+git push origin v0.1.157
 ```
 
 The workflow validates the 1.21.11 lock before building and rejects old multi-loader/multi-version matrix settings.
+
+## Release changelog automation
+
+Release notes are generated from conventional commits through [`cliff.toml`](cliff.toml).
+
+The GitHub Actions workflow generates `RELEASE_CHANGELOG.md` with git-cliff and uses the same generated changelog for:
+
+- GitHub Release body.
+- CurseForge changelog text.
+
+Supported commit groups include `feat`, `fix`, `perf`, `refactor`, `chore`, `revert` and security-related entries. Documentation/style/test-only commits are intentionally skipped from release notes.
 
 ## Release files
 
 - [`CHANGELOG.md`](CHANGELOG.md)
 - [`CHANGELOG_V156_RELEASE_PIPELINE_1_21_11.md`](CHANGELOG_V156_RELEASE_PIPELINE_1_21_11.md)
+- [`CHANGELOG_V157_GIT_CLIFF_RELEASE_NOTES.md`](CHANGELOG_V157_GIT_CLIFF_RELEASE_NOTES.md)
+- [`cliff.toml`](cliff.toml)
 - [`docs/GITHUB_RELEASE_UA.md`](docs/GITHUB_RELEASE_UA.md)
 - [`curseforge/README_CURSEFORGE.md`](curseforge/README_CURSEFORGE.md)
 - [`curseforge/CHANGELOG_CURSEFORGE.md`](curseforge/CHANGELOG_CURSEFORGE.md)
