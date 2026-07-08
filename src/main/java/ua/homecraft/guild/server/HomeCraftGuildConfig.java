@@ -19,7 +19,7 @@ import java.util.Set;
 
 public final class HomeCraftGuildConfig {
     private static final SecureRandom RANDOM = new SecureRandom();
-    private static final String NPC_TRADE_TEMPLATE_VERSION = "v151";
+    private static final String NPC_TRADE_TEMPLATE_VERSION = "v160";
     private static Path loadedPath;
     private static final Properties P = new Properties();
 
@@ -59,50 +59,50 @@ public final class HomeCraftGuildConfig {
     }
 
     private static String defaultGuildTraderTrades() {
-        return "buy=minecraft:emerald,buyCount=40,sell=homecraftguild:guild_banner,sellCount=1,max=4,xp=5,role=guildmaster,limit=4,name=Кристал гільдії";
+        return "buy=minecraft:emerald,buyCount=40,sell=homecraftguild:guild_banner,sellCount=1,max=4,xp=5,role=guildmaster,limit=4,nameKey=trade_name.homecraftguild.guild_crystal";
     }
 
     private static String defaultFoodTrades() {
         return String.join("~",
-                "buy=minecraft:emerald,buyCount=1,sell=minecraft:bread,sellCount=8,max=32,xp=0,role=any,limit=0,name=Хліб мандрівника",
-                "buy=minecraft:emerald,buyCount=1,sell=minecraft:baked_potato,sellCount=6,max=32,xp=0,role=any,limit=0,name=Печена картопля",
-                "buy=minecraft:emerald,buyCount=2,sell=minecraft:cooked_chicken,sellCount=6,max=28,xp=0,role=any,limit=0,name=Курятина в дорогу",
-                "buy=minecraft:emerald,buyCount=2,sell=minecraft:cooked_cod,sellCount=6,max=28,xp=0,role=any,limit=0,name=Риба подорожнього",
-                "buy=minecraft:emerald,buyCount=3,sell=minecraft:cooked_salmon,sellCount=6,max=24,xp=1,role=any,limit=0,name=Лосось дозорного",
-                "buy=minecraft:emerald,buyCount=3,sell=minecraft:cooked_mutton,sellCount=6,max=24,xp=1,role=any,limit=0,name=Баранина вартового",
-                "buy=minecraft:emerald,buyCount=3,sell=minecraft:cooked_porkchop,sellCount=6,max=24,xp=1,role=any,limit=0,name=Свиняча вирізка",
-                "buy=minecraft:emerald,buyCount=4,sell=minecraft:cooked_beef,sellCount=6,max=24,xp=1,role=any,limit=0,name=Стейк авангарду",
-                "buy=minecraft:emerald,buyCount=3,sell=minecraft:pumpkin_pie,sellCount=4,max=24,xp=1,role=any,limit=0,name=Гарбузовий пай",
-                "buy=minecraft:emerald,buyCount=4,sell=minecraft:apple,sellCount=8,max=24,xp=1,role=any,limit=0,name=Садові яблука",
-                "buy=minecraft:emerald,buyCount=5,sell=minecraft:golden_carrot,sellCount=6,max=20,xp=2,role=member,limit=0,name=Золота морква гільдії",
-                "buy=minecraft:emerald,buyCount=2,sell=minecraft:melon_slice,sellCount=12,max=24,xp=0,role=any,limit=0,name=Кавуновий запас",
-                "buy=minecraft:emerald,buyCount=3,sell=minecraft:beetroot_soup,sellCount=3,max=18,xp=1,role=any,limit=0,name=Буряковий суп",
-                "buy=minecraft:emerald,buyCount=5,sell=minecraft:suspicious_stew,sellCount=2,max=12,xp=2,role=member,limit=0,name=Тушкованка травника",
-                "buy=minecraft:emerald,buyCount=3,sell=minecraft:honey_bottle,sellCount=4,max=18,xp=1,role=any,limit=0,name=Медова фляга"
+                "buy=minecraft:emerald,buyCount=1,sell=minecraft:bread,sellCount=8,max=32,xp=0,role=any,limit=0",
+                "buy=minecraft:emerald,buyCount=1,sell=minecraft:baked_potato,sellCount=6,max=32,xp=0,role=any,limit=0",
+                "buy=minecraft:emerald,buyCount=2,sell=minecraft:cooked_chicken,sellCount=6,max=28,xp=0,role=any,limit=0",
+                "buy=minecraft:emerald,buyCount=2,sell=minecraft:cooked_cod,sellCount=6,max=28,xp=0,role=any,limit=0",
+                "buy=minecraft:emerald,buyCount=3,sell=minecraft:cooked_salmon,sellCount=6,max=24,xp=1,role=any,limit=0",
+                "buy=minecraft:emerald,buyCount=3,sell=minecraft:cooked_mutton,sellCount=6,max=24,xp=1,role=any,limit=0",
+                "buy=minecraft:emerald,buyCount=3,sell=minecraft:cooked_porkchop,sellCount=6,max=24,xp=1,role=any,limit=0",
+                "buy=minecraft:emerald,buyCount=4,sell=minecraft:cooked_beef,sellCount=6,max=24,xp=1,role=any,limit=0",
+                "buy=minecraft:emerald,buyCount=3,sell=minecraft:pumpkin_pie,sellCount=4,max=24,xp=1,role=any,limit=0",
+                "buy=minecraft:emerald,buyCount=4,sell=minecraft:apple,sellCount=8,max=24,xp=1,role=any,limit=0",
+                "buy=minecraft:emerald,buyCount=5,sell=minecraft:golden_carrot,sellCount=6,max=20,xp=2,role=member,limit=0",
+                "buy=minecraft:emerald,buyCount=2,sell=minecraft:melon_slice,sellCount=12,max=24,xp=0,role=any,limit=0",
+                "buy=minecraft:emerald,buyCount=3,sell=minecraft:beetroot_soup,sellCount=3,max=18,xp=1,role=any,limit=0",
+                "buy=minecraft:emerald,buyCount=5,sell=minecraft:suspicious_stew,sellCount=2,max=12,xp=2,role=member,limit=0",
+                "buy=minecraft:emerald,buyCount=3,sell=minecraft:honey_bottle,sellCount=4,max=18,xp=1,role=any,limit=0"
         );
     }
 
     private static String defaultToolTrades() {
         return joinTrades(String.join("~",
-                "buy=minecraft:emerald,buyCount=4,sell=minecraft:stone_pickaxe,sellCount=1,max=24,xp=0,role=any,limit=0,name=Кам'яна кирка мандрівника",
-                "buy=minecraft:emerald,buyCount=4,sell=minecraft:stone_axe,sellCount=1,max=24,xp=0,role=any,limit=0,name=Кам'яна сокира мандрівника",
-                "buy=minecraft:emerald,buyCount=9,sell=minecraft:iron_shovel,sellCount=1,max=20,xp=1,role=member,limit=0,name=Лопата дорожнього майстра,ench=efficiency:2+unbreaking:2",
-                "buy=minecraft:emerald,buyCount=10,sell=minecraft:iron_pickaxe,sellCount=1,max=20,xp=1,role=member,limit=0,name=Кирка шахтарського дозору,ench=efficiency:2+unbreaking:2",
-                "buy=minecraft:emerald,buyCount=10,sell=minecraft:iron_axe,sellCount=1,max=20,xp=1,role=member,limit=0,name=Сокира табірного теслі,ench=efficiency:2+unbreaking:2",
-                "buy=minecraft:emerald,buyCount=8,sell=minecraft:iron_hoe,sellCount=1,max=20,xp=1,role=member,limit=0,name=Мотика польового доглядача,ench=efficiency:2+unbreaking:2",
-                "buy=minecraft:emerald,buyCount=26,sell=minecraft:diamond_pickaxe,sellCount=1,max=14,xp=3,role=member,limit=0,name=Кирка глибинного дозору,ench=efficiency:4+unbreaking:3",
-                "buy=minecraft:emerald,buyCount=24,sell=minecraft:diamond_axe,sellCount=1,max=14,xp=3,role=member,limit=0,name=Сокира лісового дозору,ench=efficiency:4+unbreaking:3",
-                "buy=minecraft:emerald,buyCount=20,sell=minecraft:diamond_shovel,sellCount=1,max=14,xp=2,role=member,limit=0,name=Лопата тихого кар'єру,ench=efficiency:4+unbreaking:3",
-                "buy=minecraft:emerald,buyCount=20,sell=minecraft:diamond_hoe,sellCount=1,max=14,xp=2,role=member,limit=0,name=Мотика зеленого бастіону,ench=efficiency:4+unbreaking:3",
-                "buy=minecraft:emerald,buyCount=42,sell=minecraft:diamond_pickaxe,sellCount=1,max=8,xp=5,role=member,limit=0,name=Кирка щасливої жили,ench=efficiency:4+fortune:3+unbreaking:3",
-                "buy=minecraft:emerald,buyCount=46,sell=minecraft:diamond_pickaxe,sellCount=1,max=8,xp=5,role=member,limit=0,name=Кирка чистого розрізу,ench=efficiency:4+silk_touch:1+unbreaking:3",
-                "buy=minecraft:emerald,buyCount=6,sell=minecraft:shears,sellCount=1,max=32,xp=0,role=any,limit=0,name=Ножиці ремісника,ench=unbreaking:2",
-                "buy=minecraft:emerald,buyCount=10,sell=minecraft:fishing_rod,sellCount=1,max=24,xp=1,role=any,limit=0,name=Вудка мандрівника,ench=lure:2+luck_of_the_sea:2+unbreaking:2",
-                "buy=minecraft:emerald,buyCount=3,sell=minecraft:flint_and_steel,sellCount=1,max=24,xp=0,role=any,limit=0,name=Кресало",
-                "buy=minecraft:emerald,buyCount=5,sell=minecraft:compass,sellCount=1,max=24,xp=1,role=any,limit=0,name=Компас дороги",
-                "buy=minecraft:emerald,buyCount=5,sell=minecraft:clock,sellCount=1,max=24,xp=1,role=any,limit=0,name=Годинник варти",
-                "buy=minecraft:emerald,buyCount=4,sell=minecraft:bucket,sellCount=1,max=32,xp=0,role=any,limit=0,name=Відро",
-                "buy=minecraft:emerald,buyCount=6,sell=minecraft:water_bucket,sellCount=1,max=24,xp=1,role=any,limit=0,name=Відро води"
+                "buy=minecraft:emerald,buyCount=4,sell=minecraft:stone_pickaxe,sellCount=1,max=24,xp=0,role=any,limit=0,nameKey=trade_name.homecraftguild.traveler_stone_pickaxe",
+                "buy=minecraft:emerald,buyCount=4,sell=minecraft:stone_axe,sellCount=1,max=24,xp=0,role=any,limit=0,nameKey=trade_name.homecraftguild.traveler_stone_axe",
+                "buy=minecraft:emerald,buyCount=9,sell=minecraft:iron_shovel,sellCount=1,max=20,xp=1,role=member,limit=0,nameKey=trade_name.homecraftguild.roadmaster_shovel,ench=efficiency:2+unbreaking:2",
+                "buy=minecraft:emerald,buyCount=10,sell=minecraft:iron_pickaxe,sellCount=1,max=20,xp=1,role=member,limit=0,nameKey=trade_name.homecraftguild.mine_watch_pickaxe,ench=efficiency:2+unbreaking:2",
+                "buy=minecraft:emerald,buyCount=10,sell=minecraft:iron_axe,sellCount=1,max=20,xp=1,role=member,limit=0,nameKey=trade_name.homecraftguild.camp_carpenter_axe,ench=efficiency:2+unbreaking:2",
+                "buy=minecraft:emerald,buyCount=8,sell=minecraft:iron_hoe,sellCount=1,max=20,xp=1,role=member,limit=0,nameKey=trade_name.homecraftguild.field_keeper_hoe,ench=efficiency:2+unbreaking:2",
+                "buy=minecraft:emerald,buyCount=26,sell=minecraft:diamond_pickaxe,sellCount=1,max=14,xp=3,role=member,limit=0,nameKey=trade_name.homecraftguild.deep_watch_pickaxe,ench=efficiency:4+unbreaking:3",
+                "buy=minecraft:emerald,buyCount=24,sell=minecraft:diamond_axe,sellCount=1,max=14,xp=3,role=member,limit=0,nameKey=trade_name.homecraftguild.forest_watch_axe,ench=efficiency:4+unbreaking:3",
+                "buy=minecraft:emerald,buyCount=20,sell=minecraft:diamond_shovel,sellCount=1,max=14,xp=2,role=member,limit=0,nameKey=trade_name.homecraftguild.quiet_quarry_shovel,ench=efficiency:4+unbreaking:3",
+                "buy=minecraft:emerald,buyCount=20,sell=minecraft:diamond_hoe,sellCount=1,max=14,xp=2,role=member,limit=0,nameKey=trade_name.homecraftguild.green_bastion_hoe,ench=efficiency:4+unbreaking:3",
+                "buy=minecraft:emerald,buyCount=42,sell=minecraft:diamond_pickaxe,sellCount=1,max=8,xp=5,role=member,limit=0,nameKey=trade_name.homecraftguild.lucky_vein_pickaxe,ench=efficiency:4+fortune:3+unbreaking:3",
+                "buy=minecraft:emerald,buyCount=46,sell=minecraft:diamond_pickaxe,sellCount=1,max=8,xp=5,role=member,limit=0,nameKey=trade_name.homecraftguild.clean_cut_pickaxe,ench=efficiency:4+silk_touch:1+unbreaking:3",
+                "buy=minecraft:emerald,buyCount=6,sell=minecraft:shears,sellCount=1,max=32,xp=0,role=any,limit=0,nameKey=trade_name.homecraftguild.artisan_shears,ench=unbreaking:2",
+                "buy=minecraft:emerald,buyCount=10,sell=minecraft:fishing_rod,sellCount=1,max=24,xp=1,role=any,limit=0,nameKey=trade_name.homecraftguild.traveler_fishing_rod,ench=lure:2+luck_of_the_sea:2+unbreaking:2",
+                "buy=minecraft:emerald,buyCount=3,sell=minecraft:flint_and_steel,sellCount=1,max=24,xp=0,role=any,limit=0,nameKey=trade_name.homecraftguild.flint_and_steel",
+                "buy=minecraft:emerald,buyCount=5,sell=minecraft:compass,sellCount=1,max=24,xp=1,role=any,limit=0,nameKey=trade_name.homecraftguild.road_compass",
+                "buy=minecraft:emerald,buyCount=5,sell=minecraft:clock,sellCount=1,max=24,xp=1,role=any,limit=0,nameKey=trade_name.homecraftguild.watch_clock",
+                "buy=minecraft:emerald,buyCount=4,sell=minecraft:bucket,sellCount=1,max=32,xp=0,role=any,limit=0,nameKey=trade_name.homecraftguild.bucket",
+                "buy=minecraft:emerald,buyCount=6,sell=minecraft:water_bucket,sellCount=1,max=24,xp=1,role=any,limit=0,nameKey=trade_name.homecraftguild.water_bucket"
         ));
     }
 
@@ -132,54 +132,56 @@ public final class HomeCraftGuildConfig {
 
     private static String defaultWeaponTrades() {
         return joinTrades(String.join("~",
-                "buy=minecraft:emerald,buyCount=8,sell=minecraft:bow,sellCount=1,max=20,xp=1,role=member,limit=0,name=Лук мисливця,ench=power:2+unbreaking:2",
-                "buy=minecraft:emerald,buyCount=11,sell=minecraft:crossbow,sellCount=1,max=18,xp=1,role=member,limit=0,name=Арбалет вартового,ench=quick_charge:1+unbreaking:2",
-                "buy=minecraft:emerald,buyCount=2,sell=minecraft:arrow,sellCount=32,max=32,xp=0,role=any,limit=0,name=Стріли гільдії",
-                "buy=minecraft:emerald,buyCount=6,sell=minecraft:spectral_arrow,sellCount=16,max=20,xp=1,role=member,limit=0,name=Примарні стріли",
-                "buy=minecraft:emerald,buyCount=12,sell=minecraft:shield,sellCount=1,max=18,xp=1,role=member,limit=0,name=Щит туманної варти,ench=unbreaking:2",
-                "buy=minecraft:emerald,buyCount=16,sell=minecraft:iron_sword,sellCount=1,max=18,xp=1,role=member,limit=0,name=Клинок новобранця,ench=sharpness:2+unbreaking:2",
-                "buy=minecraft:emerald,buyCount=18,sell=minecraft:iron_axe,sellCount=1,max=18,xp=1,role=member,limit=0,name=Сокира польового вартового,ench=sharpness:2+efficiency:2+unbreaking:2",
-                "buy=minecraft:emerald,buyCount=34,sell=minecraft:diamond_sword,sellCount=1,max=12,xp=3,role=member,limit=0,name=Меч гільдійного дозору,ench=sharpness:3+unbreaking:3",
-                "buy=minecraft:emerald,buyCount=38,sell=minecraft:diamond_axe,sellCount=1,max=12,xp=3,role=member,limit=0,name=Сокира вартового гаю,ench=sharpness:3+efficiency:3+unbreaking:3",
-                "buy=minecraft:emerald,buyCount=52,sell=minecraft:diamond_sword,sellCount=1,max=8,xp=6,role=member,limit=0,name=Клинок срібного дозору,ench=sharpness:4+looting:2+unbreaking:3",
-                "buy=minecraft:emerald,buyCount=58,sell=minecraft:diamond_axe,sellCount=1,max=8,xp=6,role=member,limit=0,name=Сокира розколотого дуба,ench=sharpness:4+efficiency:4+unbreaking:3",
-                "buy=minecraft:emerald,buyCount=60,sell=minecraft:bow,sellCount=1,max=8,xp=7,role=member,limit=0,name=Лук зоряного стежника,ench=power:4+punch:2+unbreaking:3",
-                "buy=minecraft:emerald,buyCount=64,sell=minecraft:crossbow,sellCount=1,max=8,xp=7,role=member,limit=0,name=Арбалет залізного фронту,ench=quick_charge:3+piercing:3+unbreaking:3"
+                "buy=minecraft:emerald,buyCount=8,sell=minecraft:bow,sellCount=1,max=20,xp=1,role=member,limit=0,nameKey=trade_name.homecraftguild.hunter_bow,ench=power:2+unbreaking:2",
+                "buy=minecraft:emerald,buyCount=11,sell=minecraft:crossbow,sellCount=1,max=18,xp=1,role=member,limit=0,nameKey=trade_name.homecraftguild.watchman_crossbow,ench=quick_charge:1+unbreaking:2",
+                "buy=minecraft:emerald,buyCount=2,sell=minecraft:arrow,sellCount=32,max=32,xp=0,role=any,limit=0,nameKey=trade_name.homecraftguild.guild_arrows",
+                "buy=minecraft:emerald,buyCount=6,sell=minecraft:spectral_arrow,sellCount=16,max=20,xp=1,role=member,limit=0,nameKey=trade_name.homecraftguild.spectral_arrows",
+                "buy=minecraft:emerald,buyCount=12,sell=minecraft:shield,sellCount=1,max=18,xp=1,role=member,limit=0,nameKey=trade_name.homecraftguild.mistguard_shield,ench=unbreaking:2",
+                "buy=minecraft:emerald,buyCount=16,sell=minecraft:iron_sword,sellCount=1,max=18,xp=1,role=member,limit=0,nameKey=trade_name.homecraftguild.recruit_blade,ench=sharpness:2+unbreaking:2",
+                "buy=minecraft:emerald,buyCount=18,sell=minecraft:iron_axe,sellCount=1,max=18,xp=1,role=member,limit=0,nameKey=trade_name.homecraftguild.field_guard_axe,ench=sharpness:2+efficiency:2+unbreaking:2",
+                "buy=minecraft:emerald,buyCount=34,sell=minecraft:diamond_sword,sellCount=1,max=12,xp=3,role=member,limit=0,nameKey=trade_name.homecraftguild.guild_watch_sword,ench=sharpness:3+unbreaking:3",
+                "buy=minecraft:emerald,buyCount=38,sell=minecraft:diamond_axe,sellCount=1,max=12,xp=3,role=member,limit=0,nameKey=trade_name.homecraftguild.grove_guard_axe,ench=sharpness:3+efficiency:3+unbreaking:3",
+                "buy=minecraft:emerald,buyCount=52,sell=minecraft:diamond_sword,sellCount=1,max=8,xp=6,role=member,limit=0,nameKey=trade_name.homecraftguild.silver_watch_blade,ench=sharpness:4+looting:2+unbreaking:3",
+                "buy=minecraft:emerald,buyCount=58,sell=minecraft:diamond_axe,sellCount=1,max=8,xp=6,role=member,limit=0,nameKey=trade_name.homecraftguild.split_oak_axe,ench=sharpness:4+efficiency:4+unbreaking:3",
+                "buy=minecraft:emerald,buyCount=60,sell=minecraft:bow,sellCount=1,max=8,xp=7,role=member,limit=0,nameKey=trade_name.homecraftguild.star_pathfinder_bow,ench=power:4+punch:2+unbreaking:3",
+                "buy=minecraft:emerald,buyCount=64,sell=minecraft:crossbow,sellCount=1,max=8,xp=7,role=member,limit=0,nameKey=trade_name.homecraftguild.iron_front_crossbow,ench=quick_charge:3+piercing:3+unbreaking:3"
         ), defaultMetalBuybackTrades());
     }
 
     private static String defaultArmorTrades() {
         return joinTrades(String.join("~",
-                "buy=minecraft:emerald,buyCount=6,sell=minecraft:leather_helmet,sellCount=1,max=24,xp=0,role=any,limit=0,name=Шкіряний каптур",
-                "buy=minecraft:emerald,buyCount=8,sell=minecraft:leather_chestplate,sellCount=1,max=24,xp=0,role=any,limit=0,name=Шкіряна куртка",
-                "buy=minecraft:emerald,buyCount=7,sell=minecraft:leather_leggings,sellCount=1,max=24,xp=0,role=any,limit=0,name=Шкіряні штани",
-                "buy=minecraft:emerald,buyCount=5,sell=minecraft:leather_boots,sellCount=1,max=24,xp=0,role=any,limit=0,name=Шкіряні чоботи",
-                "buy=minecraft:emerald,buyCount=10,sell=minecraft:chainmail_helmet,sellCount=1,max=18,xp=1,role=member,limit=0,name=Кольчужний шолом застави",
-                "buy=minecraft:emerald,buyCount=15,sell=minecraft:chainmail_chestplate,sellCount=1,max=18,xp=1,role=member,limit=0,name=Кольчужна кіраса застави",
-                "buy=minecraft:emerald,buyCount=13,sell=minecraft:chainmail_leggings,sellCount=1,max=18,xp=1,role=member,limit=0,name=Кольчужні поножі застави",
-                "buy=minecraft:emerald,buyCount=9,sell=minecraft:chainmail_boots,sellCount=1,max=18,xp=1,role=member,limit=0,name=Кольчужні чоботи застави",
-                "buy=minecraft:emerald,buyCount=14,sell=minecraft:iron_helmet,sellCount=1,max=18,xp=1,role=member,limit=0,name=Шолом новобранця,ench=protection:2+unbreaking:2",
-                "buy=minecraft:emerald,buyCount=22,sell=minecraft:iron_chestplate,sellCount=1,max=18,xp=1,role=member,limit=0,name=Кіраса дозорного,ench=protection:2+unbreaking:2",
-                "buy=minecraft:emerald,buyCount=20,sell=minecraft:iron_leggings,sellCount=1,max=18,xp=1,role=member,limit=0,name=Поножі дозорного,ench=protection:2+unbreaking:2",
-                "buy=minecraft:emerald,buyCount=14,sell=minecraft:iron_boots,sellCount=1,max=18,xp=1,role=member,limit=0,name=Чоботи новобранця,ench=protection:2+feather_falling:2+unbreaking:2",
-                "buy=minecraft:emerald,buyCount=28,sell=minecraft:diamond_helmet,sellCount=1,max=12,xp=3,role=member,limit=0,name=Шолом авангарду,ench=protection:3+unbreaking:3",
-                "buy=minecraft:emerald,buyCount=44,sell=minecraft:diamond_chestplate,sellCount=1,max=12,xp=3,role=member,limit=0,name=Кіраса авангарду,ench=protection:3+unbreaking:3",
-                "buy=minecraft:emerald,buyCount=40,sell=minecraft:diamond_leggings,sellCount=1,max=12,xp=3,role=member,limit=0,name=Поножі авангарду,ench=protection:3+unbreaking:3",
-                "buy=minecraft:emerald,buyCount=28,sell=minecraft:diamond_boots,sellCount=1,max=12,xp=3,role=member,limit=0,name=Чоботи тихого патруля,ench=protection:3+feather_falling:3+unbreaking:3",
-                "buy=minecraft:emerald,buyCount=16,sell=minecraft:shield,sellCount=1,max=18,xp=1,role=member,limit=0,name=Щит новобранця,ench=unbreaking:2",
-                "buy=minecraft:emerald,buyCount=28,sell=minecraft:shield,sellCount=1,max=14,xp=2,role=member,limit=0,name=Павеза дозорного,ench=unbreaking:3",
-                "buy=minecraft:emerald,buyCount=48,sell=minecraft:shield,sellCount=1,max=10,xp=5,role=member,limit=0,name=Щит сапфірової варти,ench=unbreaking:3+mending:1",
-                "buy=minecraft:emerald,buyCount=64,buy2=minecraft:emerald,buy2Count=16,sell=minecraft:shield,sellCount=1,max=6,xp=8,role=member,limit=1,name=Егіда туманного бастіону,ench=unbreaking:3+mending:1",
-                "buy=minecraft:emerald,buyCount=16,sell=minecraft:turtle_helmet,sellCount=1,max=12,xp=2,role=member,limit=0,name=Панцирний шолом",
-                "buy=minecraft:emerald,buyCount=8,sell=minecraft:iron_horse_armor,sellCount=1,max=12,xp=1,role=member,limit=0,name=Кінська броня залізна",
-                "buy=minecraft:emerald,buyCount=10,sell=minecraft:golden_horse_armor,sellCount=1,max=12,xp=1,role=member,limit=0,name=Кінська броня золота",
-                "buy=minecraft:emerald,buyCount=18,sell=minecraft:diamond_horse_armor,sellCount=1,max=8,xp=2,role=member,limit=0,name=Кінська броня алмазна"
+                "buy=minecraft:emerald,buyCount=6,sell=minecraft:leather_helmet,sellCount=1,max=24,xp=0,role=any,limit=0,nameKey=trade_name.homecraftguild.leather_hood",
+                "buy=minecraft:emerald,buyCount=8,sell=minecraft:leather_chestplate,sellCount=1,max=24,xp=0,role=any,limit=0,nameKey=trade_name.homecraftguild.leather_jacket",
+                "buy=minecraft:emerald,buyCount=7,sell=minecraft:leather_leggings,sellCount=1,max=24,xp=0,role=any,limit=0,nameKey=trade_name.homecraftguild.leather_pants",
+                "buy=minecraft:emerald,buyCount=5,sell=minecraft:leather_boots,sellCount=1,max=24,xp=0,role=any,limit=0,nameKey=trade_name.homecraftguild.leather_boots",
+                "buy=minecraft:emerald,buyCount=10,sell=minecraft:chainmail_helmet,sellCount=1,max=18,xp=1,role=member,limit=0,nameKey=trade_name.homecraftguild.outpost_chainmail_helmet",
+                "buy=minecraft:emerald,buyCount=15,sell=minecraft:chainmail_chestplate,sellCount=1,max=18,xp=1,role=member,limit=0,nameKey=trade_name.homecraftguild.outpost_chainmail_chestplate",
+                "buy=minecraft:emerald,buyCount=13,sell=minecraft:chainmail_leggings,sellCount=1,max=18,xp=1,role=member,limit=0,nameKey=trade_name.homecraftguild.outpost_chainmail_leggings",
+                "buy=minecraft:emerald,buyCount=9,sell=minecraft:chainmail_boots,sellCount=1,max=18,xp=1,role=member,limit=0,nameKey=trade_name.homecraftguild.outpost_chainmail_boots",
+                "buy=minecraft:emerald,buyCount=14,sell=minecraft:iron_helmet,sellCount=1,max=18,xp=1,role=member,limit=0,nameKey=trade_name.homecraftguild.recruit_helmet,ench=protection:2+unbreaking:2",
+                "buy=minecraft:emerald,buyCount=22,sell=minecraft:iron_chestplate,sellCount=1,max=18,xp=1,role=member,limit=0,nameKey=trade_name.homecraftguild.watchman_chestplate,ench=protection:2+unbreaking:2",
+                "buy=minecraft:emerald,buyCount=20,sell=minecraft:iron_leggings,sellCount=1,max=18,xp=1,role=member,limit=0,nameKey=trade_name.homecraftguild.watchman_leggings,ench=protection:2+unbreaking:2",
+                "buy=minecraft:emerald,buyCount=14,sell=minecraft:iron_boots,sellCount=1,max=18,xp=1,role=member,limit=0,nameKey=trade_name.homecraftguild.recruit_boots,ench=protection:2+feather_falling:2+unbreaking:2",
+                "buy=minecraft:emerald,buyCount=28,sell=minecraft:diamond_helmet,sellCount=1,max=12,xp=3,role=member,limit=0,nameKey=trade_name.homecraftguild.vanguard_helmet,ench=protection:3+unbreaking:3",
+                "buy=minecraft:emerald,buyCount=44,sell=minecraft:diamond_chestplate,sellCount=1,max=12,xp=3,role=member,limit=0,nameKey=trade_name.homecraftguild.vanguard_chestplate,ench=protection:3+unbreaking:3",
+                "buy=minecraft:emerald,buyCount=40,sell=minecraft:diamond_leggings,sellCount=1,max=12,xp=3,role=member,limit=0,nameKey=trade_name.homecraftguild.vanguard_leggings,ench=protection:3+unbreaking:3",
+                "buy=minecraft:emerald,buyCount=28,sell=minecraft:diamond_boots,sellCount=1,max=12,xp=3,role=member,limit=0,nameKey=trade_name.homecraftguild.silent_patrol_boots,ench=protection:3+feather_falling:3+unbreaking:3",
+                "buy=minecraft:emerald,buyCount=16,sell=minecraft:shield,sellCount=1,max=18,xp=1,role=member,limit=0,nameKey=trade_name.homecraftguild.recruit_shield,ench=unbreaking:2",
+                "buy=minecraft:emerald,buyCount=28,sell=minecraft:shield,sellCount=1,max=14,xp=2,role=member,limit=0,nameKey=trade_name.homecraftguild.watchman_pavise,ench=unbreaking:3",
+                "buy=minecraft:emerald,buyCount=48,sell=minecraft:shield,sellCount=1,max=10,xp=5,role=member,limit=0,nameKey=trade_name.homecraftguild.sapphire_guard_shield,ench=unbreaking:3+mending:1",
+                "buy=minecraft:emerald,buyCount=64,buy2=minecraft:emerald,buy2Count=16,sell=minecraft:shield,sellCount=1,max=6,xp=8,role=member,limit=1,nameKey=trade_name.homecraftguild.mist_bastion_aegis,ench=unbreaking:3+mending:1",
+                "buy=minecraft:emerald,buyCount=16,sell=minecraft:turtle_helmet,sellCount=1,max=12,xp=2,role=member,limit=0,nameKey=trade_name.homecraftguild.turtle_shell_helmet",
+                "buy=minecraft:emerald,buyCount=8,sell=minecraft:iron_horse_armor,sellCount=1,max=12,xp=1,role=member,limit=0,nameKey=trade_name.homecraftguild.iron_horse_armor",
+                "buy=minecraft:emerald,buyCount=10,sell=minecraft:golden_horse_armor,sellCount=1,max=12,xp=1,role=member,limit=0,nameKey=trade_name.homecraftguild.golden_horse_armor",
+                "buy=minecraft:emerald,buyCount=18,sell=minecraft:diamond_horse_armor,sellCount=1,max=8,xp=2,role=member,limit=0,nameKey=trade_name.homecraftguild.diamond_horse_armor"
         ), defaultMetalBuybackTrades());
     }
 
     private static String maxEmeraldTrade(String sell, String name, String ench, int xp) {
+        String nameKey = GuildTradeLocalization.legacyNameKey(name);
+        String namePart = nameKey.isBlank() ? ",name=" + safeTradeText(name, 48) : ",nameKey=" + nameKey;
         return "buy=minecraft:emerald,buyCount=64,buy2=minecraft:emerald,buy2Count=64,sell=" + sell
-                + ",sellCount=1,max=2,xp=" + xp + ",role=member,limit=1,name=" + name + ",ench=" + ench;
+                + ",sellCount=1,max=2,xp=" + xp + ",role=member,limit=1" + namePart + ",ench=" + ench;
     }
 
     private static String maxEmeraldTrade(String sell, String name, String ench, int xp, String extra) {
@@ -206,7 +208,7 @@ public final class HomeCraftGuildConfig {
                 maxEmeraldTrade("minecraft:netherite_leggings", "Поножі безмовного авангарду", "protection:4+swift_sneak:3+thorns:3+unbreaking:3+mending:1", 36),
                 maxEmeraldTrade("minecraft:netherite_boots", "Чоботи зоряного маршу", "protection:4+feather_falling:4+depth_strider:3+soul_speed:3+thorns:3+unbreaking:3+mending:1", 36),
                 maxEmeraldTrade("minecraft:shield", "Егіда верховного авангарду", "unbreaking:3+mending:1", 28),
-                "buy=minecraft:emerald,buyCount=64,buy2=minecraft:emerald,buy2Count=48,sell=minecraft:elytra,sellCount=1,max=1,xp=40,role=guildmaster,limit=1,name=Крила гільдійного неба,ench=unbreaking:3+mending:1"
+                "buy=minecraft:emerald,buyCount=64,buy2=minecraft:emerald,buy2Count=48,sell=minecraft:elytra,sellCount=1,max=1,xp=40,role=guildmaster,limit=1,nameKey=trade_name.homecraftguild.guild_sky_wings,ench=unbreaking:3+mending:1"
         );
     }
 
@@ -224,13 +226,13 @@ public final class HomeCraftGuildConfig {
 
     private static String defaultEliteUtilityTrades() {
         return String.join("~",
-                "buy=minecraft:emerald,buyCount=64,buy2=minecraft:emerald,buy2Count=32,sell=minecraft:totem_of_undying,sellCount=1,max=3,xp=24,role=guildmaster,limit=1,name=Тотем останнього шансу",
-                "buy=minecraft:emerald,buyCount=64,buy2=minecraft:emerald,buy2Count=16,sell=minecraft:golden_apple,sellCount=4,max=6,xp=12,role=member,limit=2,name=Золотий резерв авангарду",
-                "buy=minecraft:emerald,buyCount=64,buy2=minecraft:emerald,buy2Count=64,sell=minecraft:enchanted_golden_apple,sellCount=1,max=1,xp=40,role=guildmaster,limit=1,name=Яблуко королівського порятунку",
-                "buy=minecraft:emerald,buyCount=32,sell=minecraft:experience_bottle,sellCount=16,max=10,xp=8,role=member,limit=0,name=Досвід гільдії",
-                "buy=minecraft:emerald,buyCount=24,sell=minecraft:ender_pearl,sellCount=8,max=10,xp=4,role=member,limit=0,name=Перлини швидкого збору",
-                "buy=minecraft:emerald,buyCount=18,sell=minecraft:name_tag,sellCount=1,max=14,xp=2,role=member,limit=0,name=Іменна бирка",
-                "buy=minecraft:emerald,buyCount=18,sell=minecraft:saddle,sellCount=1,max=10,xp=2,role=member,limit=0,name=Сідло мандрівника"
+                "buy=minecraft:emerald,buyCount=64,buy2=minecraft:emerald,buy2Count=32,sell=minecraft:totem_of_undying,sellCount=1,max=3,xp=24,role=guildmaster,limit=1,nameKey=trade_name.homecraftguild.last_chance_totem",
+                "buy=minecraft:emerald,buyCount=64,buy2=minecraft:emerald,buy2Count=16,sell=minecraft:golden_apple,sellCount=4,max=6,xp=12,role=member,limit=2",
+                "buy=minecraft:emerald,buyCount=64,buy2=minecraft:emerald,buy2Count=64,sell=minecraft:enchanted_golden_apple,sellCount=1,max=1,xp=40,role=guildmaster,limit=1",
+                "buy=minecraft:emerald,buyCount=32,sell=minecraft:experience_bottle,sellCount=16,max=10,xp=8,role=member,limit=0,nameKey=trade_name.homecraftguild.guild_experience_bottle",
+                "buy=minecraft:emerald,buyCount=24,sell=minecraft:ender_pearl,sellCount=8,max=10,xp=4,role=member,limit=0,nameKey=trade_name.homecraftguild.quick_rally_pearls",
+                "buy=minecraft:emerald,buyCount=18,sell=minecraft:name_tag,sellCount=1,max=14,xp=2,role=member,limit=0,nameKey=trade_name.homecraftguild.name_tag",
+                "buy=minecraft:emerald,buyCount=18,sell=minecraft:saddle,sellCount=1,max=10,xp=2,role=member,limit=0,nameKey=trade_name.homecraftguild.traveler_saddle"
         );
     }
 
@@ -246,7 +248,7 @@ public final class HomeCraftGuildConfig {
         put("serverSecret", randomSecret());
         put("guildCreateEmeraldCost", "3");
         put("maxGuildMembers", "20");
-        put("guildNpcName", "Гільдійний Реєстратор");
+        put("guildNpcName", "lang:npc.homecraftguild.guild_master");
         put("guildNpcSkin", "guild_registrar");
         put("guildNpcEnabled", "false");
         put("guildNpcDimension", "minecraft:overworld");
@@ -274,37 +276,37 @@ public final class HomeCraftGuildConfig {
         put("guildNpc.trader_basic.kind", "trader");
         put("guildNpc.trader_basic.system", "false");
         put("guildNpc.trader_basic.skinId", "guild_registrar");
-        put("guildNpc.trader_basic.name", "Гільдійний Торговець");
+        put("guildNpc.trader_basic.name", "lang:npc.homecraftguild.trader");
         put("guildNpc.trader_basic.trades", defaultGuildTraderTrades());
         put("guildNpc.trader_food.enabled", "false");
         put("guildNpc.trader_food.kind", "trader");
         put("guildNpc.trader_food.system", "false");
         put("guildNpc.trader_food.skinId", "boy_green");
-        put("guildNpc.trader_food.name", "Продуктовий торговець");
+        put("guildNpc.trader_food.name", "lang:npc.homecraftguild.trader_food");
         put("guildNpc.trader_food.trades", defaultFoodTrades());
         put("guildNpc.trader_tools.enabled", "false");
         put("guildNpc.trader_tools.kind", "trader");
         put("guildNpc.trader_tools.system", "false");
         put("guildNpc.trader_tools.skinId", "fighter_guy");
-        put("guildNpc.trader_tools.name", "Торговець інструментами");
+        put("guildNpc.trader_tools.name", "lang:npc.homecraftguild.trader_tools");
         put("guildNpc.trader_tools.trades", defaultToolTrades());
         put("guildNpc.trader_weapons.enabled", "false");
         put("guildNpc.trader_weapons.kind", "trader");
         put("guildNpc.trader_weapons.system", "false");
         put("guildNpc.trader_weapons.skinId", "medieval_knight");
-        put("guildNpc.trader_weapons.name", "Героїчний зброяр");
+        put("guildNpc.trader_weapons.name", "lang:npc.homecraftguild.trader_weapons");
         put("guildNpc.trader_weapons.trades", defaultWeaponTrades());
         put("guildNpc.trader_armor.enabled", "false");
         put("guildNpc.trader_armor.kind", "trader");
         put("guildNpc.trader_armor.system", "false");
         put("guildNpc.trader_armor.skinId", "trader_armor");
-        put("guildNpc.trader_armor.name", "Майстер броні");
+        put("guildNpc.trader_armor.name", "lang:npc.homecraftguild.trader_armor");
         put("guildNpc.trader_armor.trades", defaultArmorTrades());
         put("guildNpc.trader_elite.enabled", "false");
         put("guildNpc.trader_elite.kind", "trader");
         put("guildNpc.trader_elite.system", "false");
         put("guildNpc.trader_elite.skinId", "medieval_armor");
-        put("guildNpc.trader_elite.name", "Елітний гільдійний торговець");
+        put("guildNpc.trader_elite.name", "lang:npc.homecraftguild.trader_elite");
         put("guildNpc.trader_elite.trades", defaultEliteTrades());
         put("personalBannerLimit", "2");
         put("personalClaimSize", "48");
@@ -718,7 +720,16 @@ public final class HomeCraftGuildConfig {
     }
 
     public static String npcName(String key) {
-        String fallback = "guild_master".equals(normalizeNpcKey(key)) ? P.getProperty("guildNpcName", "Гільдійний Майстер") : "Гільдійний Торговець";
+        String safe = normalizeNpcKey(key);
+        String fallback = switch (safe) {
+            case "guild_master" -> P.getProperty("guildNpcName", "lang:npc.homecraftguild.guild_master");
+            case "trader_food" -> "lang:npc.homecraftguild.trader_food";
+            case "trader_tools" -> "lang:npc.homecraftguild.trader_tools";
+            case "trader_weapons" -> "lang:npc.homecraftguild.trader_weapons";
+            case "trader_armor" -> "lang:npc.homecraftguild.trader_armor";
+            case "trader_elite" -> "lang:npc.homecraftguild.trader_elite";
+            default -> "lang:npc.homecraftguild.trader";
+        };
         String raw = P.getProperty(npcPrefix(key) + "name", fallback).trim();
         return looksCorrupted(raw) || raw.isBlank() ? fallback : raw;
     }
@@ -1078,12 +1089,21 @@ public final class HomeCraftGuildConfig {
         int limit = clampInt(values.getOrDefault("limit", values.get("perplayer")), 0, 0, 9999);
         String role = sanitizeNpcRole(values.getOrDefault("role", values.getOrDefault("rank", "any")));
         String name = safeTradeText(values.getOrDefault("name", ""), 48);
+        String nameKey = safeTranslationKey(values.getOrDefault("namekey", values.getOrDefault("translationkey", values.getOrDefault("translation", ""))));
+        if (GuildTradeLocalization.shouldUseVanillaName(sell, name, nameKey)) {
+            name = "";
+            nameKey = "";
+        } else if (nameKey.isBlank()) {
+            nameKey = GuildTradeLocalization.legacyNameKey(name);
+            if (!nameKey.isBlank()) name = "";
+        }
         String ench = sanitizeEnchantSpec(values.getOrDefault("ench", values.getOrDefault("enchant", "")));
         if (GuildCurrency.isVanillaEmeraldId(sell)) {
             name = "";
+            nameKey = "";
             ench = "";
         }
-        StringBuilder out = new StringBuilder(160);
+        StringBuilder out = new StringBuilder(180);
         out.append("buy=").append(buy)
                 .append(",buyCount=").append(buyCount);
         if (!buy2.isBlank()) out.append(",buy2=").append(buy2).append(",buy2Count=").append(buy2Count);
@@ -1093,7 +1113,8 @@ public final class HomeCraftGuildConfig {
                 .append(",xp=").append(xp)
                 .append(",role=").append(role)
                 .append(",limit=").append(limit);
-        if (!name.isBlank()) out.append(",name=").append(name);
+        if (!nameKey.isBlank()) out.append(",nameKey=").append(nameKey);
+        else if (!name.isBlank()) out.append(",name=").append(name);
         if (!ench.isBlank()) out.append(",ench=").append(ench);
         return out.toString();
     }
@@ -1112,6 +1133,10 @@ public final class HomeCraftGuildConfig {
         String value = raw == null ? "" : raw.trim().replace('|', ' ').replace(';', ' ').replace('~', ' ').replace(',', ' ');
         if (looksCorrupted(value)) return "";
         return value.length() > maxLen ? value.substring(0, maxLen) : value;
+    }
+
+    private static String safeTranslationKey(String raw) {
+        return GuildTradeLocalization.normalizeTranslationKey(raw);
     }
 
     private static String sanitizeEnchantSpec(String raw) {

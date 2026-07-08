@@ -80,12 +80,41 @@ public final class HomeCraftGuildI18n {
     }
 
     public static String talentStatus(String rawStatus) {
-        String normalized = normalizeId(rawStatus);
+        String raw = rawStatus == null ? "" : rawStatus.trim();
+        String normalized = normalizeId(raw);
         if (normalized.isBlank()) normalized = "locked";
-        if (normalized.equals("доступний")) normalized = "available";
-        if (normalized.equals("вивчено")) normalized = "unlocked";
-        if (normalized.equals("заблоковано")) normalized = "locked";
-        return fallback("talent_status.homecraftguild." + normalized, rawStatus == null || rawStatus.isBlank() ? "locked" : rawStatus);
+        if (normalized.equals("доступний") || normalized.equals("available")) normalized = "available";
+        if (normalized.equals("вивчено") || normalized.equals("unlocked")) normalized = "unlocked";
+        if (normalized.equals("заблоковано") || normalized.equals("locked")) normalized = "locked";
+        int requiredLevel = extractRequiredLevel(raw);
+        if (requiredLevel > 0) return t("talent_status.homecraftguild.required_level", requiredLevel);
+        return fallback("talent_status.homecraftguild." + normalized, raw.isBlank() ? "locked" : raw);
+    }
+
+    public static String tradeName(String key, String fallback) {
+        String normalized = normalizeId(key);
+        if (normalized.startsWith("trade_name_homecraftguild_")) normalized = normalized.substring("trade_name_homecraftguild_".length());
+        if (key != null && key.startsWith("trade_name.homecraftguild.")) return fallback(key, fallback == null ? normalized : fallback);
+        return fallback("trade_name.homecraftguild." + normalized, fallback == null ? normalized : fallback);
+    }
+
+    public static String tradeRole(String rawRole) {
+        String normalized = normalizeId(rawRole);
+        if (normalized.isBlank()) normalized = "any";
+        return fallback("trade_role.homecraftguild." + normalized, rawRole == null || rawRole.isBlank() ? "any" : rawRole);
+    }
+
+    public static String compactBool(boolean value) {
+        return t(value ? "screen.homecraftguild.common.yes" : "screen.homecraftguild.common.no");
+    }
+
+    private static int extractRequiredLevel(String raw) {
+        if (raw == null || raw.isBlank()) return -1;
+        java.util.regex.Matcher matcher = java.util.regex.Pattern.compile("(\\d+)").matcher(raw);
+        if (!matcher.find()) return -1;
+        String lower = raw.toLowerCase(Locale.ROOT);
+        if (!(lower.contains("level") || lower.contains("рів") || lower.contains("lvl"))) return -1;
+        try { return Integer.parseInt(matcher.group(1)); } catch (Exception ignored) { return -1; }
     }
 
     public static String achievementTitle(String id, String fallback) {
@@ -108,7 +137,15 @@ public final class HomeCraftGuildI18n {
         return fallback("achievement.homecraftguild." + normalizeId(id) + ".reward", fallback);
     }
 
+    public static String normalizeKeyPart(String value) {
+        return normalizeId(value);
+    }
+
     private static String normalizeId(String value) {
-        return value == null ? "" : value.trim().toLowerCase(Locale.ROOT).replace(' ', '_');
+        if (value == null) return "";
+        String out = value.trim().toLowerCase(Locale.ROOT).replace(' ', '_');
+        out = out.replace(':', '_').replace('/', '_').replace('-', '_').replace('.', '_');
+        while (out.contains("__")) out = out.replace("__", "_");
+        return out;
     }
 }

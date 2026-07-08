@@ -118,8 +118,8 @@ Minecraft 1.21.11 + NeoForge + Java 21
 Push a `v*` tag to build and publish the release artifact:
 
 ```bash
-git tag v0.1.158
-git push origin v0.1.158
+git tag v0.1.160
+git push origin v0.1.160
 ```
 
 The workflow validates the 1.21.11 lock before building and rejects old multi-loader/multi-version matrix settings.

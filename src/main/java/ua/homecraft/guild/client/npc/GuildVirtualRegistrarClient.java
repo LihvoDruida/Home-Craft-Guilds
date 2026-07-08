@@ -1,5 +1,7 @@
 package ua.homecraft.guild.client.npc;
 
+import ua.homecraft.guild.client.HomeCraftGuildI18n;
+
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
@@ -100,7 +102,7 @@ public final class GuildVirtualRegistrarClient {
             double y = parseDouble(p[4], 64.0D);
             double z = parseDouble(p[5], 0.5D);
             float yaw = (float) parseDouble(p[6], 0.0D);
-            String name = p[7] == null || p[7].isBlank() ? "Гільдійний Реєстратор" : p[7].trim();
+            String name = p[7] == null || p[7].isBlank() ? HomeCraftGuildI18n.t("npc.homecraftguild.registrar") : p[7].trim();
             point = new NpcPoint(dimension, x, y, z, yaw, name, System.currentTimeMillis() + STATE_TTL_MS);
             if (dummy == null) {
                 bodyYaw = yaw;
@@ -139,7 +141,7 @@ public final class GuildVirtualRegistrarClient {
             dummy = new GuildRegistrarEntity(HomeCraftGuildEntities.GUILD_REGISTRAR.get(), level);
             dummy.setId(LOCAL_DUMMY_ENTITY_ID);
             invoke(dummy, "setUUID", new Class<?>[]{UUID.class}, new Object[]{LOCAL_DUMMY_UUID});
-            dummy.setupRegistrar(name == null || name.isBlank() ? "Гільдійний Реєстратор" : name);
+            dummy.setupRegistrar(name == null || name.isBlank() ? HomeCraftGuildI18n.t("npc.homecraftguild.registrar") : name);
             dummy.setNoGravity(true);
             dummy.setSilent(true);
             dummyName = name;
@@ -519,7 +521,7 @@ public final class GuildVirtualRegistrarClient {
     private static void renderFallbackNameTag(Minecraft mc, NpcPoint p, Object camera, Vec3 cam, PoseStack pose, MultiBufferSource buffer) {
         try {
             if (mc == null || mc.font == null || p == null || cam == null || pose == null || buffer == null) return;
-            String name = p.name == null || p.name.isBlank() ? "Гільдійний Реєстратор" : p.name;
+            String name = p.name == null || p.name.isBlank() ? HomeCraftGuildI18n.t("npc.homecraftguild.registrar") : p.name;
             pose.pushPose();
             try {
                 pose.translate(p.x - cam.x, p.y + 2.12D - cam.y, p.z - cam.z);

@@ -87,12 +87,21 @@ public final class GuildNpcTradeService {
         String role = normalizeRole(m.getOrDefault("role", m.getOrDefault("rank", "any")));
         if (role.isBlank()) return ValidationResult.error("Невалідна роль доступу");
         String name = safeText(m.getOrDefault("name", ""), 48);
+        String nameKey = GuildTradeLocalization.normalizeTranslationKey(m.getOrDefault("namekey", m.getOrDefault("translationkey", m.getOrDefault("translation", ""))));
+        if (GuildTradeLocalization.shouldUseVanillaName(sell, name, nameKey)) {
+            name = "";
+            nameKey = "";
+        } else if (nameKey.isBlank()) {
+            nameKey = GuildTradeLocalization.legacyNameKey(name);
+            if (!nameKey.isBlank()) name = "";
+        }
         String ench = normalizeEnchants(player, m.getOrDefault("ench", m.getOrDefault("enchant", "")), sell);
         if (ench == null) return ValidationResult.error("Невалідний enchant id або рівень зачарування");
         String reset = normalizeResetPolicy(m.getOrDefault("reset", m.getOrDefault("resetpolicy", "never")));
         double extraDamage = decimal(m.getOrDefault("damage", m.getOrDefault("extradamage", m.getOrDefault("bonusdamage", "0"))), 0.0D, 0.0D, 16.0D);
         if (GuildCurrency.isVanillaEmeraldId(sell)) {
             name = "";
+            nameKey = "";
             ench = "";
             extraDamage = 0.0D;
         }
@@ -107,7 +116,8 @@ public final class GuildNpcTradeService {
                 .append(",role=").append(role)
                 .append(",limit=").append(limit)
                 .append(",reset=").append(reset);
-        if (!name.isBlank()) out.append(",name=").append(name);
+        if (!nameKey.isBlank()) out.append(",nameKey=").append(nameKey);
+        else if (!name.isBlank()) out.append(",name=").append(name);
         if (extraDamage > 0.0D) out.append(",damage=").append(formatDecimal(extraDamage));
         if (!ench.isBlank()) out.append(",ench=").append(ench);
         return ValidationResult.ok(out.toString());
@@ -242,20 +252,20 @@ public final class GuildNpcTradeService {
         if (player == null || npcKey == null || npcKey.isBlank()) return;
         GuildCurrency.migrateAndNotify(player, "npc_trade_open");
         if (!"trader".equalsIgnoreCase(HomeCraftGuildConfig.npcKind(npcKey))) {
-            player.displayClientMessage(Component.literal("Home Craft Guilds: цей NPC не є торговцем."), false);
+            player.displayClientMessage(Component.translatable("message.homecraftguild.npc.not_trader"), false);
             return;
         }
         List<TradeSpec> visibleSpecs = new ArrayList<>();
         MerchantOffers offers = buildOffersFor(player, npcKey, visibleSpecs);
         if (offers.isEmpty()) {
-            player.displayClientMessage(Component.literal("Home Craft Guilds: у цього торговця немає доступних товарів для твоїх прав."), false);
+            player.displayClientMessage(Component.translatable("message.homecraftguild.npc.no_available_trades"), false);
             if (HomeCraftGuildConfig.npcInteractionSoundEnabled()) {
                 player.level().playSound(null, player.blockPosition(), SoundEvents.VILLAGER_NO, SoundSource.NEUTRAL, 0.8F, 1.0F);
             }
             return;
         }
         GuildMerchant merchant = new GuildMerchant(player, npcKey, npcEntity, offers, visibleSpecs);
-        merchant.openTradingScreen(player, Component.literal(HomeCraftGuildConfig.npcName(npcKey)), 0);
+        merchant.openTradingScreen(player, GuildTradeLocalization.npcNameComponent(HomeCraftGuildConfig.npcName(npcKey), Component.translatable("npc.homecraftguild.trader")), 0);
     }
 
     private static MerchantOffers buildOffersFor(ServerPlayer player, String npcKey, List<TradeSpec> visibleSpecs) {
@@ -265,7 +275,7 @@ public final class GuildNpcTradeService {
             int remaining = remainingFor(player, npcKey, spec);
             if (remaining == 0) continue;
             ItemStack buy = stackFromId(spec.buy, spec.buyCount);
-            ItemStack sell = stackFromSpec(player, spec.sell, spec.sellCount, spec.name, spec.enchants, spec.extraDamage);
+            ItemStack sell = stackFromSpec(player, spec.sell, spec.sellCount, spec.name, spec.nameKey, spec.enchants, spec.extraDamage);
             if (buy.isEmpty() || sell.isEmpty()) continue;
             int maxUses = spec.maxUses;
             if (remaining > 0) maxUses = Math.min(maxUses, remaining);
@@ -373,7 +383,7 @@ public final class GuildNpcTradeService {
         return new ItemStack(item, Math.max(1, Math.min(64, count)));
     }
 
-    private static ItemStack stackFromSpec(ServerPlayer player, String id, int count, String name, String enchants, double extraDamage) {
+    private static ItemStack stackFromSpec(ServerPlayer player, String id, int count, String name, String nameKey, String enchants, double extraDamage) {
         String normalized = GuildCurrency.normalizeItemId(id);
         ItemStack stack = stackFromId(normalized, count);
         if (stack.isEmpty()) return stack;
@@ -382,7 +392,7 @@ public final class GuildNpcTradeService {
             // same original vanilla emerald that normal trades accept.
             return GuildCurrency.vanillaEmeraldStack(count);
         }
-        if (name != null && !name.isBlank()) stack.set(DataComponents.CUSTOM_NAME, Component.literal(name));
+        if ((nameKey != null && !nameKey.isBlank()) || (name != null && !name.isBlank())) stack.set(DataComponents.CUSTOM_NAME, GuildTradeLocalization.nameComponent(name, nameKey, stack.getHoverName()));
         applyExtraAttackDamage(stack, extraDamage);
         applyEnchants(player, stack, enchants);
         return stack;
@@ -476,7 +486,7 @@ public final class GuildNpcTradeService {
         }
     }
 
-    private record TradeSpec(String id, String buy, int buyCount, String buy2, int buy2Count, String sell, int sellCount, int maxUses, int xp, String role, int perPlayerLimit, String resetPolicy, String name, String enchants, double extraDamage) {
+    private record TradeSpec(String id, String buy, int buyCount, String buy2, int buy2Count, String sell, int sellCount, int maxUses, int xp, String role, int perPlayerLimit, String resetPolicy, String name, String nameKey, String enchants, double extraDamage) {
         static TradeSpec parse(String raw) {
             Map<String,String> m = new HashMap<>();
             if (raw == null) return null;
@@ -496,16 +506,25 @@ public final class GuildNpcTradeService {
             int limit = num(m.getOrDefault("limit", m.get("perplayer")), 0, 0, 9999);
             String role = m.getOrDefault("role", m.getOrDefault("rank", "any"));
             String name = m.getOrDefault("name", "");
+            String nameKey = GuildTradeLocalization.normalizeTranslationKey(m.getOrDefault("namekey", m.getOrDefault("translationkey", m.getOrDefault("translation", ""))));
+            if (GuildTradeLocalization.shouldUseVanillaName(sell, name, nameKey)) {
+                name = "";
+                nameKey = "";
+            } else if (nameKey.isBlank()) {
+                nameKey = GuildTradeLocalization.legacyNameKey(name);
+                if (!nameKey.isBlank()) name = "";
+            }
             String ench = m.getOrDefault("ench", m.getOrDefault("enchant", ""));
             String reset = m.getOrDefault("reset", m.getOrDefault("resetpolicy", "never"));
             double extraDamage = decimal(m.getOrDefault("damage", m.getOrDefault("extradamage", m.getOrDefault("bonusdamage", "0"))), 0.0D, 0.0D, 16.0D);
             if (GuildCurrency.isVanillaEmeraldId(sell)) {
                 name = "";
+                nameKey = "";
                 ench = "";
                 extraDamage = 0.0D;
             }
-            String id = stableTradeId(buy, buyCount, buy2, buy2Count, sell, sellCount, max, xp, role, limit, reset, name, ench, extraDamage);
-            return new TradeSpec(id, buy, buyCount, buy2, buy2Count, sell, sellCount, max, xp, role, limit, reset, name, ench, extraDamage);
+            String id = stableTradeId(buy, buyCount, buy2, buy2Count, sell, sellCount, max, xp, role, limit, reset, name, nameKey, ench, extraDamage);
+            return new TradeSpec(id, buy, buyCount, buy2, buy2Count, sell, sellCount, max, xp, role, limit, reset, name, nameKey, ench, extraDamage);
         }
         private static String stableTradeId(Object... values) {
             CRC32 crc = new CRC32();

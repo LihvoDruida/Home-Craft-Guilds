@@ -30,7 +30,7 @@ public final class CreateGuildScreen extends Screen {
     private int helpInnerX, helpInnerY, helpInnerW, helpInnerH;
 
     public CreateGuildScreen(String message) {
-        super(Component.literal("Home Craft — гільдійний реєстратор"));
+        super(HomeCraftGuildI18n.c("screen.homecraftguild.create.title"));
         this.view = NpcView.parse(message == null ? "" : message);
     }
 
@@ -45,8 +45,8 @@ public final class CreateGuildScreen extends Screen {
         addRenderableWidget(Button.builder(Component.literal("i"), b -> { helpOpen = !helpOpen; if (helpOpen) helpScroll = 0; }).bounds(infoX, infoY, infoS, infoS).build());
 
         if (view.mode.equals("CREATE")) {
-            this.nameBox = new EditBox(this.font, l.x + l.pad, l.y + 90, l.contentW, 22, Component.literal("Назва гільдії"));
-            this.nameBox.setHint(Component.literal("Назва гільдії"));
+            this.nameBox = new EditBox(this.font, l.x + l.pad, l.y + 90, l.contentW, 22, HomeCraftGuildI18n.c("field.homecraftguild.guild_name"));
+            this.nameBox.setHint(HomeCraftGuildI18n.c("field.homecraftguild.guild_name"));
             this.nameBox.setMaxLength(32);
             addRenderableWidget(nameBox);
 
@@ -60,7 +60,7 @@ public final class CreateGuildScreen extends Screen {
                 addRenderableWidget(Button.builder(Component.literal(colorLabel(color)), b -> selectedColor = color)
                         .bounds(cx, cy, colorButtonW, 20).build());
             }
-            addRenderableWidget(Button.builder(Component.literal("Створити за " + view.cost + " смарагди"), b -> {
+            addRenderableWidget(Button.builder(HomeCraftGuildI18n.c("button.homecraftguild.create_for_emeralds", view.cost), b -> {
                 ClientPacketDistributor.sendToServer(new GuildActionPayload("create", nameBox.getValue(), selectedColor));
                 onClose();
             }).bounds(l.x + l.pad, l.bottomY - 54, l.contentW, 22).build());
@@ -71,28 +71,28 @@ public final class CreateGuildScreen extends Screen {
             int bw = Math.max(76, (l.contentW - gap * 3) / 4);
             boolean ordinaryAvailable = view.ordinaryGolems < view.maxOrdinaryGolems;
             boolean eliteAvailable = view.maxEliteGolems > 0 && view.eliteGolems < view.maxEliteGolems;
-            Button ironButton = Button.builder(Component.literal("Залізний"), b -> send("hire_golem", "minecraft:iron_golem"))
+            Button ironButton = Button.builder(HomeCraftGuildI18n.c("golem_type.homecraftguild.iron"), b -> send("hire_golem", "minecraft:iron_golem"))
                     .bounds(l.x + l.pad, golemY, bw, 22).build();
             ironButton.active = ordinaryAvailable;
             addRenderableWidget(ironButton);
-            Button snowButton = Button.builder(Component.literal("Сніжний"), b -> send("hire_golem", "minecraft:snow_golem"))
+            Button snowButton = Button.builder(HomeCraftGuildI18n.c("golem_type.homecraftguild.snow"), b -> send("hire_golem", "minecraft:snow_golem"))
                     .bounds(l.x + l.pad + (bw + gap), golemY, bw, 22).build();
             snowButton.active = ordinaryAvailable;
             addRenderableWidget(snowButton);
-            Button copperButton = Button.builder(Component.literal("Мідний"), b -> send("hire_golem", "minecraft:copper_golem"))
+            Button copperButton = Button.builder(HomeCraftGuildI18n.c("golem_type.homecraftguild.copper"), b -> send("hire_golem", "minecraft:copper_golem"))
                     .bounds(l.x + l.pad + (bw + gap) * 2, golemY, bw, 22).build();
             copperButton.active = ordinaryAvailable;
             addRenderableWidget(copperButton);
             if (view.maxEliteGolems > 0) {
-                Button eliteButton = Button.builder(Component.literal("Елітний"), b -> send("hire_golem", "elite"))
+                Button eliteButton = Button.builder(HomeCraftGuildI18n.c("golem_type.homecraftguild.elite"), b -> send("hire_golem", "elite"))
                         .bounds(l.x + l.pad + (bw + gap) * 3, golemY, bw, 22).build();
                 eliteButton.active = eliteAvailable;
                 addRenderableWidget(eliteButton);
             }
-            addRenderableWidget(Button.builder(Component.literal("Розпустити гільдію"), b -> send("disband", ""))
+            addRenderableWidget(Button.builder(HomeCraftGuildI18n.c("button.homecraftguild.disband_guild"), b -> send("disband", ""))
                     .bounds(l.x + l.pad, l.bottomY - 54, l.contentW, 22).build());
         }
-        addRenderableWidget(Button.builder(Component.literal("Закрити"), b -> onClose())
+        addRenderableWidget(Button.builder(HomeCraftGuildI18n.c("button.homecraftguild.close"), b -> onClose())
                 .bounds(l.x + l.pad, l.bottomY - 26, l.contentW, 22).build());
     }
 
@@ -176,31 +176,31 @@ public final class CreateGuildScreen extends Screen {
         Layout l = layout();
         graphics.fill(l.x, l.y, l.x + l.panelW, l.y + l.panelH, 0xF0101119);
         graphics.fill(l.x, l.y, l.x + l.panelW, l.y + 3, 0xFFFFA914);
-        graphics.drawCenteredString(this.font, "Гільдійний реєстратор", this.width / 2, l.y + 12, 0xFFFFF3DC);
+        graphics.drawCenteredString(this.font, HomeCraftGuildI18n.t("screen.homecraftguild.create.title"), this.width / 2, l.y + 12, 0xFFFFF3DC);
 
         if (view.mode.equals("CREATE")) {
-            graphics.drawString(this.font, "Ти не перебуваєш у гільдії.", l.x + l.pad, l.y + 38, 0xFFD8DEE9, false);
-            graphics.drawString(this.font, "Ціна створення: " + view.cost + " смарагди · ліміт складу: " + view.memberLimit, l.x + l.pad, l.y + 54, 0xFFFFD99A, false);
-            graphics.drawString(this.font, "Назва: 3–32 символи.", l.x + l.pad, l.y + 70, 0xFF9AA4B2, false);
-            graphics.drawString(this.font, "Колір гільдії: " + colorLabel(selectedColor), l.x + l.pad, l.y + 116, colorArgb(selectedColor), false);
+            graphics.drawString(this.font, HomeCraftGuildI18n.t("screen.homecraftguild.create.not_in_guild"), l.x + l.pad, l.y + 38, 0xFFD8DEE9, false);
+            graphics.drawString(this.font, HomeCraftGuildI18n.t("screen.homecraftguild.create.creation_cost", view.cost, view.memberLimit), l.x + l.pad, l.y + 54, 0xFFFFD99A, false);
+            graphics.drawString(this.font, HomeCraftGuildI18n.t("screen.homecraftguild.create.name_rule"), l.x + l.pad, l.y + 70, 0xFF9AA4B2, false);
+            graphics.drawString(this.font, HomeCraftGuildI18n.t("screen.homecraftguild.create.guild_color", colorLabel(selectedColor)), l.x + l.pad, l.y + 116, colorArgb(selectedColor), false);
             int bonusY = Math.min(l.y + 228, l.bottomY - 92);
             drawLevelSummary(graphics, l.x + l.pad, bonusY, l.contentW);
         } else if (view.mode.equals("MASTER")) {
-            String title = "Рівень " + view.guildLevel + " · " + trim(view.guildName, Math.max(12, l.contentW / 7));
+            String title = HomeCraftGuildI18n.t("screen.homecraftguild.common.level_name", view.guildLevel, trim(view.guildName, Math.max(12, l.contentW / 7)));
             graphics.drawString(this.font, title, l.x + l.pad, l.y + 38, 0xFFFFD99A, false);
             drawXpBar(graphics, l.x + l.pad, l.y + 54, l.contentW, 9);
-            graphics.drawString(this.font, "Колір: " + colorLabel(view.color) + " · учасників: " + view.members + "/" + view.memberLimit, l.x + l.pad, l.y + 72, 0xFFD8DEE9, false);
-            graphics.drawString(this.font, "Големи: " + view.golems + "/" + view.maxGolems + " · звичайні " + view.ordinaryGolems + "/" + view.maxOrdinaryGolems + " · елітні " + view.eliteGolems + "/" + view.maxEliteGolems, l.x + l.pad, l.y + 88, 0xFFD8DEE9, false);
-            String eliteText = view.maxEliteGolems > 0 ? " · елітний " + view.eliteGolemCost : " · елітний з рівня " + view.nextEliteGolemUnlockLevel;
-            graphics.drawString(this.font, "Ціна: звичайний " + view.normalGolemCost + " смарагдів" + eliteText, l.x + l.pad, l.y + 104, 0xFFFFD99A, false);
-            graphics.drawString(this.font, "Найм големів:", l.x + l.pad, Math.min(l.y + 164, l.bottomY - 102), 0xFF9AA4B2, false);
+            graphics.drawString(this.font, HomeCraftGuildI18n.t("screen.homecraftguild.create.color_members", colorLabel(view.color), view.members, view.memberLimit), l.x + l.pad, l.y + 72, 0xFFD8DEE9, false);
+            graphics.drawString(this.font, HomeCraftGuildI18n.t("screen.homecraftguild.create.golems_summary", view.golems, view.maxGolems, view.ordinaryGolems, view.maxOrdinaryGolems, view.eliteGolems, view.maxEliteGolems), l.x + l.pad, l.y + 88, 0xFFD8DEE9, false);
+            String eliteText = view.maxEliteGolems > 0 ? HomeCraftGuildI18n.t("screen.homecraftguild.create.elite_cost", view.eliteGolemCost) : HomeCraftGuildI18n.t("screen.homecraftguild.create.elite_unlock_level", view.nextEliteGolemUnlockLevel);
+            graphics.drawString(this.font, HomeCraftGuildI18n.t("screen.homecraftguild.create.golem_cost", view.normalGolemCost, eliteText), l.x + l.pad, l.y + 104, 0xFFFFD99A, false);
+            graphics.drawString(this.font, HomeCraftGuildI18n.t("screen.homecraftguild.create.hire_golems"), l.x + l.pad, Math.min(l.y + 164, l.bottomY - 102), 0xFF9AA4B2, false);
             drawLevelSummary(graphics, l.x + l.pad, l.y + 124, l.contentW);
         } else {
-            String title = "Рівень " + view.guildLevel + " · " + trim(view.guildName, Math.max(12, l.contentW / 7));
+            String title = HomeCraftGuildI18n.t("screen.homecraftguild.common.level_name", view.guildLevel, trim(view.guildName, Math.max(12, l.contentW / 7)));
             graphics.drawString(this.font, title, l.x + l.pad, l.y + 42, 0xFFFFD99A, false);
             drawXpBar(graphics, l.x + l.pad, l.y + 58, l.contentW, 9);
-            graphics.drawString(this.font, "Склад, ролі й території — клавіша G.", l.x + l.pad, l.y + 76, 0xFFD8DEE9, false);
-            graphics.drawString(this.font, "Через NPC керує лише Гілдмайстер.", l.x + l.pad, l.y + 92, 0xFF9AA4B2, false);
+            graphics.drawString(this.font, HomeCraftGuildI18n.t("screen.homecraftguild.create.roster_hint"), l.x + l.pad, l.y + 76, 0xFFD8DEE9, false);
+            graphics.drawString(this.font, HomeCraftGuildI18n.t("screen.homecraftguild.create.master_only_hint"), l.x + l.pad, l.y + 92, 0xFF9AA4B2, false);
             drawLevelSummary(graphics, l.x + l.pad, l.y + 116, l.contentW);
         }
         super.render(graphics, mouseX, mouseY, partialTick);
@@ -210,35 +210,11 @@ public final class CreateGuildScreen extends Screen {
 
     private List<String> buildHelpLines() {
         List<String> lines = new ArrayList<>();
-        lines.add("Що таке гільдія:");
-        lines.add("• Гільдія — це команда з ролями, власними територіями, ліжками, големами й прогресом.");
-        lines.add("• Гілдмайстер керує ролями, учасниками, запрошеннями, тотемами та наймом големів.");
-        lines.add("• Будівельник допомагає з територією і може ставити багато вільних ліжок для учасників.");
-        lines.add("");
-        lines.add("Гільдійний тотем:");
-        lines.add("• Скрафти предмет 'Гільдійний кристалічний тотем'.");
-        lines.add("• Рецепт: ABA / BEB / ABA.");
-        lines.add("• A — уламок аметисту, B — будь-який банер, E — смарагд.");
-        lines.add("• Тотем ставить Гілдмайстер поза spawn-зоною, без перетину з чужою територією.");
-        lines.add("• Кожен тотем створює територію; суміжні території однієї гільдії працюють як один простір.");
-        lines.add("");
-        lines.add("Ліжка:");
-        lines.add("• Учасник може закріпити одне активне ліжко на території гільдії.");
-        lines.add("• Нове закріплення звільняє старе. Чуже закріплене ліжко не перезаписується.");
-        lines.add("");
-        lines.add("Големи:");
-        lines.add("• Звичайний голем: +300% до max HP від бази та +50% до урону.");
-        lines.add("• Елітний голем: +500% до max HP від бази та +75% до урону.");
-        lines.add("• Ліміти звичайних: рівні 1-2 — 1, 3-4 — 2, 5-6 — 3, рівень 7 — 4.");
-        lines.add("• Ціни звичайних: 1, 3, 10 і 20 смарагдів за 1-го, 2-го, 3-го і 4-го голема.");
-        lines.add("• Елітний голем відкривається з 5 рівня, ліміт 1. Ціна: 50 смарагдів на 5 рівні, 60 на 6, 70 на 7.");
-        lines.add("• Удень при HP нижче 50% від гільдійного максимуму голем спершу йде лікуватися до тотема до 100% HP.");
-        lines.add("• Уночі големи підтримують учасників на поверхні, але не йдуть у шахти за підземними цілями.");
-        lines.add("");
-        lines.add("Коротко про бонуси:");
-        lines.add("• Гільдія дає базово +5% досвіду та +10% тривалості корисних зіль; сильніші бонуси відкриваються талантами.");
-        lines.add("• Бонус броні працює тільки на вдягненій броні, бонус зброї — тільки на справжній зброї.");
-        lines.add("• Сокира — зброя. Кирка, сапка, лопата, блоки й матеріали не отримують бонус зброї.");
+        for (int i = 1; i <= 29; i++) {
+            String line = HomeCraftGuildI18n.t("screen.homecraftguild.create.help.line_" + i);
+            if (line.equals("<blank>")) line = "";
+            lines.add(line);
+        }
         return lines;
     }
 
@@ -251,7 +227,7 @@ public final class CreateGuildScreen extends Screen {
         graphics.fill(0, 0, this.width, this.height, 0x88000000);
         graphics.fill(x, y, x + w, y + h, 0xF0151920);
         graphics.fill(x, y, x + w, y + 3, 0xFFFFA914);
-        graphics.drawCenteredString(this.font, "Інформація про гільдію", x + w / 2, y + 10, 0xFFFFF3DC);
+        graphics.drawCenteredString(this.font, HomeCraftGuildI18n.t("screen.homecraftguild.create.help_title"), x + w / 2, y + 10, 0xFFFFF3DC);
         helpCloseW = 18; helpCloseH = 18; helpCloseX = x + w - 24; helpCloseY = y + 8;
         graphics.fill(helpCloseX, helpCloseY, helpCloseX + helpCloseW, helpCloseY + helpCloseH, 0xFF313842);
         graphics.drawCenteredString(this.font, "×", helpCloseX + helpCloseW / 2, helpCloseY + 5, 0xFFFFFFFF);
@@ -275,7 +251,7 @@ public final class CreateGuildScreen extends Screen {
         }
 
         if (wrappedHelpLines.size() > visibleLines) {
-            String scrollLabel = "Скрол: " + (helpScroll + 1) + "-" + Math.min(wrappedHelpLines.size(), helpScroll + visibleLines) + " з " + wrappedHelpLines.size();
+            String scrollLabel = HomeCraftGuildI18n.t("screen.homecraftguild.common.scroll_range", helpScroll + 1, Math.min(wrappedHelpLines.size(), helpScroll + visibleLines), wrappedHelpLines.size());
             graphics.drawString(this.font, scrollLabel, helpInnerX, y + h - 12, 0xFF9AA4B2, false);
             if (helpScroll > 0) graphics.drawString(this.font, "↑", x + w - 38, y + 34, 0xFFFFD99A, false);
             if (helpScroll < maxScroll) graphics.drawString(this.font, "↓", x + w - 38, y + h - 24, 0xFFFFD99A, false);
@@ -352,20 +328,20 @@ public final class CreateGuildScreen extends Screen {
         graphics.fill(x, y, x + w, y + h, 0xFF262B34);
         int fill = view.guildXpLevelSize <= 0 ? w : Math.max(0, Math.min(w, (int) Math.round((double) view.guildXpInLevel * w / Math.max(1, view.guildXpLevelSize))));
         graphics.fill(x, y, x + fill, y + h, 0xFFFFA914);
-        String label = view.guildXpLevelSize <= 0 ? "максимальний рівень" : (view.guildXpInLevel + "/" + view.guildXpLevelSize + " XP");
+        String label = view.guildXpLevelSize <= 0 ? HomeCraftGuildI18n.t("screen.homecraftguild.common.max_level") : HomeCraftGuildI18n.t("screen.homecraftguild.common.xp_plain", view.guildXpInLevel, view.guildXpLevelSize);
         graphics.drawCenteredString(this.font, label, x + w / 2, y + Math.max(0, (h - 8) / 2), 0xFFFFFFFF);
     }
 
     private void drawLevelSummary(GuiGraphics graphics, int x, int y, int w) {
         int line = 0;
-        graphics.drawString(this.font, "Гільдія:", x, y + line, 0xFF9FE7FF, false); line += 14;
-        for (String row : wrapText("Території, ліжка, големи, розвиток і короткі бонуси", w)) {
+        graphics.drawString(this.font, HomeCraftGuildI18n.t("screen.homecraftguild.create.summary_guild"), x, y + line, 0xFF9FE7FF, false); line += 14;
+        for (String row : wrapText(HomeCraftGuildI18n.t("screen.homecraftguild.create.summary_line_1"), w)) {
             graphics.drawString(this.font, row, x, y + line, 0xFFB7A7FF, false); line += 12;
         }
-        for (String row : wrapText("Големи: звичайний +300% HP/+50% урон, елітний +500% HP/+75% урон", w)) {
+        for (String row : wrapText(HomeCraftGuildI18n.t("screen.homecraftguild.create.summary_line_2"), w)) {
             graphics.drawString(this.font, row, x, y + line, 0xFF9AFFB4, false); line += 12;
         }
-        for (String row : wrapText("Рівень " + view.guildLevel + ": големи звич. " + view.ordinaryGolems + "/" + view.maxOrdinaryGolems + " · еліт. " + view.eliteGolems + "/" + view.maxEliteGolems + " · території " + view.territoryLimit, w)) {
+        for (String row : wrapText(HomeCraftGuildI18n.t("screen.homecraftguild.create.summary_line_3", view.guildLevel, view.ordinaryGolems, view.maxOrdinaryGolems, view.eliteGolems, view.maxEliteGolems, view.territoryLimit), w)) {
             graphics.drawString(this.font, row, x, y + line, 0xFF9AA4B2, false); line += 12;
         }
     }
@@ -394,17 +370,17 @@ public final class CreateGuildScreen extends Screen {
 
     private static String colorLabel(String color) {
         return switch (String.valueOf(color == null ? "" : color)) {
-            case "white" -> "Білий";
-            case "orange" -> "Помаранч";
-            case "magenta" -> "Магента";
-            case "light_blue" -> "Блакитний";
-            case "yellow" -> "Жовтий";
-            case "lime" -> "Лайм";
-            case "cyan" -> "Ціан";
-            case "purple" -> "Пурпур";
-            case "blue" -> "Синій";
-            case "red" -> "Червоний";
-            default -> "Магента";
+            case "white" -> HomeCraftGuildI18n.t("color.homecraftguild.white");
+            case "orange" -> HomeCraftGuildI18n.t("color.homecraftguild.orange");
+            case "magenta" -> HomeCraftGuildI18n.t("color.homecraftguild.magenta");
+            case "light_blue" -> HomeCraftGuildI18n.t("color.homecraftguild.light_blue");
+            case "yellow" -> HomeCraftGuildI18n.t("color.homecraftguild.yellow");
+            case "lime" -> HomeCraftGuildI18n.t("color.homecraftguild.lime");
+            case "cyan" -> HomeCraftGuildI18n.t("color.homecraftguild.cyan");
+            case "purple" -> HomeCraftGuildI18n.t("color.homecraftguild.purple");
+            case "blue" -> HomeCraftGuildI18n.t("color.homecraftguild.blue");
+            case "red" -> HomeCraftGuildI18n.t("color.homecraftguild.red");
+            default -> HomeCraftGuildI18n.t("color.homecraftguild.magenta");
         };
     }
 

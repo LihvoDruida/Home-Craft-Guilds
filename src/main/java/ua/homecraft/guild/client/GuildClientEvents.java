@@ -159,9 +159,9 @@ public final class GuildClientEvents {
             if (percent > 0) {
                 double baseDamage = estimatedWeaponDamage(stack);
                 String added = baseDamage > 0.0D
-                        ? " — значення урону: " + formatOneDecimal(baseDamage) + " + " + formatOneDecimal(baseDamage * percent / 100.0D) + " = " + formatOneDecimal(baseDamage * (1.0D + percent / 100.0D))
-                        : " (додано: +" + percent + "% до фактичного урону)";
-                event.getToolTip().add(Component.literal("Бонус гільдії: +" + percent + "% шкоди зброєю" + added).withStyle(ChatFormatting.GOLD));
+                        ? HomeCraftGuildI18n.t("tooltip.homecraftguild.weapon_bonus.calculated", formatOneDecimal(baseDamage), formatOneDecimal(baseDamage * percent / 100.0D), formatOneDecimal(baseDamage * (1.0D + percent / 100.0D)))
+                        : HomeCraftGuildI18n.t("tooltip.homecraftguild.weapon_bonus.added", percent);
+                event.getToolTip().add(HomeCraftGuildI18n.c("tooltip.homecraftguild.weapon_bonus.line", percent, added).withStyle(ChatFormatting.GOLD));
             }
         }
 
@@ -171,9 +171,9 @@ public final class GuildClientEvents {
             if (percent > 0) {
                 double armor = estimatedArmorValue(stack);
                 String added = armor > 0.0D
-                        ? " — значення броні: " + formatOneDecimal(armor) + " + " + formatOneDecimal(armor * percent / 100.0D) + " = " + formatOneDecimal(armor * (1.0D + percent / 100.0D))
-                        : " (додано: +" + percent + "% до фактичної броні)";
-                event.getToolTip().add(Component.literal("Бонус гільдії: +" + percent + "% броні" + added).withStyle(ChatFormatting.AQUA));
+                        ? HomeCraftGuildI18n.t("tooltip.homecraftguild.armor_bonus.calculated", formatOneDecimal(armor), formatOneDecimal(armor * percent / 100.0D), formatOneDecimal(armor * (1.0D + percent / 100.0D)))
+                        : HomeCraftGuildI18n.t("tooltip.homecraftguild.armor_bonus.added", percent);
+                event.getToolTip().add(HomeCraftGuildI18n.c("tooltip.homecraftguild.armor_bonus.line", percent, added).withStyle(ChatFormatting.AQUA));
             }
         }
     }

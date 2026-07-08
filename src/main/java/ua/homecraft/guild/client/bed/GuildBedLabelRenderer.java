@@ -1,5 +1,7 @@
 package ua.homecraft.guild.client.bed;
 
+import ua.homecraft.guild.client.HomeCraftGuildI18n;
+
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
@@ -76,7 +78,7 @@ public final class GuildBedLabelRenderer {
             double dz = mc.player.getZ() - lz;
             if (dx * dx + dy * dy + dz * dz > maxDistanceSqr) continue;
 
-            String text = "Ліжко: " + label.owner;
+            String text = HomeCraftGuildI18n.t("label.homecraftguild.bed_owner", label.owner);
             pose.pushPose();
             pose.translate(lx - cam.x, ly - cam.y, lz - cam.z);
             applyCameraRotation(pose, camera);

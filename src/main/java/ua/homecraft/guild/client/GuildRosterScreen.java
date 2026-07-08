@@ -1463,18 +1463,20 @@ public final class GuildRosterScreen extends Screen {
     private static String friendlyGolemStatus(String raw, boolean dead, boolean elite) {
         String value = raw == null ? "" : raw.trim();
         String normalized = value.toUpperCase(Locale.ROOT);
-        if (dead || normalized.contains("DEAD") || value.equalsIgnoreCase("загинув")) return HomeCraftGuildI18n.t("golem_status.homecraftguild.dead");
-        if (normalized.contains("RESPAWN")) return HomeCraftGuildI18n.t("golem_status.homecraftguild.waiting_respawn");
-        if (normalized.contains("REMOVED")) return HomeCraftGuildI18n.t("golem_status.homecraftguild.removed");
+        String lower = value.toLowerCase(Locale.ROOT);
+        if (dead || normalized.contains("DEAD") || lower.contains("загин")) return HomeCraftGuildI18n.t("golem_status.homecraftguild.dead");
+        if (normalized.contains("RESPAWN") || lower.contains("відрод")) return HomeCraftGuildI18n.t("golem_status.homecraftguild.waiting_respawn");
+        if (normalized.contains("REMOVED") || lower.contains("видален")) return HomeCraftGuildI18n.t("golem_status.homecraftguild.removed");
         if (normalized.contains("ORPHAN") || normalized.contains("DATA") || normalized.contains("MISSING")) return HomeCraftGuildI18n.t("golem_status.homecraftguild.needs_data");
-        if (normalized.contains("HEAL") || value.contains("ліку")) return HomeCraftGuildI18n.t("golem_status.homecraftguild.healing_totem");
-        if (normalized.contains("RETURN")) return HomeCraftGuildI18n.t("golem_status.homecraftguild.returning");
-        if (normalized.contains("ENGAGE") || normalized.contains("DEFEND") || normalized.contains("CHASE")) return HomeCraftGuildI18n.t("golem_status.homecraftguild.defending");
-        if (normalized.contains("PATROL")) return HomeCraftGuildI18n.t("golem_status.homecraftguild.patrolling");
-        if (normalized.contains("STRATEGIC") || normalized.contains("COMMAND")) return elite ? HomeCraftGuildI18n.t("golem_status.homecraftguild.holding_key_point") : HomeCraftGuildI18n.t("golem_status.homecraftguild.patrolling");
-        if (normalized.contains("RECOVER")) return HomeCraftGuildI18n.t("golem_status.homecraftguild.recovering");
-        if (value.isBlank() || normalized.equals("ALIVE")) return elite ? HomeCraftGuildI18n.t("golem_status.homecraftguild.holding_key_point") : HomeCraftGuildI18n.t("golem_status.homecraftguild.patrolling");
-        return value;
+        if (normalized.contains("HEAL") || lower.contains("ліку")) return HomeCraftGuildI18n.t("golem_status.homecraftguild.healing_totem");
+        if (normalized.contains("RETURN") || lower.contains("повер")) return HomeCraftGuildI18n.t("golem_status.homecraftguild.returning");
+        if (normalized.contains("ENGAGE") || normalized.contains("DEFEND") || normalized.contains("CHASE") || lower.contains("захищ") || lower.contains("атак")) return HomeCraftGuildI18n.t("golem_status.homecraftguild.defending");
+        if (normalized.contains("PATROL") || lower.contains("патру")) return HomeCraftGuildI18n.t("golem_status.homecraftguild.patrolling");
+        if (normalized.contains("STRATEGIC") || normalized.contains("COMMAND") || lower.contains("команд")) return elite ? HomeCraftGuildI18n.t("golem_status.homecraftguild.holding_key_point") : HomeCraftGuildI18n.t("golem_status.homecraftguild.patrolling");
+        if (normalized.contains("RECOVER") || lower.contains("віднов")) return HomeCraftGuildI18n.t("golem_status.homecraftguild.recovering");
+        if (value.isBlank() || normalized.equals("ALIVE") || lower.contains("жив")) return elite ? HomeCraftGuildI18n.t("golem_status.homecraftguild.holding_key_point") : HomeCraftGuildI18n.t("golem_status.homecraftguild.patrolling");
+        String key = HomeCraftGuildI18n.normalizeKeyPart(value);
+        return HomeCraftGuildI18n.fallback("golem_status.homecraftguild." + key, value);
     }
 
     private static String friendlyDimension(String raw) {

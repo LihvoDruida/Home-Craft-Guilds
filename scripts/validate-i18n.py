@@ -16,6 +16,11 @@ DYNAMIC_PREFIXES = (
     "npc_preset.homecraftguild.",
     "achievement.homecraftguild.",
     "talent_status.homecraftguild.",
+    "trade_name.homecraftguild.",
+    "trade_role.homecraftguild.",
+    "golem_status.homecraftguild.",
+    "screen.homecraftguild.npc_admin.kind.",
+    "screen.homecraftguild.create.help.line_",
 )
 
 
@@ -38,6 +43,29 @@ def read_locale(locale: str) -> dict[str, str]:
     if bad:
         fail(f"Locale {locale} contains empty/non-string keys or values: {bad[:8]}")
     return data
+
+
+def collect_trade_name_keys() -> set[str]:
+    keys: set[str] = set()
+    patterns = (
+        re.compile(r"nameKey=([^,\"]+)"),
+        re.compile(r'"(trade_name\.homecraftguild\.[a-z0-9_]+)"'),
+    )
+    for root in (ROOT / "src/main/java", ROOT / "src/main/resources"):
+        if not root.exists():
+            continue
+        for path in root.rglob("*"):
+            if not path.is_file():
+                continue
+            if path.suffix.lower() not in {".java", ".json", ".toml", ".properties"}:
+                continue
+            text = path.read_text(encoding="utf-8", errors="ignore")
+            for pattern in patterns:
+                for match in pattern.finditer(text):
+                    key = match.group(1).strip()
+                    if key.startswith("trade_name.homecraftguild."):
+                        keys.add(key)
+    return keys
 
 
 def collect_static_code_keys() -> set[str]:
@@ -78,17 +106,35 @@ def main() -> int:
         "talent.homecraftguild.member_xp_1.title",
         "talent.homecraftguild.golem_stone_heart.effect",
         "achievement.homecraftguild.kill_ender_dragon.title",
+        "achievement.homecraftguild.portal_nether.title",
+        "talent_status.homecraftguild.required_level",
+        "trade_name.homecraftguild.high_vanguard_blade",
+        "trade_name.homecraftguild.guild_crystal",
+        "message.homecraftguild.npc.no_available_trades",
     ]
     for key in required_content_keys:
         if key not in base_keys:
             fail(f"Missing required localization key: {key}")
 
     code_keys = collect_static_code_keys()
+    trade_name_keys = collect_trade_name_keys()
+    missing_trade_names = sorted(key for key in trade_name_keys if key not in base_keys)
+    if missing_trade_names:
+        fail(f"Trade name keys used by configured/custom trades are missing from lang files: {missing_trade_names[:24]}")
+
     missing_in_lang = sorted(key for key in code_keys if key not in base_keys and not any(key.startswith(prefix) for prefix in DYNAMIC_PREFIXES))
     if missing_in_lang:
         fail(f"Code references localization keys missing from lang files: {missing_in_lang[:24]}")
 
-    print(f"Home Craft Guilds i18n OK: {len(base_keys)} keys in en_us and uk_ua, with matching key sets.")
+    placeholder_pattern = re.compile(r"%(?:\d+\$)?[sd]")
+    for key in sorted(base_keys):
+        base_placeholders = placeholder_pattern.findall(locales["en_us"][key])
+        for locale, data in locales.items():
+            placeholders = placeholder_pattern.findall(data[key])
+            if len(placeholders) != len(base_placeholders):
+                fail(f"Placeholder count mismatch for {key}: en_us={base_placeholders}, {locale}={placeholders}")
+
+    print(f"Home Craft Guilds i18n OK: {len(base_keys)} keys in en_us and uk_ua, with matching key sets and placeholder parity.")
     return 0
 
 

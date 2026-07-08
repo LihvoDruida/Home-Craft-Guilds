@@ -86,11 +86,11 @@ public final class NpcPreviewRenderer {
                                                   double mouseX, double mouseY) {
         if (types == null || types.length == 0) return null;
         Object[] args = new Object[types.length];
+        int safeScale = Math.max(18, Math.min(96, scale));
         int cx = x + Math.max(1, w / 2);
-        int cy = y + Math.max(1, h - 18);
+        int cy = y + Math.max(1, h / 2) + Math.max(18, Math.min(48, safeScale / 2));
         int x2 = x + Math.max(1, w);
         int y2 = y + Math.max(1, h);
-        int safeScale = Math.max(18, Math.min(96, scale));
         float followX = clamp((float) (mouseX - (x + w * 0.50D)), -80.0F, 80.0F);
         float followY = clamp((float) (mouseY - (y + h * 0.46D)), -70.0F, 70.0F);
         int intIndex = 0;
@@ -144,7 +144,7 @@ public final class NpcPreviewRenderer {
             } else if (type.getName().equals("org.joml.Quaternionf")) {
                 args[i] = newQuaternion(0.0F, 180.0F - yaw, 0.0F);
             } else if (type.getName().equals("org.joml.Vector3f")) {
-                args[i] = newVector3f(0.0F, -0.10F, 0.0F);
+                args[i] = newVector3f(0.0F, -0.03F, 0.0F);
             } else {
                 args[i] = null;
             }
@@ -172,7 +172,7 @@ public final class NpcPreviewRenderer {
             if (renderState == null) return false;
             if (!extractRenderState(renderer, entity, renderState)) return false;
 
-            Object translation = newVector3f(0.0F, -0.15F, 0.0F);
+            Object translation = newVector3f(0.0F, -0.04F, 0.0F);
             Object rotation = newQuaternion(pitch * 0.35F, 180.0F - yaw, 0.0F);
             Object camera = newQuaternion(pitch * 0.18F, 0.0F, 0.0F);
             float pipScale = Math.max(32.0F, Math.min(92.0F, (float) scale));

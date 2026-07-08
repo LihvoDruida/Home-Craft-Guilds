@@ -1,5 +1,7 @@
 package ua.homecraft.guild.client.npc;
 
+import ua.homecraft.guild.client.HomeCraftGuildI18n;
+
 import net.minecraft.client.Minecraft;
 import ua.homecraft.guild.HomeCraftGuildMod;
 import ua.homecraft.guild.client.skin.GuildNpcSkins;
@@ -99,7 +101,7 @@ public final class GuildNpcClientCache {
                     p.length > 8 ? parseDouble(p[8], 0.5D) : 0.5D,
                     p.length > 9 ? (float) parseDouble(p[9], 0D) : 0F,
                     p.length > 10 ? normalize(p[10]) : "guild_registrar",
-                    p.length > 11 ? safe(p[11]) : "Гільдійний NPC"
+                    p.length > 11 ? safe(p[11]) : HomeCraftGuildI18n.t("npc.homecraftguild.registrar")
             );
             Entry prev = next.put(key, e);
             if (!Objects.equals(e, prev)) changed = true;
